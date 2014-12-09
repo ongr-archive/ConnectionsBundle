@@ -1,0 +1,101 @@
+services:
+    project.downloader.dummy:
+        class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Downloader\DummyDownloader
+        calls:
+            - [ setDispatcher, [ @event_dispatcher ] ]
+        tags:
+            - name: kernel.event_listener
+              event: ongr.pipeline.ongr_download.provider_foo.source
+              method: onSource
+
+    project.converter.products:
+        class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Convert\ProductsConverter
+        calls:
+            - [ setDispatcher, [ @event_dispatcher ] ]
+        tags:
+            - name: kernel.event_listener
+              event: ongr.pipeline.ongr_convert.product.source
+              method: onSource
+
+    project.converter.products.consumer:
+        class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Convert\ProductConsumer
+        calls:
+            - [ setDispatcher, [ @event_dispatcher ] ]
+        tags:
+            - name: kernel.event_listener
+              event: ongr.pipeline.ongr_convert.product.consume
+              method: onConsume
+            - name: kernel.event_listener
+              event: ongr.pipeline.ongr_convert.product.start
+              method: onStart
+            - name: kernel.event_listener
+              event: ongr.pipeline.ongr_convert.product.finish
+              method: onFinish
+
+    project.listener.dummy:
+        class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\DummySyncListener
+        tags:
+            - { name: kernel.event_listener, event: ongr_connections.sync_task_complete, method: onComplete }
+
+    project.item_url_invalidator.dummy:
+        class:  ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ItemUrlInvalidator\DummyItemInvalidator
+        parent: ongr_connections.item_url_invalidator
+        calls:
+            - [ setUrlInvalidator, [ @ongr_connections.url_invalidator_service ] ]
+        tags:
+            - { name: kernel.event_listener, event: ongr.pipeline.dummypipeline.default.consume, method: onConsume }
+            - { name: kernel.event_listener, event: ongr.pipeline.dummypipeline.default.finish, method: onFinish }
+
+    project.item_url_invalidator.dummy.source:
+        class:  ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ItemUrlInvalidator\DummyPipelineSource
+        tags:
+            - name: kernel.event_listener
+              event: ongr.pipeline.dummypipeline.default.source
+              method: onSource
+
+    test.import.source:
+           class: %ongr_connections.import.source.class%
+           parent: ongr_connections.import.source
+           arguments:
+             - @doctrine.orm.default_entity_manager
+             - Test:TestProduct
+             - @es.manager
+             - ONGRTestingBundle:Product
+           tags:
+             - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
+
+    test.import.modifier:
+            class: %ongr_connections.import.modifier.class%
+            parent: ongr_connections.import.modifier
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.import.default.modify, method: onModify }
+
+    test.import.consumer:
+            class: %ongr_connections.import.consumer.class%
+            parent: ongr_connections.import.consumer
+            arguments:
+              - @es.manager
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.import.default.consume, method: onConsume }
+
+    test.import.finish:
+            class: %ongr_connections.import.finish.class%
+            parent: ongr_connections.import.finish
+            arguments:
+              - @es.manager
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.import.default.finish, method: onFinish }
+
+    test.data_sync_source:
+        class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
+        arguments:
+            - @ongr_connections.sync.diff_provider.binlog_diff_provider
+        tags:
+            - { name: kernel.event_listener, event: ongr.pipeline.data_sync.some-target.source, method: onSource }
+
+    test.data_sync_consume:
+        class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
+        arguments:
+            - @ongr_connections.sync.extractor.passthrough_extractor
+        tags:
+            - { name: kernel.event_listener, event: ongr.pipeline.data_sync.some-target.consume, method: onConsume }

@@ -1,0 +1,51 @@
+#140905  3:34:06 server id 1  end_log_pos 710 	Write_rows: table id 41 flags: STMT_END_F
+### INSERT INTO `test`.`test`
+### SET
+###   @1=2
+###   @2='Hello world!'
+#140905 13:34:06 server id 1  end_log_pos 737 	Xid = 119
+#140905 13:34:39 server id 1  end_log_pos 805 	Query	thread_id=37	exec_time=0	error_code=0
+#140905 13:34:39 server id 1  end_log_pos 851 	Table_map: `test`.`test` mapped to number 41
+#140905 13:34:39 server id 1  end_log_pos 923 	Update_rows: table id 41 flags: STMT_END_F
+### UPDATE `test`.`test`
+### WHERE
+###   @1=2
+###   @2='Hello world!'
+### SET
+###   @1=2
+###   @2='Updated with where'
+#140905 13:34:39 server id 1  end_log_pos 950 	Xid = 121
+#140905 13:35:22 server id 1  end_log_pos 1018 	Query	thread_id=37	exec_time=0	error_code=0
+#140905 13:35:22 server id 1  end_log_pos 1064 	Table_map: `test`.`test` mapped to number 41
+#140905 13:35:22 server id 1  end_log_pos 1190 	Update_rows: table id 41 flags: STMT_END_F
+### UPDATE `test`.`test`
+### WHERE
+###   @1=1
+###   @2='Hello world!'
+### SET
+###   @1=1
+###   @2='Updated without where'
+### UPDATE `test`.`test`
+### WHERE
+###   @1=2
+###   @2='Updated with where'
+### SET
+###   @1=2
+###   @2='Updated without where'
+#140905 13:35:22 server id 1  end_log_pos 1217 	Xid = 122
+#140905 13:35:46 server id 1  end_log_pos 1285 	Query	thread_id=37	exec_time=0	error_code=0
+#140905 13:35:46 server id 1  end_log_pos 1331 	Table_map: `test`.`test` mapped to number 41
+#140905 13:35:46 server id 1  end_log_pos 1387 	Delete_rows: table id 41 flags: STMT_END_F
+### DELETE FROM `test`.`test`
+### WHERE
+###   @1=1
+###   @2='Updated without where'
+#140905 13:35:46 server id 1  end_log_pos 1414 	Xid = 123
+#140905 13:35:52 server id 1  end_log_pos 1482 	Query	thread_id=37	exec_time=0	error_code=0
+#140905 13:35:52 server id 1  end_log_pos 1528 	Table_map: `test`.`test` mapped to number 41
+#140905 13:35:52 server id 1  end_log_pos 1584 	Delete_rows: table id 41 flags: STMT_END_F
+### DELETE FROM `test`.`test`
+### WHERE
+###   @1=2
+###   @2='Updated without where'
+#140905 13:35:52 server id 1  end_log_pos 1611 	Xid = 124

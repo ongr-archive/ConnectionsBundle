@@ -1,0 +1,12 @@
+CREATE TABLE test (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   data VARCHAR(100),
+   data2 VARCHAR(100),
+   data3 VARCHAR(100)
+);
+
+CREATE TABLE test_child (
+   child_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   parent_id INT,
+   data VARCHAR(100)
+);

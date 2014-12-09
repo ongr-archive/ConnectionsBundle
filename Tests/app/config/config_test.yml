@@ -1,0 +1,77 @@
+imports:
+    - { resource: parameters_test.yml }
+
+# Framework Configuration
+framework:
+    esi:             ~
+    fragments:       { path: /_proxy }
+    translator:      { fallback: "%locale%" }
+    secret:          %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: %kernel.debug%
+    form:            true
+    csrf_protection: true
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: 201204261
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:         ~
+    test: ~
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+        logging: false
+        profiling: false
+
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        mappings:
+          Test:
+              type: annotation
+              prefix: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest
+              dir: Tests/Functional/Fixtures/ImportCommandTest/
+
+monolog:
+    handlers:
+        event_all:
+            type: stream
+            level: error
+
+
+ongr_elasticsearch:
+    connections:
+        default:
+            hosts:
+                - { host: 127.0.0.1:9200 }
+            index_name: ongr-elasticsearch-bundle-test
+            settings:
+                refresh_interval: -1
+                number_of_replicas: 0
+        bar:
+            hosts:
+                - { host: 127.0.0.1:9200 }
+            index_name: ongr-elasticsearch-bundle-bar-test
+            settings:
+                refresh_interval: -1
+                number_of_replicas: 1
+    managers:
+        default:
+            connection: default
+            mappings:
+                - ONGRTestingBundle
+        bar:
+            connection: bar
+            mappings:
+                - ONGRElasticsearchBundle
