@@ -1,6 +1,13 @@
 Continuous Synchronization
 ==========================
 
+SqlRelations
+------------
+
+Sql relations listens to changes on primary tables and issues updates on joined tables.
+Update actions require additional parameter for which fields changes to react,
+least one tracked field change is required for trigger to take action.
+
 Example extractor setup for sql:
 
 .. code-block:: yml
@@ -31,8 +38,7 @@ Example extractor setup for sql:
     
         ongr_project.sql_relations.category.update:
             class: %ongr_project.sql_relations.composed_trigger.class%
-            arguments: [oxcategories, U, 1, category, __ctx__.OXID]
-            arguments: [oxcategories, U, 1, category, __ctxo__.OXID, %ongr_project.sql_relations.category.fields%]
+            arguments: [oxcategories, U, 1, category, OLD.OXID, %ongr_project.sql_relations.category.fields%]
             tags:
                 - { name: ongr_connections.sql_relation }
             calls:
