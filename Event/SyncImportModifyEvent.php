@@ -20,21 +20,6 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 class SyncImportModifyEvent extends AbstractInitialSyncModifyEvent
 {
     /**
-     * Assigns raw data to given object.
-     *
-     * @param DocumentInterface $document
-     * @param mixed             $data
-     */
-    protected function assignDataToDocument(DocumentInterface $document, $data)
-    {
-        foreach ($data as $property => $value) {
-            if (property_exists(get_class($document), $property)) {
-                $document->$property = $value;
-            }
-        }
-    }
-
-    /**
      * Modifies EventItem.
      *
      * @param AbstractImportItem $eventItem

@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Event;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -23,11 +24,19 @@ abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * Modifies AbstractImportItem.
+     * Assigns raw data to given object.
      *
-     * @param AbstractImportItem $eventItem
+     * @param DocumentInterface $document
+     * @param mixed             $data
      */
-    abstract protected function modify(AbstractImportItem $eventItem);
+    protected function assignDataToDocument(DocumentInterface $document, $data)
+    {
+        foreach ($data as $property => $value) {
+            if (property_exists(get_class($document), $property)) {
+                $document->$property = $value;
+            }
+        }
+    }
 
     /**
      * Modify event.
