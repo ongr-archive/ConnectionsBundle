@@ -7,7 +7,8 @@ Panther
 
 By default panther storage is set up for MySQL like this:
 
-.. code-block:: yml
+.. code-block:: yaml
+
     ongr_connections:
         panther:
             mysql:
@@ -25,7 +26,7 @@ tables, e.g.: ongr_panther_storage_1, ongr_panther_storage_2, etc.)
 
 Data source for extraction is set up using "source" event listener, like that:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     services:
         my.data_sync.source:
@@ -39,7 +40,7 @@ Data source for extraction is set up using "source" event listener, like that:
 
 Consumer which extracts data received from diff provider is set up using "consume" event listener:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     services:
         my.data_sync.consume:

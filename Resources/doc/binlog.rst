@@ -27,7 +27,7 @@ Restart MySQL
 Set Binlog Parameters in YAML configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: yml
+.. code-block:: yaml
 
     # binlog parameters
     ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
@@ -37,7 +37,7 @@ Set Binlog Parameters in YAML configuration
 Register your source settings into YAML configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: yml
+.. code-block:: yaml
 
      test.data_sync_source:
         class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent

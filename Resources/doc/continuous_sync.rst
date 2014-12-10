@@ -3,7 +3,7 @@ Continuous Synchronization
 
 Example extractor setup for sql:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     parameters:
         ongr_project.sql_relations.simple_trigger.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\SimpleSqlRelation

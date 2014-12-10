@@ -16,7 +16,7 @@ Register your source settings into YAML configuration
 
 Binlog Diff Provider example:
 
-.. code-block:: yml
+.. code-block:: yaml
 
      test.data_sync_source:
         class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
