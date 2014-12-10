@@ -8,7 +8,7 @@ env:
 services:
   - elasticsearch
 install:
-  - pip install -q sphinx --use-mirrors
+  - sudo pip install -q sphinx --use-mirrors
   - wget -q -O conf.py https://raw.githubusercontent.com/mindaugasbarysas/playground/master/source/conf-travis.py
   - mkdir _static
   - composer require --no-update symfony/symfony:${SYMFONY}
