@@ -19,7 +19,7 @@ use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 abstract class DiffImport
 {
     /**
-     * @var PantherInterface $storage
+     * @var PantherInterface
      */
     private $storage;
 

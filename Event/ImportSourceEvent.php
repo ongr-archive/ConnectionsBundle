@@ -36,7 +36,7 @@ class ImportSourceEvent
     protected $elasticSearchManager;
 
     /**
-     * @var string Classname of Elasticsearch document. (e.g. Product)
+     * @var string Classname of Elasticsearch document. (e.g. Product).
      */
     protected $documentClass;
 

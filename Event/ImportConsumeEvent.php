@@ -24,7 +24,7 @@ class ImportConsumeEvent implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * @var Manager $manager
+     * @var Manager
      */
     protected $manager;
 
