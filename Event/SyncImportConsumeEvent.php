@@ -118,7 +118,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
 
                     return false;
             }
-            $this->panther->deleteItem($pantherData['id'], [$this->shopId]);
+            $this->panther->deleteItem($pantherData['id'], [$pantherData['shop_id']]);
         } else {
             if ($this->logger) {
                 $this->logger->notice(

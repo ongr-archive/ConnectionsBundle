@@ -99,6 +99,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                     [
                         'type' => PantherInterface::OPERATION_DELETE,
                         'id' => 1,
+                        'shop_id' => 1,
                     ]
                 ),
                 'debug',
@@ -116,6 +117,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                     [
                         'type' => PantherInterface::OPERATION_UPDATE,
                         'id' => 1,
+                        'shop_id' => 1,
                     ]
                 ),
                 'debug',
@@ -133,6 +135,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                     [
                         'type' => PantherInterface::OPERATION_CREATE,
                         'id' => 1,
+                        'shop_id' => 1,
                     ]
                 ),
                 'debug',
