@@ -446,7 +446,8 @@ class BinlogParser implements \Iterator
     protected function handleParam()
     {
         if (preg_match('/^@([0-9]+)=(.*)$/', $this->getNextLine(self::LINE_TYPE_ANY), $part)) {
-            return [$part[1] => $part[2]];
+            $paramValue = trim($part[2], "'");
+            return [$part[1] => $paramValue];
         }
 
         return null;
