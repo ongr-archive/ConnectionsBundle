@@ -189,13 +189,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     }
 
     /**
-     * Returns next $recordCount (or less) available for processing records from storage.
-     *
-     * @param int    $count
-     * @param string $documentType
-     * @param int    $shopId
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getNextRecords($count, $documentType = null, $shopId = null)
     {
@@ -209,64 +203,58 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
+        // Select records for update.
+        $params = [
+            ['shopId', $shopId, \PDO::PARAM_INT],
+            ['status', self::STATUS_NEW, \PDO::PARAM_INT],
+            ['limit', $count, \PDO::PARAM_INT],
+        ];
+        $documentTypeCondition = '';
         if (!empty($documentType) && is_string($documentType)) {
-            // Return only records of certain type.
-            $statement = $connection->prepare(
-                'SELECT * FROM ' . $tableName . '
-                WHERE
-                    `status` = :status
-                    AND `document_type` = :documentType
-                ORDER BY `timestamp` ASC
-                LIMIT :limit
-                FOR UPDATE'
-            );
-            $statement->bindValue('status', self::STATUS_NEW, \PDO::PARAM_INT);
-            $statement->bindValue('documentType', $documentType, \PDO::PARAM_STR);
-            $statement->bindValue('limit', $count, \PDO::PARAM_INT);
-            $statement->execute();
-            $nextRecords = $statement->fetchAll();
-
-            $statement = $connection->prepare(
-                'UPDATE ' . $tableName . '
-                SET `status` = :toStatus
-                WHERE
-                    `status` = :fromStatus
-                    AND `document_type` = :documentType
-                ORDER BY `timestamp` ASC
-                LIMIT :limit'
-            );
-            $statement->bindValue('fromStatus', self::STATUS_NEW, \PDO::PARAM_INT);
-            $statement->bindValue('toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT);
-            $statement->bindValue('documentType', $documentType, \PDO::PARAM_STR);
-            $statement->bindValue('limit', $count, \PDO::PARAM_INT);
-            $statement->execute();
-        } else {
-            // Return all records.
-            $statement = $connection->prepare(
-                'SELECT * FROM ' . $tableName . '
-                WHERE
-                    `status` = :status
-                ORDER BY `timestamp` ASC
-                LIMIT :limit
-                FOR UPDATE'
-            );
-            $statement->bindValue('status', self::STATUS_NEW, \PDO::PARAM_INT);
-            $statement->bindValue('limit', $count, \PDO::PARAM_INT);
-            $statement->execute();
-            $nextRecords = $statement->fetchAll();
-
-            $statement = $connection->prepare(
-                'UPDATE ' . $tableName . '
-                SET `status` = :toStatus
-                WHERE `status` = :fromStatus
-                ORDER BY `timestamp` ASC
-                LIMIT :limit'
-            );
-            $statement->bindValue('toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT);
-            $statement->bindValue('fromStatus', self::STATUS_NEW, \PDO::PARAM_INT);
-            $statement->bindValue('limit', $count, \PDO::PARAM_INT);
-            $statement->execute();
+            $documentTypeCondition = ' AND `document_type` = :documentType';
+            $params[] = ['documentType', $documentType, \PDO::PARAM_STR];
         }
+        $sqlSelectForUpdate = sprintf(
+            'SELECT *, :shopId AS `shop_id` FROM ' . $tableName . '
+            WHERE
+                `status` = :status %s
+            ORDER BY `timestamp` ASC, `id` ASC
+            LIMIT :limit
+            FOR UPDATE',
+            $documentTypeCondition
+        );
+        $statement = $connection->prepare($sqlSelectForUpdate);
+        foreach ($params as $param) {
+            $statement->bindValue($param[0], $param[1], $param[2]);
+        }
+        $statement->execute();
+        $nextRecords = $statement->fetchAll();
+
+        // Update status.
+        $params = [
+            ['fromStatus', self::STATUS_NEW, \PDO::PARAM_INT],
+            ['toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT],
+            ['limit', $count, \PDO::PARAM_INT],
+        ];
+        $documentTypeCondition = '';
+        if (!empty($documentType) && is_string($documentType)) {
+            $documentTypeCondition = ' AND `document_type` = :documentType';
+            $params[] = ['documentType', $documentType, \PDO::PARAM_STR];
+        }
+        $sqlUpdate = sprintf(
+            'UPDATE ' . $tableName . '
+            SET `status` = :toStatus
+            WHERE
+                `status` = :fromStatus %s
+            ORDER BY `timestamp` ASC
+            LIMIT :limit',
+            $documentTypeCondition
+        );
+        $statement = $connection->prepare($sqlUpdate);
+        foreach ($params as $param) {
+            $statement->bindValue($param[0], $param[1], $param[2]);
+        }
+        $statement->execute();
 
         $connection->commit();
 
