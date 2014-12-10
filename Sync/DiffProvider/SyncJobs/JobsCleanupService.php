@@ -60,7 +60,9 @@ class JobsCleanupService
             $this->generateCleanupQuery()
         );
 
-        $this->logger && $this->logger->info('Number of rows deleted: ' . $result->rowCount());
+        if ($this->logger) {
+            $this->logger->info('Number of rows deleted: ' . $result->rowCount());
+        }
     }
 
     /**
