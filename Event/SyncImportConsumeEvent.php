@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Event;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
@@ -36,13 +37,27 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
     protected $documentType;
 
     /**
+     * @var Panther
+     */
+    protected $panther;
+
+    /**
+     * @var int
+     */
+    protected $shopId;
+
+    /**
      * @param Manager $manager
      * @param string  $documentType
+     * @param Panther $panther
+     * @param int     $shopId
      */
-    public function __construct(Manager $manager, $documentType)
+    public function __construct(Manager $manager, $documentType, Panther $panther, $shopId)
     {
         $this->manager = $manager;
         $this->documentType = $documentType;
+        $this->panther = $panther;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -103,6 +118,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
 
                     return false;
             }
+            $this->panther->deleteItem($pantherData['id'], [$this->shopId]);
         } else {
             if ($this->logger) {
                 $this->logger->notice(

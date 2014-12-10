@@ -1,3 +1,4 @@
+
 services:
     project.downloader.dummy:
         class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Downloader\DummyDownloader
@@ -105,13 +106,13 @@ services:
            parent: ongr_connections.import.source
            arguments:
              - @doctrine.orm.default_entity_manager
-             - Test:TestProduct
+             - %test.sync.import.doctrine_entity_type%
              - @es.manager
-             - ONGRTestingBundle:Product
+             - %test.sync.import.elastic_document_type%
              - @ongr_connections.sync.panther
-             - 1
-             - 1
-             - product
+             - %test.sync.import.shop_id%
+             - %test.sync.import.chunk_size%
+             - %test.sync.import.panther_document_type%
            tags:
              - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.source, method: onSource }
 
@@ -126,7 +127,9 @@ services:
             parent: ongr_connections.sync.import.consumer
             arguments:
               - @es.manager
-              - ONGRTestingBundle:Product
+              - %test.sync.import.elastic_document_type%
+              - @ongr_connections.sync.panther
+              - %test.sync.import.shop_id%
             tags:
               - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.consume, method: onConsume }
 

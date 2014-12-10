@@ -48,6 +48,10 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
         $manager->method('getRepository')
             ->willReturn($repo);
 
+        $panther = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\Panther\Panther')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         if ($managerMethod !== null) {
             $manager->expects($this->once())
                 ->method($managerMethod);
@@ -68,7 +72,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 );
         }
 
-        $event = new SyncImportConsumeEvent($manager, $documentType);
+        $event = new SyncImportConsumeEvent($manager, $documentType, $panther, 1);
         $event->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
@@ -89,7 +93,14 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'product',
-                new SyncImportItem(new TestProduct(), $product, ['type' => PantherInterface::OPERATION_DELETE]),
+                new SyncImportItem(
+                    new TestProduct(),
+                    $product,
+                    [
+                        'type' => PantherInterface::OPERATION_DELETE,
+                        'id' => 1,
+                    ]
+                ),
                 'debug',
                 [
                     'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),
@@ -99,7 +110,14 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(new TestProduct(), $product, ['type' => PantherInterface::OPERATION_UPDATE]),
+                new SyncImportItem(
+                    new TestProduct(),
+                    $product,
+                    [
+                        'type' => PantherInterface::OPERATION_UPDATE,
+                        'id' => 1,
+                    ]
+                ),
                 'debug',
                 [
                     'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),
@@ -109,7 +127,14 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(new TestProduct(), $product, ['type' => PantherInterface::OPERATION_CREATE]),
+                new SyncImportItem(
+                    new TestProduct(),
+                    $product,
+                    [
+                        'type' => PantherInterface::OPERATION_CREATE,
+                        'id' => 1,
+                    ]
+                ),
                 'debug',
                 [
                     'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),

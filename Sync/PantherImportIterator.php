@@ -86,32 +86,6 @@ class PantherImportIterator implements \Iterator
     }
 
     /**
-     * Gets chunk and sets valid and entity.
-     */
-    private function getNewChunk()
-    {
-        $this->currentChunk = $this->panther->getChunk(1, $this->documentType, $this->shopId);
-
-        if (empty($this->currentChunk)) {
-            $this->valid = false;
-        } else {
-            $this->valid = true;
-
-            $this->currentEntity = $this
-                ->entityManager
-                ->getRepository($this->entityClass)->find($this->currentChunk[0]['document_id']);
-            if (!empty($this->currentEntity)) {
-                $this->valid = true;
-            } elseif ($this->currentChunk[0]['type'] == PantherInterface::OPERATION_DELETE) {
-                $this->currentEntity = null;
-                $this->valid = true;
-            } else {
-                $this->valid = false;
-            }
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function rewind()
@@ -157,5 +131,31 @@ class PantherImportIterator implements \Iterator
     public function valid()
     {
         return $this->valid;
+    }
+
+    /**
+     * Gets chunk and sets valid and entity.
+     */
+    private function getNewChunk()
+    {
+        $this->currentChunk = $this->panther->getChunk(1, $this->documentType, $this->shopId);
+
+        if (empty($this->currentChunk)) {
+            $this->valid = false;
+        } else {
+            $this->valid = true;
+
+            $this->currentEntity = $this
+                ->entityManager
+                ->getRepository($this->entityClass)->find($this->currentChunk[0]['document_id']);
+            if (!empty($this->currentEntity)) {
+                $this->valid = true;
+            } elseif ($this->currentChunk[0]['type'] == PantherInterface::OPERATION_DELETE) {
+                $this->currentEntity = null;
+                $this->valid = true;
+            } else {
+                $this->valid = false;
+            }
+        }
     }
 }
