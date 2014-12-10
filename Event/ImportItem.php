@@ -11,62 +11,9 @@
 
 namespace ONGR\ConnectionsBundle\Event;
 
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-
 /**
  * Import event item carrying both Doctrine element and ES element.
  */
-class ImportItem
+class ImportItem extends AbstractImportItem
 {
-    /**
-     * @var mixed
-     */
-    protected $entity;
-
-    /**
-     * @var DocumentInterface
-     */
-    protected $document;
-
-    /**
-     * @param mixed             $doctrineItem
-     * @param DocumentInterface $elasticItem
-     */
-    public function __construct($doctrineItem, DocumentInterface $elasticItem)
-    {
-        $this->setEntity($doctrineItem);
-        $this->setDocument($elasticItem);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
-     * @param mixed $doctrineItem
-     */
-    public function setEntity($doctrineItem)
-    {
-        $this->entity = $doctrineItem;
-    }
-
-    /**
-     * @return DocumentInterface
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    /**
-     * @param DocumentInterface $elasticItem
-     */
-    public function setDocument(DocumentInterface $elasticItem)
-    {
-        $this->document = $elasticItem;
-    }
 }

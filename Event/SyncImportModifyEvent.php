@@ -11,12 +11,13 @@
 
 namespace ONGR\ConnectionsBundle\Event;
 
+use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
- * ImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
+ * SyncImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
  */
-class ImportModifyEvent extends AbstractInitialSyncModifyEvent
+class SyncImportModifyEvent extends AbstractInitialSyncModifyEvent
 {
     /**
      * Assigns raw data to given object.
@@ -40,6 +41,11 @@ class ImportModifyEvent extends AbstractInitialSyncModifyEvent
      */
     protected function modify(AbstractImportItem $eventItem)
     {
-        $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+        /** @var SyncImportItem $eventItem */
+        if ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_CREATE) {
+            $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+        } elseif ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_UPDATE) {
+            $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+        }
     }
 }

@@ -11,6 +11,7 @@ parameters:
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
     ongr_connections.import_service.class: ONGR\ConnectionsBundle\Import\ImportService
+    ongr_connections.sync.import_service.class: ONGR\ConnectionsBundle\Sync\SyncImportService
 
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
@@ -40,6 +41,11 @@ parameters:
     # Binlog parameters.
     ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
     ongr_connections.sync.diff_provider.binlog_basename: mysql-bin
+
+    # sync import pipeline event parent classes
+    ongr_connections.sync.import.source.class: ONGR\ConnectionsBundle\Event\SyncImportSourceEvent
+    ongr_connections.sync.import.modifier.class: ONGR\ConnectionsBundle\Event\SyncImportModifyEvent
+    ongr_connections.sync.import.consumer.class: ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent
 
 services:
     ongr_connections.sync.table_manager:
@@ -134,6 +140,11 @@ services:
         calls:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
 
+    ongr_connections.sync.import_service:
+        class: %ongr_connections.sync.import_service.class%
+        calls:
+            - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
+
     ongr_connections.import.source:
         class: %ongr_connections.import.source.class%
 
@@ -160,3 +171,15 @@ services:
         class: %ongr_connections.sync.data_sync_service.class%
         calls:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
+
+    ongr_connections.sync.import.source:
+        class: %ongr_connections.sync.import.source.class%
+
+    ongr_connections.sync.import.modifier:
+        class: %ongr_connections.sync.import.modifier.class%
+
+    ongr_connections.sync.import.consumer:
+        class: %ongr_connections.sync.import.consumer.class%
+
+    ongr_connections.sync.import.finish:
+        class: %ongr_connections.import.finish.class%

@@ -99,3 +99,41 @@ services:
             - @ongr_connections.sync.extractor.passthrough_extractor
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.data_sync.some-target.consume, method: onConsume }
+
+    test.sync.import.source:
+           class: %ongr_connections.sync.import.source.class%
+           parent: ongr_connections.import.source
+           arguments:
+             - @doctrine.orm.default_entity_manager
+             - Test:TestProduct
+             - @es.manager
+             - ONGRTestingBundle:Product
+             - @ongr_connections.sync.panther
+             - 1
+             - 1
+             - product
+           tags:
+             - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.source, method: onSource }
+
+    test.sync.import.modifier:
+            class: %ongr_connections.sync.import.modifier.class%
+            parent: ongr_connections.sync.import.modifier
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.modify, method: onModify }
+
+    test.sync.import.consumer:
+            class: %ongr_connections.sync.import.consumer.class%
+            parent: ongr_connections.sync.import.consumer
+            arguments:
+              - @es.manager
+              - ONGRTestingBundle:Product
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.consume, method: onConsume }
+
+    test.sync.import.finish:
+            class: %ongr_connections.import.finish.class%
+            parent: ongr_connections.import.finish
+            arguments:
+              - @es.manager
+            tags:
+              - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.finish, method: onFinish }

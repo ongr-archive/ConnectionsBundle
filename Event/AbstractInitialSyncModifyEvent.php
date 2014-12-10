@@ -23,11 +23,11 @@ abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * Modifies EventItem.
+     * Modifies AbstractImportItem.
      *
-     * @param ImportItem $eventItem
+     * @param AbstractImportItem $eventItem
      */
-    abstract protected function modify(ImportItem $eventItem);
+    abstract protected function modify(AbstractImportItem $eventItem);
 
     /**
      * Modify event.
@@ -36,18 +36,12 @@ abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
      */
     public function onModify(ItemPipelineEvent $event)
     {
-        if ($event instanceof ItemPipelineEvent) {
-            $item = $event->getItem();
-            if ($item instanceof ImportItem) {
-                $this->modify($item);
-            } else {
-                if ($this->logger) {
-                    $this->logger->notice('Item provided is not an ImportItem');
-                }
-            }
+        $item = $event->getItem();
+        if ($item instanceof AbstractImportItem) {
+            $this->modify($item);
         } else {
             if ($this->logger) {
-                $this->logger->notice('Event provided is not an ItemPipelineEvent');
+                $this->logger->notice('Item provided is not an AbstractImportItem');
             }
         }
     }

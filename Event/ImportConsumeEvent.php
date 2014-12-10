@@ -45,20 +45,12 @@ class ImportConsumeEvent implements LoggerAwareInterface
      */
     public function onConsume(ItemPipelineEvent $event)
     {
-        if ($event instanceof ItemPipelineEvent) {
-            $item = $event->getItem();
-            if ($item instanceof ImportItem) {
-                $document = $event->getItem()->getDocument();
-            } else {
-                if ($this->logger) {
-                    $this->logger->notice('Item provided is not an ImportItem');
-                }
-
-                return false;
-            }
+        $item = $event->getItem();
+        if ($item instanceof ImportItem) {
+            $document = $event->getItem()->getDocument();
         } else {
             if ($this->logger) {
-                $this->logger->notice('Event provided is not an ItemPipelineEvent');
+                $this->logger->notice('Item provided is not an ImportItem');
             }
 
             return false;
