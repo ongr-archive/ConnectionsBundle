@@ -130,6 +130,21 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test record removal while connection is malfunctioning.
+     */
+    public function testRemoveRecordWhileConnectionIsMalfunctioning()
+    {
+        $testRecordId = 123;
+
+        $this->connection->expects($this->once())
+            ->method('delete')
+            ->with(self::TABLE_NAME, ['id' => $testRecordId])
+            ->will($this->throwException(new \Exception('Connection is not working')));
+
+        $this->service->removeRecord($testRecordId);
+    }
+
+    /**
      * Test next records retrieval with invalid parameters.
      */
     public function testGetNextRecords()

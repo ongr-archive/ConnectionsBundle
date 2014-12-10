@@ -12,6 +12,8 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Extractor;
 
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
+use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 
@@ -37,22 +39,38 @@ class DoctrineExtractorTest extends TestBase
         /** @var PantherInterface|\PHPUnit_Framework_MockObject_MockObject $dummyPanther */
         $dummyPanther = $this->getMock('\ONGR\ConnectionsBundle\Sync\Panther\PantherInterface');
         $dummyPanther
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(6))
             ->method('save')
             ->withConsecutive(
-                ['C', 'category', 'cat0', $this->isInstanceOf('\DateTime')],
-                ['U', 'product', 'art0', $this->isInstanceOf('\DateTime')],
-                ['U', 'product', 'art1', $this->isInstanceOf('\DateTime')]
+                [ActionTypes::CREATE, 'category', 'cat0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'category', 'cat0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')]
             );
 
         $extractor->setStorageFacility($dummyPanther);
 
         // Execute.
 
+        // Should make 3 save calls.
         $item = new CreateDiffItem();
         $item->setCategory('oxcategories');
-        $item->setItem(['OXID' => 'cat0']);
+        $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'Category']);
         $item->setTimestamp(new \DateTime());
+        $extractor->extract($item);
+
+        // Should not make any saves because no tracked field updated.
+        $item = new UpdateDiffItem();
+        $item->setCategory('oxcategories');
+        $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'Category']);
+        $item->setOldItem(['OXID' => 'cat0', 'OXTITLE' => 'Category']);
+        $item->setTimestamp(new \DateTime());
+        $extractor->extract($item);
+
+        // Should make 3 save calls.
+        $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'CategoryNew']);
         $extractor->extract($item);
     }
 }

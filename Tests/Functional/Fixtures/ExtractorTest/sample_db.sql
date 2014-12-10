@@ -1,5 +1,6 @@
 CREATE TABLE `oxcategories` (
-   OXID VARCHAR(100)
+   OXID VARCHAR(100),
+   OXTITLE VARCHAR(100)
 );
 
 CREATE TABLE `oxobject2category` (
@@ -12,7 +13,7 @@ CREATE TABLE `oxarticles` (
   OXID VARCHAR(100)
 );
 
-INSERT INTO `oxcategories` (OXID) VALUES ('cat0');
+INSERT INTO `oxcategories` (OXID, OXTITLE) VALUES ('cat0', 'Category');
 
 INSERT INTO `oxarticles` (OXID) VALUES ('art0');
 INSERT INTO `oxarticles` (OXID) VALUES ('art1');
