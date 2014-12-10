@@ -11,9 +11,6 @@
 
 namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
 
-use ONGR\ConnectionsBundle\DataCollector\DataCollectorInterface;
-use ONGR\ConnectionsBundle\Entity\SyncJob;
-
 /**
  * This class has basic methods to create sync job insert sql statement..
  */
