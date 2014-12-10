@@ -66,7 +66,7 @@ class BinlogParser implements \Iterator
     private $buffer;
 
     /**
-     * @var int key
+     * @var int
      */
     private $key;
 

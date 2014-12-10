@@ -32,7 +32,7 @@ class SyncJob
     const UPDATE_TYPE_FULL = 1;
 
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column
      * @ORM\Id

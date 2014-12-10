@@ -19,12 +19,12 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 class ImportItem
 {
     /**
-     * @var mixed $entity
+     * @var mixed
      */
     protected $entity;
 
     /**
-     * @var DocumentInterface $document
+     * @var DocumentInterface
      */
     protected $document;
 

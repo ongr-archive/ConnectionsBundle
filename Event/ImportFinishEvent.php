@@ -19,7 +19,7 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 class ImportFinishEvent
 {
     /**
-     * @var Manager $manager
+     * @var Manager
      */
     protected $manager;
 
