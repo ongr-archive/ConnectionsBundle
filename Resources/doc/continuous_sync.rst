@@ -5,12 +5,12 @@ SqlRelations
 ------------
 
 Sql relations listens to changes on primary tables and issues updates on joined tables.
-Update actions require additional parameter for which fields changes to react,
-least one tracked field change is required for trigger to take action.
+Update actions require additional parameter defining which fields to watch for changes.
+At least one of the tracked fields must change for trigger to fire.
 
 Example extractor setup for sql:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     parameters:
         ongr_project.sql_relations.simple_trigger.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\SimpleSqlRelation
