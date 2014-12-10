@@ -59,14 +59,18 @@ class JobManager
             $type = $job->getDocumentType();
 
             if (!$type) {
-                $this->logger && $this->logger->error('Unrecognized entity');
+                if ($this->logger) {
+                    $this->logger->error('Unrecognized entity');
+                }
                 $this->markJobDone($job);
                 continue;
             }
 
             $objectId = $job->getDocumentId();
             if (empty($objectId)) {
-                $this->logger && $this->logger->error('objctId value is empty');
+                if ($this->logger) {
+                    $this->logger->error('objctId value is empty');
+                }
                 $this->markJobDone($job);
                 continue;
             }
@@ -81,14 +85,16 @@ class JobManager
                 /** @var $oldJob SyncJob */
                 $oldJob = $cache[$type][$job->getDocumentId()];
 
-                $this->logger && $this->logger->info(
-                    sprintf(
-                        "Skip duplicate action '%s' on '%s' '%s'.",
-                        $oldJob->getType(),
-                        $type,
-                        $oldJob->getDocumentId()
-                    )
-                );
+                if ($this->logger) {
+                    $this->logger->info(
+                        sprintf(
+                            "Skip duplicate action '%s' on '%s' '%s'.",
+                            $oldJob->getType(),
+                            $type,
+                            $oldJob->getDocumentId()
+                        )
+                    );
+                }
 
                 $this->markJobDone($oldJob);
 
@@ -104,14 +110,16 @@ class JobManager
                     || ($oldJob->getType() === SyncJob::TYPE_UPDATE
                     && $job->getUpdateType() <= $oldJob->getUpdateType())
                 ) {
-                    $this->logger && $this->logger->info(
-                        sprintf(
-                            "Skip duplicate action '%s' on '%s' '%s'.",
-                            $job->getType(),
-                            $type,
-                            $job->getDocumentId()
-                        )
-                    );
+                    if ($this->logger) {
+                        $this->logger->info(
+                            sprintf(
+                                "Skip duplicate action '%s' on '%s' '%s'.",
+                                $job->getType(),
+                                $type,
+                                $job->getDocumentId()
+                            )
+                        );
+                    }
 
                     $this->markJobDone($job);
                     continue;
@@ -123,14 +131,16 @@ class JobManager
                 ) {
                     $job->setUpdateType(SyncJob::UPDATE_TYPE_FULL);
 
-                    $this->logger && $this->logger->info(
-                        sprintf(
-                            "Skip duplicate action '%s' on '%s' '%s'.",
-                            $oldJob->getType(),
-                            $type,
-                            $oldJob->getDocumentId()
-                        )
-                    );
+                    if ($this->logger) {
+                        $this->logger->info(
+                            sprintf(
+                                "Skip duplicate action '%s' on '%s' '%s'.",
+                                $oldJob->getType(),
+                                $type,
+                                $oldJob->getDocumentId()
+                            )
+                        );
+                    }
                     $this->markJobDone($oldJob);
                     $cache[$type][$job->getDocumentId()] = $job;
                     continue;
