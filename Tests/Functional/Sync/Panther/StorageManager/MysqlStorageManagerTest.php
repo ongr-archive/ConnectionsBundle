@@ -347,6 +347,7 @@ class MysqlStorageManagerTest extends TestBase
         $nextRecords = $this->service->getNextRecords(10, 'product');
         foreach ($nextRecords as $record) {
             $this->assertEquals('product', $record['document_type']);
+            $this->assertNull($record['shop_id']);
         }
 
         $documents = $this->getConnection()->fetchAll(
@@ -362,6 +363,7 @@ class MysqlStorageManagerTest extends TestBase
         $this->assertEquals(3, count($nextRecords));
         foreach ($nextRecords as $record) {
             $this->assertEquals('category', $record['document_type']);
+            $this->assertNull($record['shop_id']);
         }
     }
 
