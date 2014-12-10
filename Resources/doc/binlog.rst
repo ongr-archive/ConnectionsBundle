@@ -39,7 +39,7 @@ Register your source settings into YAML configuration
 
 .. code-block:: yml
 
-     test.data_sync_source:
+     test.sync.data_sync.source:
         class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
         arguments:
             - @ongr_connections.sync.diff_provider.binlog_diff_provider

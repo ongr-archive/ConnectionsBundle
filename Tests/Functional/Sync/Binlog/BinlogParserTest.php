@@ -13,13 +13,23 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Binlog;
 
 use ONGR\ConnectionsBundle\Entity\SyncJob;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
+use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Functional test for binary log parser.
  */
-class BinlogParserTest extends \PHPUnit_Framework_TestCase
+class BinlogParserTest extends TestBase
 {
+    /**
+     * Clear logs before each test.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->getConnection()->executeQuery('RESET MASTER');
+    }
+
     /**
      * Data provider for testParse().
      *
@@ -36,7 +46,7 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'set' => [
                         1 => '1',
-                        2 => "'Hello world!'",
+                        2 => 'Hello world!',
                     ],
                 ],
             ],
@@ -47,7 +57,7 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'set' => [
                         1 => '2',
-                        2 => "'Hello world!'",
+                        2 => 'Hello world!',
                     ],
                 ],
             ],
@@ -58,11 +68,11 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'where' => [
                         1 => '2',
-                        2 => "'Hello world!'",
+                        2 => 'Hello world!',
                     ],
                     'set' => [
                         1 => '2',
-                        2 => "'Updated with where'",
+                        2 => 'Updated with where',
                     ],
                 ],
             ],
@@ -73,11 +83,11 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'where' => [
                         1 => '1',
-                        2 => "'Hello world!'",
+                        2 => 'Hello world!',
                     ],
                     'set' => [
                         1 => '1',
-                        2 => "'Updated without where'",
+                        2 => 'Updated without where',
                     ],
                 ],
             ],
@@ -88,11 +98,11 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'where' => [
                         1 => '2',
-                        2 => "'Updated with where'",
+                        2 => 'Updated with where',
                     ],
                     'set' => [
                         1 => '2',
-                        2 => "'Updated without where'",
+                        2 => 'Updated without where',
                     ],
                 ],
             ],
@@ -103,7 +113,7 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'where' => [
                         1 => '1',
-                        2 => "'Updated without where'",
+                        2 => 'Updated without where',
                     ],
                 ],
             ],
@@ -114,7 +124,7 @@ class BinlogParserTest extends \PHPUnit_Framework_TestCase
                     'table' => 'test',
                     'where' => [
                         1 => '2',
-                        2 => "'Updated without where'",
+                        2 => 'Updated without where',
                     ],
                 ],
             ],

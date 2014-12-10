@@ -39,8 +39,7 @@ class PantherTest extends TestBase
     {
         $this->storageManager = $this->getMockBuilder(
             'ONGR\ConnectionsBundle\Sync\Panther\StorageManager\StorageManagerInterface'
-        )
-            ->getMock();
+        )->getMock();
 
         $this->service = new Panther($this->storageManager);
 
