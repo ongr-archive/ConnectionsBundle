@@ -1,12 +1,7 @@
 parameters:
-    ongr_connections.sync.table_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager
     ongr_connections.jobs_cleanup_service.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobsCleanupService
     ongr_connections.sync.job_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobManager
-    ongr_connections.sync.panther.storage_manager.mysql_storage_manager.class: ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager
-    ongr_connections.sync.panther.class: ONGR\ConnectionsBundle\Sync\Panther\Panther
     ongr_connections.mapping_listener.class: ONGR\ConnectionsBundle\EventListener\LoadClassMetadataListener
-    ongr_connections.import_data_directory.class: ONGR\ConnectionsBundle\Service\ImportDataDirectory
-    ongr_connections.import_data_directory.data_dir: data
     ongr_connections.date_helper.class: ONGR\ConnectionsBundle\Service\DateHelper
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
@@ -15,32 +10,6 @@ parameters:
 
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
-    ongr_connections.sync.relations_collection.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection
-    ongr_connections.sync.data_sync_service.class: ONGR\ConnectionsBundle\Sync\DataSyncService
-    ongr_connections.diff_provider.binlog_diff_provider.class: ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider
-    ongr_connections.extractor.passthrough_extractor.class: ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor
-
-    # Url invalidator service.
-    ongr_connections.url_invalidator_service.class: ONGR\ConnectionsBundle\Service\UrlInvalidatorService
-    ongr_connections.url_invalidator_service.cache_script: bin/varnish
-    ongr_connections.url_invalidator_service.base_url: http://ongr.dev
-    ongr_connections.url_invalidator_service.curl_timeout: 5
-
-    ongr_connections.item_url_invalidator.class: ONGR\ConnectionsBundle\Service\AbstractItemUrlInvalidator
-
-    # Import pipeline event parent classes.
-    ongr_connections.import.source.class: ONGR\ConnectionsBundle\Event\ImportSourceEvent
-    ongr_connections.import.modifier.class: ONGR\ConnectionsBundle\Event\ImportModifyEvent
-    ongr_connections.import.consumer.class: ONGR\ConnectionsBundle\Event\ImportConsumeEvent
-    ongr_connections.import.finish.class: ONGR\ConnectionsBundle\Event\ImportFinishEvent
-
-    # data sync pipeline event parent classes
-    ongr_connections.sync.data_sync.source.class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
-    ongr_connections.sync.data_sync.consume.class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
-
-    # Binlog parameters.
-    ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
-    ongr_connections.sync.diff_provider.binlog_basename: mysql-bin
 
     # sync import pipeline event parent classes
     ongr_connections.sync.import.source.class: ONGR\ConnectionsBundle\Event\SyncImportSourceEvent
@@ -48,18 +17,6 @@ parameters:
     ongr_connections.sync.import.consumer.class: ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent
 
 services:
-    ongr_connections.sync.table_manager:
-        class: %ongr_connections.sync.table_manager.class%
-        # Arguments are injected in bundle Extension class.
-
-    ongr_connections.sync.panther.storage_manager.mysql_storage_manager:
-        class: %ongr_connections.sync.panther.storage_manager.mysql_storage_manager.class%
-        # Arguments are injected in bundle Extension class.
-
-    ongr_connections.sync.panther:
-        class: %ongr_connections.sync.panther.class%
-        # Arguments are injected in bundle Extension class.
-
     ongr_connections.jobs_cleanup_service:
         class: %ongr_connections.jobs_cleanup_service.class%
 
@@ -84,13 +41,6 @@ services:
         abstract: true
         calls:
             - [ setDispatcher, [ @event_dispatcher ] ]
-    ongr_connections.import_data_directory:
-        class: %ongr_connections.import_data_directory.class%
-        arguments:
-            - %kernel.root_dir%
-            - %ongr_connections.import_data_directory.data_dir%
-        calls:
-            - [setDateHelper, [@ongr_connections.date_helper]]
 
     ongr_connections.date_helper:
         class: %ongr_connections.date_helper.class%

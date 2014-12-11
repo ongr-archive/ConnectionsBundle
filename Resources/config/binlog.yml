@@ -1,0 +1,12 @@
+parameters:
+    ongr_connections.diff_provider.binlog_diff_provider.class: ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider
+    ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
+    ongr_connections.sync.diff_provider.binlog_basename: mysql-bin
+
+services:
+    ongr_connections.sync.diff_provider.binlog_diff_provider:
+        class: %ongr_connections.diff_provider.binlog_diff_provider.class%
+        arguments:
+            - @database_connection
+            - %ongr_connections.sync.diff_provider.binlog_dir%
+            - %ongr_connections.sync.diff_provider.binlog_basename%
