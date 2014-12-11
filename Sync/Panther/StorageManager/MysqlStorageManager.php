@@ -109,11 +109,12 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
             try {
-                $connection->executeUpdate(
-                    'INSERT INTO ' . $tableName . '
+                $sql = 'INSERT INTO ' . $tableName . '
                         (`type`, `document_type`, `document_id`, `timestamp`, `status`)
                     VALUES
-                        (:operationType, :documentType, :documentId, :timestamp, :status)',
+                        (:operationType, :documentType, :documentId, :timestamp, :status)';
+                $connection->executeUpdate(
+                    $sql,
                     [
                         'operationType' => $operationType,
                         'documentType' => $documentType,
@@ -124,15 +125,14 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 );
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
-                $statement = $connection->prepare(
-                    'SELECT COUNT(*) AS count FROM ' . $tableName . '
+                $sql = 'SELECT COUNT(*) AS count FROM ' . $tableName . '
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
                         AND `status` = :status
-                        AND `timestamp` >= :dateTime'
-                );
+                        AND `timestamp` >= :dateTime';
+                $statement = $connection->prepare($sql);
                 $statement->execute(
                     [
                         'operationType' => $operationType,
@@ -148,14 +148,15 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 }
 
                 // More recent record info, attempt to update existing record.
-                $connection->executeUpdate(
-                    'UPDATE ' . $tableName . '
+                $sql = 'UPDATE ' . $tableName . '
                     SET `timestamp` = :dateTime
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
-                        AND `status` = :status',
+                        AND `status` = :status';
+                $connection->executeUpdate(
+                    $sql,
                     [
                         'dateTime' => $dateTime->format('Y-m-d H:i:s'),
                         'operationType' => $operationType,
@@ -211,30 +212,28 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         if (!empty($documentType) && is_string($documentType)) {
             // Return only records of certain type.
-            $statement = $connection->prepare(
-                'SELECT * FROM ' . $tableName . '
+            $sql = 'SELECT * FROM ' . $tableName . '
                 WHERE
                     `status` = :status
                     AND `document_type` = :documentType
                 ORDER BY `timestamp` ASC
                 LIMIT :limit
-                FOR UPDATE'
-            );
+                FOR UPDATE';
+            $statement = $connection->prepare($sql);
             $statement->bindValue('status', self::STATUS_NEW, \PDO::PARAM_INT);
             $statement->bindValue('documentType', $documentType, \PDO::PARAM_STR);
             $statement->bindValue('limit', $count, \PDO::PARAM_INT);
             $statement->execute();
             $nextRecords = $statement->fetchAll();
 
-            $statement = $connection->prepare(
-                'UPDATE ' . $tableName . '
+            $sql = 'UPDATE ' . $tableName . '
                 SET `status` = :toStatus
                 WHERE
                     `status` = :fromStatus
                     AND `document_type` = :documentType
                 ORDER BY `timestamp` ASC
-                LIMIT :limit'
-            );
+                LIMIT :limit';
+            $statement = $connection->prepare($sql);
             $statement->bindValue('fromStatus', self::STATUS_NEW, \PDO::PARAM_INT);
             $statement->bindValue('toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT);
             $statement->bindValue('documentType', $documentType, \PDO::PARAM_STR);
@@ -242,26 +241,24 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             $statement->execute();
         } else {
             // Return all records.
-            $statement = $connection->prepare(
-                'SELECT * FROM ' . $tableName . '
+            $sql = 'SELECT * FROM ' . $tableName . '
                 WHERE
                     `status` = :status
                 ORDER BY `timestamp` ASC
                 LIMIT :limit
-                FOR UPDATE'
-            );
+                FOR UPDATE';
+            $statement = $connection->prepare($sql);
             $statement->bindValue('status', self::STATUS_NEW, \PDO::PARAM_INT);
             $statement->bindValue('limit', $count, \PDO::PARAM_INT);
             $statement->execute();
             $nextRecords = $statement->fetchAll();
 
-            $statement = $connection->prepare(
-                'UPDATE ' . $tableName . '
+            $sql = 'UPDATE ' . $tableName . '
                 SET `status` = :toStatus
                 WHERE `status` = :fromStatus
                 ORDER BY `timestamp` ASC
-                LIMIT :limit'
-            );
+                LIMIT :limit';
+            $statement = $connection->prepare($sql);
             $statement->bindValue('toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT);
             $statement->bindValue('fromStatus', self::STATUS_NEW, \PDO::PARAM_INT);
             $statement->bindValue('limit', $count, \PDO::PARAM_INT);
