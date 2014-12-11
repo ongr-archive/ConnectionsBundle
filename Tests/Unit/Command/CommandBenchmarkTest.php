@@ -33,6 +33,11 @@ class CommandBenchmarkTest extends \PHPUnit_Framework_TestCase
         $output->expects($this->at(2))->method('writeln')->with($this->stringContains('<info>Memory usage: '));
 
         $benchmark = new CommandBenchmark($output);
+
+        $benchmark->start();
+        $benchmark->finish();
+
+        // Restart benchmark, to test output statistics array.
         $benchmark->start();
         $data = $benchmark->finish(false);
 
@@ -40,8 +45,5 @@ class CommandBenchmarkTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('finish', $data);
         $this->assertArrayHasKey('duration', $data);
         $this->assertArrayHasKey('memory_peak', $data);
-
-        $benchmark->start();
-        $benchmark->finish();
     }
 }
