@@ -111,10 +111,10 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
             try {
                 $sql = sprintf(
-                    'INSERT INTO ' . $tableName . '
+                    "INSERT INTO {$tableName}
                         (`type`, `document_type`, `document_id`, `timestamp`, `status`)
                     VALUES
-                        (:operationType, :documentType, :documentId, :timestamp, :status)'
+                        (:operationType, :documentType, :documentId, :timestamp, :status)"
                 );
                 $statement = $connection->prepare($sql);
                 $statement->execute(
@@ -129,13 +129,13 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
                 $sql = sprintf(
-                    'SELECT COUNT(*) AS count FROM ' . $tableName . '
+                    "SELECT COUNT(*) AS count FROM {$tableName}
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
                         AND `status` = :status
-                        AND `timestamp` >= :dateTime'
+                        AND `timestamp` >= :dateTime"
                 );
                 $statement = $connection->prepare($sql);
                 $statement->execute(
@@ -154,13 +154,13 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
                 // More recent record info, attempt to update existing record.
                 $sql = sprintf(
-                    'UPDATE ' . $tableName . '
+                    "UPDATE {$tableName}
                     SET `timestamp` = :dateTime
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
-                        AND `status` = :status'
+                        AND `status` = :status"
                 );
                 $statement = $connection->prepare($sql);
                 $statement->execute(
@@ -223,12 +223,12 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         // Select records for update.
         $sqlSelectForUpdate = sprintf(
-            'SELECT *, :shopId AS `shop_id` FROM ' . $tableName . '
+            "SELECT *, :shopId AS `shop_id` FROM {$tableName}
             WHERE
                 `status` = :status %s
             ORDER BY `timestamp` ASC, `id` ASC
             LIMIT :limit
-            FOR UPDATE',
+            FOR UPDATE",
             $documentTypeCondition
         );
 
@@ -244,12 +244,12 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         // Update status.
         $sqlUpdate = sprintf(
-            'UPDATE ' . $tableName . '
+            "UPDATE {$tableName}
             SET `status` = :toStatus
             WHERE
                 `status` = :fromStatus %s
-            ORDER BY `timestamp` ASC
-            LIMIT :limit',
+            ORDER BY `timestamp` ASC, `id` ASC
+            LIMIT :limit",
             $documentTypeCondition
         );
 
