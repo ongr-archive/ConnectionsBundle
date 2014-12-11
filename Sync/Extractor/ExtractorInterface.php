@@ -23,6 +23,8 @@ interface ExtractorInterface
      * Extract data to full stack.
      *
      * @param BaseDiffItem $item
+     *
+     * @return void
      */
     public function extract(BaseDiffItem $item);
 
@@ -30,11 +32,15 @@ interface ExtractorInterface
      * Set Panther storage facility.
      *
      * @param PantherInterface $storage
+     *
+     * @return void
      */
     public function setStorageFacility(PantherInterface $storage);
 
     /**
      * Panther storage facility.
+     *
+     * @return PantherInterface
      */
     public function getStorageFacility();
 }

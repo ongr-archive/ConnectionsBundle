@@ -141,7 +141,7 @@ class SyncJob
     /**
      * Returns record status.
      *
-     * @return string
+     * @return int
      */
     public function getStatus()
     {
