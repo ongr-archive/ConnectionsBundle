@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Event;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -55,6 +56,7 @@ class ImportConsumeEvent implements LoggerAwareInterface
             return false;
         }
 
+        /** @var DocumentInterface $document */
         $document = $event->getItem()->getDocument();
 
         if ($document->getId() === null) {
@@ -67,7 +69,7 @@ class ImportConsumeEvent implements LoggerAwareInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Start update single document of type ' . get_class($document) . ' id: ' . $document->getId()
+                sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId())
             );
         }
 

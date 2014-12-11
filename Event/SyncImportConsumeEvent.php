@@ -72,6 +72,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
             return false;
         }
 
+        /** @var DocumentInterface $document */
         $document = $event->getItem()->getDocument();
 
         if ($document->getId() === null) {
@@ -86,7 +87,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
         if (!isset($pantherData['type'])) {
             if ($this->logger) {
                 $this->logger->notice(
-                    'No operation type defined for document id:' . $document->getId()
+                    sprintf('No operation type defined for document id: %s', $document->getId())
                 );
             }
 
@@ -95,7 +96,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
 
         if ($this->logger) {
             $this->logger->debug(
-                'Start update single document of type ' . get_class($document) . ' id: ' . $document->getId()
+                sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId())
             );
         }
 
@@ -112,10 +113,14 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
             default:
                 if ($this->logger) {
                     $this->logger->debug(
-                        'Failed to update document of type ' . get_class($document) . ' id: ' . $document->getId()
+                        sprintf(
+                            'Failed to update document of type  %s id: %s',
+                            get_class($document),
+                            $document->getId()
+                        )
                     );
                     $this->logger->notice(
-                        'No valid operation type defined for document id:' . $document->getId()
+                        sprintf('No valid operation type defined for document id: %s', $document->getId())
                     );
                 }
 

@@ -106,7 +106,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 ),
                 'debug',
                 [
-                    'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),
+                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
                     'End an update of a single document.',
                 ],
                 'getRepository',
@@ -124,7 +124,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 ),
                 'debug',
                 [
-                    'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),
+                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
                     'End an update of a single document.',
                 ],
                 'persist',
@@ -142,7 +142,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 ),
                 'debug',
                 [
-                    'Start update single document of type ' . get_class($product) . ' id: ' . $product->getId(),
+                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
                     'End an update of a single document.',
                 ],
                 'persist',
@@ -151,14 +151,14 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 'product',
                 new SyncImportItem(new TestProduct(), $product, ['type' => '']),
                 'notice',
-                ['No valid operation type defined for document id:' . $documentId],
+                ["No valid operation type defined for document id: {$documentId}"],
                 null,
             ],
             [
                 'product',
                 new SyncImportItem(new TestProduct(), $product, []),
                 'notice',
-                ['No operation type defined for document id:' . $documentId],
+                ["No operation type defined for document id: {$documentId}"],
                 null,
             ],
             [
