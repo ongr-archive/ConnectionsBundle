@@ -25,6 +25,8 @@ class AbstractInitialSyncModifyEventTest extends \PHPUnit_Framework_TestCase
      * @param mixed  $eventItem
      * @param string $notice
      *
+     * @return void
+     *
      * @dataProvider onModifyDataProvider
      */
     public function testOnConsume($eventItem, $notice)

@@ -44,6 +44,8 @@ class SyncImportItem extends AbstractImportItem
 
     /**
      * @param array $pantherData
+     *
+     * @return void
      */
     public function setPantherData($pantherData)
     {

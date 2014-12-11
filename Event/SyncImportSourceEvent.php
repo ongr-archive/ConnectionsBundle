@@ -22,12 +22,12 @@ class SyncImportSourceEvent
     /**
      * @var int
      */
-    protected $shopId;
+    protected $shopId = 1;
 
     /**
      * @var int
      */
-    protected $chunkSize;
+    protected $chunkSize = 1;
 
     /**
      * @var EntityManager
@@ -45,9 +45,14 @@ class SyncImportSourceEvent
     protected $elasticSearchManager;
 
     /**
-     * @var string Classname of Elasticsearch document. (e.g. Product)
+     * @var string Class name of Elasticsearch document. (e.g. Product)
      */
     protected $documentClass;
+
+    /**
+     * @var string
+     */
+    protected $documentType = '';
 
     /**
      * @param EntityManager    $manager
@@ -55,28 +60,19 @@ class SyncImportSourceEvent
      * @param Manager          $elasticSearchManager
      * @param string           $documentClass
      * @param PantherInterface $panther
-     * @param int              $shopId
-     * @param int              $chunkSize
-     * @param string           $documentType
      */
     public function __construct(
         EntityManager $manager,
         $entityClass,
         Manager $elasticSearchManager,
         $documentClass,
-        $panther,
-        $shopId,
-        $chunkSize,
-        $documentType
+        $panther
     ) {
         $this->entityManager = $manager;
         $this->entityClass = $entityClass;
         $this->elasticSearchManager = $elasticSearchManager;
         $this->documentClass = $documentClass;
         $this->panther = $panther;
-        $this->shopId = $shopId;
-        $this->documentType = $documentType;
-        $this->chunkSize = $chunkSize;
     }
 
     /**
@@ -102,9 +98,65 @@ class SyncImportSourceEvent
      * Gets data and adds source.
      *
      * @param SourcePipelineEvent $event
+     *
+     * @return void
      */
     public function onSource(SourcePipelineEvent $event)
     {
         $event->addSource($this->getDocuments());
+    }
+
+    /**
+     * @return int
+     */
+    public function getChunkSize()
+    {
+        return $this->chunkSize;
+    }
+
+    /**
+     * @param int $chunkSize
+     *
+     * @return void
+     */
+    public function setChunkSize($chunkSize)
+    {
+        $this->chunkSize = $chunkSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId()
+    {
+        return $this->shopId;
+    }
+
+    /**
+     * @param int $shopId
+     *
+     * @return void
+     */
+    public function setShopId($shopId)
+    {
+        $this->shopId = $shopId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentType()
+    {
+        return $this->documentType;
+    }
+
+    /**
+     * @param string $documentType
+     *
+     * @return void
+     */
+    public function setDocumentType($documentType)
+    {
+        $this->documentType = $documentType;
     }
 }

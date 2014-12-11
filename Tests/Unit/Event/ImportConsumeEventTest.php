@@ -25,6 +25,8 @@ class ImportConsumeEventTest extends \PHPUnit_Framework_TestCase
      * @param mixed  $eventItem
      * @param string $notice
      *
+     * @return void
+     *
      * @dataProvider onConsumeDataProvider
      */
     public function testOnConsume($eventItem, $notice)

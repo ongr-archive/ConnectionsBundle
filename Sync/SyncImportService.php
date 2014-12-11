@@ -18,6 +18,8 @@ class SyncImportService
      * Runs import from panther process.
      *
      * @param string $target
+     *
+     * @return void
      */
     public function import($target = null)
     {
@@ -41,6 +43,8 @@ class SyncImportService
 
     /**
      * @param PipelineFactory $pipelineFactory
+     *
+     * @return void
      */
     public function setPipelineFactory($pipelineFactory)
     {

@@ -24,6 +24,8 @@ class SyncImportCommandTest extends ESDoctrineTestCase
 {
     /**
      * Check if a document is saved as expected after collecting data from providers.
+     *
+     * @return void
      */
     public function testExecute()
     {

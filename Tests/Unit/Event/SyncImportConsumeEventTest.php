@@ -60,6 +60,8 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
             ->setMethods([$loggerMethod])
             ->getMockForAbstractClass();
+
+        // Check if logger->notice() called 2 times with different messages.
         if (count($loggerNotice) == 2) {
             $logger->expects($this->exactly(2))
                 ->method($loggerMethod)

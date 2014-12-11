@@ -110,9 +110,10 @@ services:
              - @es.manager
              - %test.sync.import.elastic_document_type%
              - @ongr_connections.sync.panther
-             - %test.sync.import.shop_id%
-             - %test.sync.import.chunk_size%
-             - %test.sync.import.panther_document_type%
+           calls:
+             - [ setChunkSize, [ %test.sync.import.chunk_size% ] ]
+             - [ setShopId, [ %test.sync.import.shop_id% ]]
+             - [ setDocumentType, [ %test.sync.import.panther_document_type% ]]
            tags:
              - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.source, method: onSource }
 
@@ -129,7 +130,6 @@ services:
               - @es.manager
               - %test.sync.import.elastic_document_type%
               - @ongr_connections.sync.panther
-              - %test.sync.import.shop_id%
             tags:
               - { name: kernel.event_listener, event: ongr.pipeline.sync.import.default.consume, method: onConsume }
 

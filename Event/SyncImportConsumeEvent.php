@@ -42,22 +42,15 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
     protected $panther;
 
     /**
-     * @var int
-     */
-    protected $shopId;
-
-    /**
      * @param Manager $manager
      * @param string  $documentType
      * @param Panther $panther
-     * @param int     $shopId
      */
-    public function __construct(Manager $manager, $documentType, Panther $panther, $shopId)
+    public function __construct(Manager $manager, $documentType, Panther $panther)
     {
         $this->manager = $manager;
         $this->documentType = $documentType;
         $this->panther = $panther;
-        $this->shopId = $shopId;
     }
 
     /**
@@ -70,16 +63,16 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
     public function onConsume(ItemPipelineEvent $event)
     {
         $item = $event->getItem();
-        if ($item instanceof SyncImportItem) {
-            /** @var DocumentInterface $document */
-            $document = $event->getItem()->getDocument();
-        } else {
+
+        if (!$item instanceof SyncImportItem) {
             if ($this->logger) {
                 $this->logger->notice('Item provided is not an SyncImportItem');
             }
 
             return false;
         }
+
+        $document = $event->getItem()->getDocument();
 
         if ($document->getId() === null) {
             if ($this->logger) {
@@ -90,36 +83,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
         }
 
         $pantherData = $item->getPantherData();
-        if (isset($pantherData['type'])) {
-            if ($this->logger) {
-                $this->logger->debug(
-                    'Start update single document of type ' . get_class($document) . ' id: ' . $document->getId()
-                );
-            }
-            switch ($pantherData['type']) {
-                case PantherInterface::OPERATION_CREATE:
-                    $this->manager->persist($document);
-                    break;
-                case PantherInterface::OPERATION_UPDATE:
-                    $this->manager->persist($document);
-                    break;
-                case PantherInterface::OPERATION_DELETE:
-                    $this->manager->getRepository($this->documentType)->remove($document->getId());
-                    break;
-                default:
-                    if ($this->logger) {
-                        $this->logger->debug(
-                            'Failed to update document of type ' . get_class($document) . ' id: ' . $document->getId()
-                        );
-                        $this->logger->notice(
-                            'No valid operation type defined for document id:' . $document->getId()
-                        );
-                    }
-
-                    return false;
-            }
-            $this->panther->deleteItem($pantherData['id'], [$pantherData['shop_id']]);
-        } else {
+        if (!isset($pantherData['type'])) {
             if ($this->logger) {
                 $this->logger->notice(
                     'No operation type defined for document id:' . $document->getId()
@@ -128,6 +92,36 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
 
             return false;
         }
+
+        if ($this->logger) {
+            $this->logger->debug(
+                'Start update single document of type ' . get_class($document) . ' id: ' . $document->getId()
+            );
+        }
+
+        switch ($pantherData['type']) {
+            case PantherInterface::OPERATION_CREATE:
+                $this->manager->persist($document);
+                break;
+            case PantherInterface::OPERATION_UPDATE:
+                $this->manager->persist($document);
+                break;
+            case PantherInterface::OPERATION_DELETE:
+                $this->manager->getRepository($this->documentType)->remove($document->getId());
+                break;
+            default:
+                if ($this->logger) {
+                    $this->logger->debug(
+                        'Failed to update document of type ' . get_class($document) . ' id: ' . $document->getId()
+                    );
+                    $this->logger->notice(
+                        'No valid operation type defined for document id:' . $document->getId()
+                    );
+                }
+
+                return false;
+        }
+        $this->panther->deleteItem($pantherData['id'], [$pantherData['shop_id']]);
 
         if ($this->logger) {
             $this->logger->debug(

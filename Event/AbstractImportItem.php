@@ -48,6 +48,8 @@ abstract class AbstractImportItem
 
     /**
      * @param mixed $doctrineItem
+     *
+     * @return void
      */
     public function setEntity($doctrineItem)
     {
@@ -64,6 +66,8 @@ abstract class AbstractImportItem
 
     /**
      * @param DocumentInterface $elasticItem
+     *
+     * @return void
      */
     public function setDocument(DocumentInterface $elasticItem)
     {
