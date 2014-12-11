@@ -28,7 +28,7 @@ class DoctrineExtractorTest extends TestBase
     {
         $container = $this->getServiceContainer();
         /** @var \ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor $extractor */
-        $extractor = $container->get('ongr_connections.sync.doctrine_extractor');
+        $extractor = $container->get('ongr_connections.sync.extractor.doctrine_extractor');
 
         // Populate database with schema and data.
 
@@ -39,12 +39,9 @@ class DoctrineExtractorTest extends TestBase
         /** @var PantherInterface|\PHPUnit_Framework_MockObject_MockObject $dummyPanther */
         $dummyPanther = $this->getMock('\ONGR\ConnectionsBundle\Sync\Panther\PantherInterface');
         $dummyPanther
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(3))
             ->method('save')
             ->withConsecutive(
-                [ActionTypes::CREATE, 'category', 'cat0', $this->isInstanceOf('\DateTime')],
-                [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
-                [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'category', 'cat0', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')]
@@ -54,7 +51,7 @@ class DoctrineExtractorTest extends TestBase
 
         // Execute.
 
-        // Should make 3 save calls.
+        // Should not make any save calls because Category CREATE action is turned off.
         $item = new CreateDiffItem();
         $item->setCategory('oxcategories');
         $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'Category']);

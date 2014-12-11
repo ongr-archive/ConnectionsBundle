@@ -6,14 +6,6 @@ parameters:
         - OXTITLE
 
 services:
-    ongr_project.sql_relations.category.create:
-        class: %ongr_project.sql_relations.composed_trigger.class%
-        arguments: [oxcategories, C, 1, category, NEW.OXID]
-        tags:
-            - { name: ongr_connections.sql_relation }
-        calls:
-            - [ addStatement, [ @ongr_project.sql_relations.category.join.articles ] ]
-
     ongr_project.sql_relations.category.delete:
         class: %ongr_project.sql_relations.composed_trigger.class%
         arguments: [oxcategories, D, 1, category, OLD.OXID]
@@ -33,3 +25,21 @@ services:
     ongr_project.sql_relations.category.join.articles:
         class: %ongr_project.sql_relations.related_table.class%
         arguments: [oxobject2category AS oc, oc.OXOBJECTID, oc.OXCATNID=NEW.OXID, product, U, 1]
+
+    ongr_project.sql_relations.product.create:
+        class: %ongr_project.sql_relations.composed_trigger.class%
+        arguments: [oxarticles, C, 1, product, NEW.OXID]
+        tags:
+            - { name: ongr_connections.sql_relation }
+
+    ongr_project.sql_relations.product.update:
+        class: %ongr_project.sql_relations.composed_trigger.class%
+        arguments: [oxarticles, U, 1, product, OLD.OXID]
+        tags:
+            - { name: ongr_connections.sql_relation }
+
+    ongr_project.sql_relations.product.delete:
+        class: %ongr_project.sql_relations.composed_trigger.class%
+        arguments: [oxarticles, D, 1, product, OLD.OXID]
+        tags:
+            - { name: ongr_connections.sql_relation }

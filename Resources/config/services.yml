@@ -34,9 +34,9 @@ parameters:
     ongr_connections.import.consumer.class: ONGR\ConnectionsBundle\Event\ImportConsumeEvent
     ongr_connections.import.finish.class: ONGR\ConnectionsBundle\Event\ImportFinishEvent
 
-    # Data sync pipeline event parent classes.
-    ongr_connections.data_sync_source.class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
-    ongr_connections.data_sync_consume.class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
+    # data sync pipeline event parent classes
+    ongr_connections.sync.data_sync.source.class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
+    ongr_connections.sync.data_sync.consume.class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
 
     # Binlog parameters.
     ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
@@ -58,7 +58,7 @@ services:
 
     ongr_connections.sync.panther:
         class: %ongr_connections.sync.panther.class%
-        # Arguments are injected in bundle Extendion class.
+        # Arguments are injected in bundle Extension class.
 
     ongr_connections.jobs_cleanup_service:
         class: %ongr_connections.jobs_cleanup_service.class%
@@ -129,12 +129,6 @@ services:
     ongr_connections.sync.relations_collection:
         class: %ongr_connections.sync.relations_collection.class%
 
-    ongr_connections.sync.doctrine_extractor:
-        class: ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor
-        calls:
-            - [ setRelationsCollection, [ @ongr_connections.sync.relations_collection ] ]
-            - [ setConnection, [ @database_connection ] ]
-
     ongr_connections.import_service:
         class: %ongr_connections.import_service.class%
         calls:
@@ -164,8 +158,17 @@ services:
             - %ongr_connections.sync.diff_provider.binlog_dir%
             - %ongr_connections.sync.diff_provider.binlog_basename%
 
+    ongr_connections.sync.extractor.doctrine_extractor:
+        class: ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor
+        calls:
+            - [ setRelationsCollection, [ @ongr_connections.sync.relations_collection ] ]
+            - [ setConnection, [ @database_connection ] ]
+            - [ setStorageFacility, [ @ongr_connections.sync.panther ] ]
+
     ongr_connections.sync.extractor.passthrough_extractor:
         class: %ongr_connections.extractor.passthrough_extractor.class%
+        calls:
+            - [ setStorageFacility, [ @ongr_connections.sync.panther ] ]
 
     ongr_connections.sync.data_sync_service:
         class: %ongr_connections.sync.data_sync_service.class%

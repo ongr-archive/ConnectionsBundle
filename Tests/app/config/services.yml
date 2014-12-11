@@ -87,17 +87,17 @@ services:
             tags:
               - { name: kernel.event_listener, event: ongr.pipeline.import.default.finish, method: onFinish }
 
-    test.data_sync_source:
+    test.sync.data_sync.source:
         class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
         arguments:
             - @ongr_connections.sync.diff_provider.binlog_diff_provider
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.data_sync.some-target.source, method: onSource }
 
-    test.data_sync_consume:
+    test.sync.data_sync.consume:
         class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
         arguments:
-            - @ongr_connections.sync.extractor.passthrough_extractor
+            - @ongr_connections.sync.extractor.doctrine_extractor
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.data_sync.some-target.consume, method: onConsume }
 

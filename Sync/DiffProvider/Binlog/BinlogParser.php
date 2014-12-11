@@ -40,6 +40,10 @@ class BinlogParser implements \Iterator
     const LINE_TYPE_PARAM = 4;
     const LINE_TYPE_ERROR = 5;
 
+    // SQL statement types.
+    const STATEMENT_TYPE_WHERE = 'WHERE';
+    const STATEMENT_TYPE_SET = 'SET';
+
     /**
      * @var string Directory with log-dir files.
      */
@@ -200,11 +204,11 @@ class BinlogParser implements \Iterator
         $this->getNextLine(self::LINE_TYPE_QUERY);
 
         if ($buffer['type'] == SyncJob::TYPE_DELETE || $buffer['type'] === SyncJob::TYPE_UPDATE) {
-            $buffer['where'] = $this->handleWhere($this->lastLine);
+            $buffer['where'] = $this->handleStatement($this->lastLine, self::STATEMENT_TYPE_WHERE);
         }
 
         if ($buffer['type'] == SyncJob::TYPE_CREATE || $buffer['type'] === SyncJob::TYPE_UPDATE) {
-            $buffer['set'] = $this->handleSet($this->lastLine);
+            $buffer['set'] = $this->handleStatement($this->lastLine, self::STATEMENT_TYPE_SET);
         }
 
         return $buffer;
@@ -213,7 +217,7 @@ class BinlogParser implements \Iterator
     /**
      * Read one line from pipe.
      *
-     * @return array
+     * @return string
      */
     protected function getLine()
     {
@@ -225,7 +229,7 @@ class BinlogParser implements \Iterator
     /**
      * @param int $type
      *
-     * @return mixed
+     * @return string
      * @throws \RuntimeException
      */
     protected function getNextLine($type = self::LINE_TYPE_ANY)
@@ -312,7 +316,7 @@ class BinlogParser implements \Iterator
      *
      * @param string $line
      *
-     * @return mixed
+     * @return string
      */
     protected function parseParamLine($line)
     {
@@ -389,42 +393,18 @@ class BinlogParser implements \Iterator
     }
 
     /**
-     * Handle set statements.
+     * Handle SQL statements.
      *
      * @param string $line
+     * @param string $type
      *
      * @throws \UnexpectedValueException
      * @return array|null
      */
-    protected function handleWhere($line)
+    protected function handleStatement($line, $type)
     {
-        if (!preg_match("/^WHERE$/", $line)) {
-            throw new \UnexpectedValueException("Expected a WHERE statement, got {$line}");
-        }
-
-        $params = [];
-        $param = $this->handleParam();
-
-        while ($param !== null) {
-            $params = $params + $param;
-            $param = $this->handleParam();
-        }
-
-        return $params;
-    }
-
-    /**
-     * Handle set statements.
-     *
-     * @param string $line
-     *
-     * @throws \UnexpectedValueException
-     * @return array|null
-     */
-    protected function handleSet($line)
-    {
-        if (!preg_match("/^SET$/", $line)) {
-            throw new \UnexpectedValueException("Expected a SET statement, got {$line}");
+        if (!preg_match("/^{$type}$/", $line)) {
+            throw new \UnexpectedValueException("Expected a {$type} statement, got {$line}");
         }
 
         $params = [];
@@ -446,7 +426,9 @@ class BinlogParser implements \Iterator
     protected function handleParam()
     {
         if (preg_match('/^@([0-9]+)=(.*)$/', $this->getNextLine(self::LINE_TYPE_ANY), $part)) {
-            return [$part[1] => $part[2]];
+            $paramValue = trim($part[2], "'");
+
+            return [$part[1] => $paramValue];
         }
 
         return null;

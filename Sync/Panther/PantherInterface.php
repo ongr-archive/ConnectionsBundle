@@ -32,6 +32,8 @@ interface PantherInterface
      * @param int      $documentId
      * @param DateTime $dateTime
      * @param array    $shopIds
+     *
+     * @return void
      */
     public function save($operationType, $documentType, $documentId, DateTime $dateTime, array $shopIds = null);
 
@@ -51,6 +53,8 @@ interface PantherInterface
      *
      * @param int   $itemId
      * @param array $shopIds
+     *
+     * @return void
      */
     public function deleteItem($itemId, array $shopIds = null);
 }

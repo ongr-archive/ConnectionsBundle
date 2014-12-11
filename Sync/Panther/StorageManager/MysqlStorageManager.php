@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Sync\Panther\StorageManager;
 
 use DateTime;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\Table;
 use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager;
@@ -109,11 +110,14 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
             try {
-                $connection->executeUpdate(
+                $sql = sprintf(
                     'INSERT INTO ' . $tableName . '
                         (`type`, `document_type`, `document_id`, `timestamp`, `status`)
                     VALUES
-                        (:operationType, :documentType, :documentId, :timestamp, :status)',
+                        (:operationType, :documentType, :documentId, :timestamp, :status)'
+                );
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'operationType' => $operationType,
                         'documentType' => $documentType,
@@ -124,7 +128,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 );
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
-                $statement = $connection->prepare(
+                $sql = sprintf(
                     'SELECT COUNT(*) AS count FROM ' . $tableName . '
                     WHERE
                         `type` = :operationType
@@ -133,6 +137,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                         AND `status` = :status
                         AND `timestamp` >= :dateTime'
                 );
+                $statement = $connection->prepare($sql);
                 $statement->execute(
                     [
                         'operationType' => $operationType,
@@ -148,14 +153,17 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 }
 
                 // More recent record info, attempt to update existing record.
-                $connection->executeUpdate(
+                $sql = sprintf(
                     'UPDATE ' . $tableName . '
                     SET `timestamp` = :dateTime
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
-                        AND `status` = :status',
+                        AND `status` = :status'
+                );
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'dateTime' => $dateTime->format('Y-m-d H:i:s'),
                         'operationType' => $operationType,
@@ -203,17 +211,17 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
-        // Select records for update.
-        $params = [
-            ['shopId', $shopId, \PDO::PARAM_INT],
-            ['status', self::STATUS_NEW, \PDO::PARAM_INT],
+        $baseParams = [
             ['limit', $count, \PDO::PARAM_INT],
         ];
+
         $documentTypeCondition = '';
         if (!empty($documentType) && is_string($documentType)) {
             $documentTypeCondition = ' AND `document_type` = :documentType';
-            $params[] = ['documentType', $documentType, \PDO::PARAM_STR];
+            $baseParams[] = ['documentType', $documentType, \PDO::PARAM_STR];
         }
+
+        // Select records for update.
         $sqlSelectForUpdate = sprintf(
             'SELECT *, :shopId AS `shop_id` FROM ' . $tableName . '
             WHERE
@@ -223,24 +231,18 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             FOR UPDATE',
             $documentTypeCondition
         );
+
+        $params = [
+            ['shopId', $shopId, \PDO::PARAM_INT],
+            ['status', self::STATUS_NEW, \PDO::PARAM_INT],
+        ];
+
         $statement = $connection->prepare($sqlSelectForUpdate);
-        foreach ($params as $param) {
-            $statement->bindValue($param[0], $param[1], $param[2]);
-        }
+        $this->bindParams($statement, array_merge_recursive($params, $baseParams));
         $statement->execute();
         $nextRecords = $statement->fetchAll();
 
         // Update status.
-        $params = [
-            ['fromStatus', self::STATUS_NEW, \PDO::PARAM_INT],
-            ['toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT],
-            ['limit', $count, \PDO::PARAM_INT],
-        ];
-        $documentTypeCondition = '';
-        if (!empty($documentType) && is_string($documentType)) {
-            $documentTypeCondition = ' AND `document_type` = :documentType';
-            $params[] = ['documentType', $documentType, \PDO::PARAM_STR];
-        }
         $sqlUpdate = sprintf(
             'UPDATE ' . $tableName . '
             SET `status` = :toStatus
@@ -250,14 +252,30 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             LIMIT :limit',
             $documentTypeCondition
         );
-        $statement = $connection->prepare($sqlUpdate);
-        foreach ($params as $param) {
-            $statement->bindValue($param[0], $param[1], $param[2]);
-        }
-        $statement->execute();
 
+        $params = [
+            ['fromStatus', self::STATUS_NEW, \PDO::PARAM_INT],
+            ['toStatus', self::STATUS_IN_PROGRESS, \PDO::PARAM_INT],
+        ];
+
+        $statement = $connection->prepare($sqlUpdate);
+        $this->bindParams($statement, array_merge_recursive($params, $baseParams));
+        $statement->execute();
         $connection->commit();
 
         return $nextRecords;
+    }
+
+    /**
+     * Bind params to SQL statement.
+     *
+     * @param Statement $statement
+     * @param array     $params
+     */
+    private function bindParams($statement, $params)
+    {
+        foreach ($params as $param) {
+            $statement->bindValue($param[0], $param[1], $param[2]);
+        }
     }
 }

@@ -214,6 +214,10 @@ class DoctrineExtractor implements ExtractorInterface
     private function isTrackedFieldModified(UpdateDiffItem $item, ComposedSqlRelation $relation)
     {
         $trackedFields = $relation->getUpdateFields();
+        if (empty($trackedFields)) {
+            return true;
+        }
+
         $itemRow = $item->getItem();
         $oldItemRow = $item->getOldItem();
         foreach (array_keys($trackedFields) as $key) {

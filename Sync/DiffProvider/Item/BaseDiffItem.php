@@ -32,7 +32,7 @@ abstract class BaseDiffItem
     private $item;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $itemId;
 
