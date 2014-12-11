@@ -205,7 +205,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
         $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
         $baseParams = [
-            100 => ['limit', $count, \PDO::PARAM_INT],
+            ['limit', $count, \PDO::PARAM_INT],
         ];
 
         $documentTypeCondition = '';
@@ -231,7 +231,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
         ];
 
         $statement = $connection->prepare($sqlSelectForUpdate);
-        $this->bindParams($statement, $params + $baseParams);
+        $this->bindParams($statement, array_merge_recursive($params, $baseParams));
         $statement->execute();
         $nextRecords = $statement->fetchAll();
 
@@ -252,7 +252,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
         ];
 
         $statement = $connection->prepare($sqlUpdate);
-        $this->bindParams($statement, $params + $baseParams);
+        $this->bindParams($statement, array_merge_recursive($params, $baseParams));
         $statement->execute();
         $connection->commit();
 
