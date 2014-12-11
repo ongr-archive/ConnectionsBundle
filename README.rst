@@ -28,9 +28,9 @@ ONGR Connections Bundle.
 Documentation
 ~~~~~~~~~~~~~
 
-Documentation for ONGRConnectionsBundle can be found in ``Resources/doc/index.rst``
+Documentation for ONGRConnectionsBundle can be found in ``http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html``
 
-`[Read the documentation (master)] </Resources/doc/index.rst>`_
+`[Read the documentation (master)] <http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html>`_
 
 
 License
