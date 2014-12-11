@@ -21,16 +21,15 @@ trait PipelineExecuterTrait
      *
      * @param string $prefix
      * @param string $target
+     *
+     * @return string
      */
-    private function executePipeline($prefix, $target)
+    private function preparePipelineName($prefix, $target)
     {
         if ($target === null) {
             $target = 'default';
         }
-        $pipeline = $this->getPipelineFactory()->create(
-            $prefix . $target
-        );
 
-        $pipeline->execute();
+        return $prefix . $target;
     }
 }

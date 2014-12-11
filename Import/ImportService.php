@@ -33,7 +33,7 @@ class ImportService
      */
     public function import($target = null)
     {
-        $this->executePipeline('import.', $target);
+        $this->getPipelineFactory()->create($this->preparePipelineName('import.', $target))->execute();
     }
 
     /**

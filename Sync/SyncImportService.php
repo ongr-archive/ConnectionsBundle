@@ -26,7 +26,7 @@ class SyncImportService
      */
     public function import($target = null)
     {
-        $this->executePipeline('sync.import.', $target);
+        $this->getPipelineFactory()->create($this->preparePipelineName('sync.import.', $target))->execute();
     }
 
     /**
