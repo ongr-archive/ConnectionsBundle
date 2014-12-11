@@ -96,7 +96,7 @@ It is very important to have onSource() method included, which defines the behav
 
 Next step is adding your source settings into YAML configuration:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     my.import.source:
            class: %my.import.source.class%
@@ -158,7 +158,7 @@ Example:
 ..
 
 
-.. code-block:: yml
+.. code-block:: yaml
 
        my.import.modifier:
            class: %my.import.modifier.class%
@@ -240,7 +240,7 @@ Example:
 ..
 
 
-.. code-block:: yml
+.. code-block:: yaml
 
        my.initial_sync_consumer:
            class: %my.initial_sync_consumer.class%
@@ -261,7 +261,7 @@ Your event will receive a StartPipelineEvent object, which contains the pipeline
 
 To listen on start event, use something similar to this in your config:
 
-.. code-block:: yml
+.. code-block:: yaml
 
        my.initial_sync_start:
            class: %my.initial_sync_start.class%
@@ -304,7 +304,7 @@ Example:
 ..
 
 
-.. code-block:: yml
+.. code-block:: yaml
 
        my.initial_sync_finish:
            class: %my.initial_sync_finish.class%
@@ -325,7 +325,7 @@ Configure your event listeners to use event names in following pattern: ongr.pip
 
 e.g.:
 
-.. code-block:: yml
+.. code-block:: yaml
 
        my.initial_sync_finish:
            class: %my.initial_sync_finish.class%
