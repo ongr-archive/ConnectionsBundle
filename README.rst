@@ -2,6 +2,8 @@
 Connections Bundle
 ==================
 
+ONGR Connections Bundle.
+
 .. image:: https://travis-ci.org/ongr-io/ConnectionsBundle.svg?branch=master
     :target: https://travis-ci.org/ongr-io/ConnectionsBundle
     
@@ -22,3 +24,16 @@ Connections Bundle
     
 .. image:: https://poser.pugx.org/ongr/connections-bundle/license.svg
     :target: https://packagist.org/packages/ongr/connections-bundle
+    
+Documentation
+~~~~~~~~~~~~~
+
+Documentation for ONGRConnectionsBundle can be found in ``Resources/doc/index.rst``
+
+`[Read the documentation (master)] </Resources/doc/index.rst>`_
+
+
+License
+~~~~~~~
+
+This bundle is under the MIT license. Please, see the complete license in the bundle `LICENSE </LICENSE>`_ file.
