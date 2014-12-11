@@ -110,11 +110,14 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
             $tableName = $connection->quoteIdentifier($this->getTableName($shopId));
 
             try {
-                $connection->executeUpdate(
+                $sql = sprintf(
                     'INSERT INTO ' . $tableName . '
                         (`type`, `document_type`, `document_id`, `timestamp`, `status`)
                     VALUES
-                        (:operationType, :documentType, :documentId, :timestamp, :status)',
+                        (:operationType, :documentType, :documentId, :timestamp, :status)'
+                );
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'operationType' => $operationType,
                         'documentType' => $documentType,
@@ -125,7 +128,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 );
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
-                $statement = $connection->prepare(
+                $sql = sprintf(
                     'SELECT COUNT(*) AS count FROM ' . $tableName . '
                     WHERE
                         `type` = :operationType
@@ -134,6 +137,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                         AND `status` = :status
                         AND `timestamp` >= :dateTime'
                 );
+                $statement = $connection->prepare($sql);
                 $statement->execute(
                     [
                         'operationType' => $operationType,
@@ -149,14 +153,17 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 }
 
                 // More recent record info, attempt to update existing record.
-                $connection->executeUpdate(
+                $sql = sprintf(
                     'UPDATE ' . $tableName . '
                     SET `timestamp` = :dateTime
                     WHERE
                         `type` = :operationType
                         AND `document_type` = :documentType
                         AND `document_id` = :documentId
-                        AND `status` = :status',
+                        AND `status` = :status'
+                );
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'dateTime' => $dateTime->format('Y-m-d H:i:s'),
                         'operationType' => $operationType,
