@@ -11,11 +11,6 @@ parameters:
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
 
-    # sync import pipeline event parent classes
-    ongr_connections.sync.import.source.class: ONGR\ConnectionsBundle\Event\SyncImportSourceEvent
-    ongr_connections.sync.import.modifier.class: ONGR\ConnectionsBundle\Event\SyncImportModifyEvent
-    ongr_connections.sync.import.consumer.class: ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent
-
 services:
     ongr_connections.jobs_cleanup_service:
         class: %ongr_connections.jobs_cleanup_service.class%
