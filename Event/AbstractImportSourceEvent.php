@@ -16,9 +16,9 @@ use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class ImportSourceEvent - gets items from Doctrine, creates empty Elasticsearch documents.
+ * Class AbstractImportSourceEvent - gets items from Doctrine, creates empty Elasticsearch documents.
  */
-class ImportSourceEvent extends AbstractImportSourceEvent
+abstract class AbstractImportSourceEvent
 {
     /**
      * @var EntityManager
@@ -41,17 +41,17 @@ class ImportSourceEvent extends AbstractImportSourceEvent
     protected $documentClass;
 
     /**
-     * Gets all documents by given type.
-     *
-     * @return DoctrineImportIterator
+     * @param EntityManager $manager
+     * @param string        $entityClass
+     * @param Manager       $elasticSearchManager
+     * @param string        $documentClass
      */
-    public function getAllDocuments()
+    public function __construct(EntityManager $manager, $entityClass, Manager $elasticSearchManager, $documentClass)
     {
-        return new DoctrineImportIterator(
-            $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
-            $this->entityManager,
-            $this->elasticSearchManager->getRepository($this->documentClass)
-        );
+        $this->entityManager = $manager;
+        $this->entityClass = $entityClass;
+        $this->elasticSearchManager = $elasticSearchManager;
+        $this->documentClass = $documentClass;
     }
 
     /**
@@ -59,8 +59,5 @@ class ImportSourceEvent extends AbstractImportSourceEvent
      *
      * @param SourcePipelineEvent $event
      */
-    public function onSource(SourcePipelineEvent $event)
-    {
-        $event->addSource($this->getAllDocuments());
-    }
+    abstract public function onSource(SourcePipelineEvent $event);
 }

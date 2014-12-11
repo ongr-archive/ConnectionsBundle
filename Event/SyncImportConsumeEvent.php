@@ -100,19 +100,13 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
                 $this->manager->getRepository($this->documentType)->remove($document->getId());
                 break;
             default:
-                if ($this->logger) {
-                    $this->log(
-                        sprintf(
-                            'Failed to update document of type  %s id: %s',
-                            get_class($document),
-                            $document->getId()
-                        )
-                    );
-                    $this->log(
-                        sprintf('No valid operation type defined for document id: %s', $document->getId()),
-                        LogLevel::NOTICE
-                    );
-                }
+                $this->log(
+                    sprintf('Failed to update document of type  %s id: %s', get_class($document), $document->getId())
+                );
+                $this->log(
+                    sprintf('No valid operation type defined for document id: %s', $document->getId()),
+                    LogLevel::NOTICE
+                );
 
                 return false;
         }

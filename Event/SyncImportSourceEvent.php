@@ -12,7 +12,7 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 /**
  * Class ImportSourceEvent.
  */
-class SyncImportSourceEvent
+class SyncImportSourceEvent extends AbstractImportSourceEvent
 {
     /**
      * @var Panther
@@ -28,26 +28,6 @@ class SyncImportSourceEvent
      * @var int
      */
     protected $chunkSize = 1;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var string Type of source.
-     */
-    protected $entityClass;
-
-    /**
-     * @var Manager
-     */
-    protected $elasticSearchManager;
-
-    /**
-     * @var string Class name of Elasticsearch document. (e.g. Product)
-     */
-    protected $documentClass;
 
     /**
      * @var string
@@ -68,10 +48,7 @@ class SyncImportSourceEvent
         $documentClass,
         $panther
     ) {
-        $this->entityManager = $manager;
-        $this->entityClass = $entityClass;
-        $this->elasticSearchManager = $elasticSearchManager;
-        $this->documentClass = $documentClass;
+        parent::__construct($manager, $entityClass, $elasticSearchManager, $documentClass);
         $this->panther = $panther;
     }
 

@@ -2,6 +2,7 @@
 
 namespace ONGR\ConnectionsBundle\Sync;
 
+use ONGR\ConnectionsBundle\Pipeline\PipelineExecuterTrait;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 
 /**
@@ -9,6 +10,8 @@ use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
  */
 class SyncImportService
 {
+    use PipelineExecuterTrait;
+
     /**
      * @var PipelineFactory
      */
@@ -23,14 +26,7 @@ class SyncImportService
      */
     public function import($target = null)
     {
-        if ($target === null) {
-            $target = 'default';
-        }
-        $pipeline = $this->getPipelineFactory()->create(
-            "sync.import.$target"
-        );
-
-        $pipeline->execute();
+        $this->executePipeline('sync.import.', $target);
     }
 
     /**

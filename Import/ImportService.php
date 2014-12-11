@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Import;
 
+use ONGR\ConnectionsBundle\Pipeline\PipelineExecuterTrait;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 
 /**
@@ -18,6 +19,8 @@ use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
  */
 class ImportService
 {
+    use PipelineExecuterTrait;
+
     /**
      * @var PipelineFactory
      */
@@ -30,14 +33,7 @@ class ImportService
      */
     public function import($target = null)
     {
-        if ($target === null) {
-            $target = 'default';
-        }
-        $pipeline = $this->getPipelineFactory()->create(
-            "import.$target"
-        );
-
-        $pipeline->execute();
+        $this->executePipeline('import.', $target);
     }
 
     /**

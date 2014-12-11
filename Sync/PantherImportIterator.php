@@ -38,7 +38,7 @@ class PantherImportIterator implements \Iterator
     private $currentEntity;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $currentChunk;
 
