@@ -34,6 +34,11 @@ class ONGRConnectionsExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('url_invalidator.yml');
+        $loader->load('import.yml');
+        $loader->load('binlog.yml');
+        $loader->load('extractor.yml');
+        $loader->load('sync_storage.yml');
 
         $activeShop = !empty($config['active_shop']) ? $config['active_shop'] : null;
         $container->setParameter('ongr_connections.active_shop', $activeShop);
