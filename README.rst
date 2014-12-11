@@ -5,7 +5,7 @@ Connections Bundle
 Introduction
 ~~~~~~~~~~~~
 
-ONGR Connections Bundle is responsible for importing data into Elasticsearch from outside services or databases and keeping it up to date upon modification. Currently, bundle provides (1) means of importing data from remote APIs over the network and (2) synchronizing database entries using Doctrine.
+ONGR Connections Bundle is responsible for importing data into Elasticsearch from outside services or databases and keeping it up to date upon modification. Currently, bundle provides means of importing data from remote APIs over the network and synchronizing database entries using Doctrine.
     
 .. image:: https://travis-ci.org/ongr-io/ConnectionsBundle.svg?branch=master
     :target: https://travis-ci.org/ongr-io/ConnectionsBundle
