@@ -1,0 +1,28 @@
+parameters:
+    ongr_connections.url_invalidator_service.class: ONGR\ConnectionsBundle\Service\UrlInvalidatorService
+    ongr_connections.url_invalidator_service.cache_script: bin/varnish
+    ongr_connections.url_invalidator_service.base_url: http://ongr.dev
+    ongr_connections.url_invalidator_service.curl_timeout: 5
+
+    ongr_connections.item_url_invalidator.class: ONGR\ConnectionsBundle\Service\AbstractItemUrlInvalidator
+
+services:
+    ongr_connections.url_invalidator_service:
+        class: %ongr_connections.url_invalidator_service.class%
+        arguments:
+            - @router
+            - @es.manager
+            - %ongr_connections.url_invalidator_service.base_url%
+            - %ongr_connections.url_invalidator_service.curl_timeout%
+            - %kernel.root_dir%
+            - %ongr_connections.url_invalidator_service.cache_script%
+
+    ongr_connections.item_url_invalidator:
+        class: %ongr_connections.url_invalidator_service.class%
+        arguments:
+            - @router
+            - @es.manager
+            - %ongr_connections.url_invalidator_service.base_url%
+            - %ongr_connections.url_invalidator_service.curl_timeout%
+            - %kernel.root_dir%
+            - %ongr_connections.url_invalidator_service.cache_script%
