@@ -42,14 +42,14 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $start = microtime(true);
+        $benchmark = new CommandBenchmark($output);
+        $benchmark->start();
 
         /** @var DataSyncService $service */
         $service = $this->getContainer()->get('ongr_connections.sync.data_sync_service');
         $service->startPipeline($input->getArgument('target'));
 
         $output->writeln('<info>Success.</info>');
-        $output->writeln(sprintf('<info>Job finished in %.2f s</info>', microtime(true) - $start));
-        $output->writeln(sprintf('<info>Memory usage: %.2f MB</info>', memory_get_peak_usage() >> 20));
+        $benchmark->finish();
     }
 }
