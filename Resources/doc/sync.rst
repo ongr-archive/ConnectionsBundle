@@ -36,7 +36,7 @@ Formats, modifies, explodes and stores synchronization data to temp storage (abs
 
 Temp storage could be any data storage: Mysql, Redis, etc.
 
-Abstract extractor class: :doc:`extractor`
+Abstract extractor class: :doc:`_extractor`
 
 Abstract storage class (codename): :doc:`panther`
 
