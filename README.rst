@@ -2,8 +2,11 @@
 Connections Bundle
 ==================
 
-ONGR Connections Bundle.
+Introduction
+~~~~~~~~~~~~
 
+ONGR Connections Bundle is responsible for importing data into Elasticsearch from outside services or databases and keeping it up to date upon modification. Currently, bundle provides (1) means of importing data from remote APIs over the network and (2) synchronizing database entries using Doctrine.
+    
 .. image:: https://travis-ci.org/ongr-io/ConnectionsBundle.svg?branch=master
     :target: https://travis-ci.org/ongr-io/ConnectionsBundle
     
@@ -15,7 +18,7 @@ ONGR Connections Bundle.
     
 .. image:: https://poser.pugx.org/ongr/connections-bundle/downloads.svg
     :target: https://packagist.org/packages/ongr/connections-bundle
-
+    
 .. image:: https://poser.pugx.org/ongr/connections-bundle/v/stable.svg
     :target: https://packagist.org/packages/ongr/connections-bundle
     
@@ -28,9 +31,8 @@ ONGR Connections Bundle.
 Documentation
 ~~~~~~~~~~~~~
 
-Documentation for ONGRConnectionsBundle can be found in ``http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html``
-
-`[Read the documentation (master)] <http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html>`_
+Documentation for ONGRConnectionsBundle can be found in 
+`here <http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html>`_
 
 
 License
