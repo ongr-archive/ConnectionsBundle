@@ -11,14 +11,13 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
 use ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent;
 use ONGR\ConnectionsBundle\Event\SyncImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
+use Psr\Log\LogLevel;
 
 class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,13 +26,12 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $documentType
      * @param mixed  $eventItem
-     * @param string $loggerMethod
      * @param array  $loggerNotice
      * @param string $managerMethod
      *
      * @dataProvider onConsumeDataProvider
      */
-    public function testOnConsume($documentType, $eventItem, $loggerMethod, $loggerNotice, $managerMethod)
+    public function testOnConsume($documentType, $eventItem, $loggerNotice, $managerMethod)
     {
         $repo = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Repository')
             ->disableOriginalConstructor()
@@ -58,20 +56,38 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
         }
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods([$loggerMethod])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        // Check if logger->notice() called 2 times with different messages.
-        if (count($loggerNotice) == 2) {
-            $logger->expects($this->exactly(2))
-                ->method($loggerMethod)
-                ->withConsecutive([$this->equalTo($loggerNotice[0])], [$this->equalTo($loggerNotice[1])]);
-        } else {
-            $logger->expects($this->once())
-                ->method($loggerMethod)
-                ->withConsecutive(
-                    [$this->equalTo($loggerNotice[0])]
-                );
+        // Check how many times log is called.
+        switch (count($loggerNotice)) {
+            case 1:
+                $logger->expects($this->once())
+                    ->method('log')
+                    ->withConsecutive(
+                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []]
+                    );
+                break;
+            case 2:
+                $logger->expects($this->exactly(2))
+                    ->method('log')
+                    ->withConsecutive(
+                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []],
+                        [$loggerNotice[1][1], $this->equalTo($loggerNotice[1][0]), []]
+                    );
+                break;
+            case 3:
+                $logger->expects($this->exactly(3))
+                    ->method('log')
+                    ->withConsecutive(
+                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []],
+                        [$loggerNotice[1][1], $this->equalTo($loggerNotice[1][0]), []],
+                        [$loggerNotice[2][1], $this->equalTo($loggerNotice[2][0]), []]
+                    );
+                break;
+            default:
+                // Do nothing.
+                break;
         }
 
         $event = new SyncImportConsumeEvent($manager, $documentType, $panther, 1);
@@ -104,10 +120,19 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                'debug',
                 [
-                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
-                    'End an update of a single document.',
+                    [
+                        sprintf(
+                            'Start update single document of type %s id: %s',
+                            get_class($product),
+                            $product->getId()
+                        ),
+                        LogLevel::DEBUG,
+                    ],
+                    [
+                        'End an update of a single document.',
+                        LogLevel::DEBUG,
+                    ],
                 ],
                 'getRepository',
             ],
@@ -122,10 +147,19 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                'debug',
                 [
-                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
-                    'End an update of a single document.',
+                    [
+                        sprintf(
+                            'Start update single document of type %s id: %s',
+                            get_class($product),
+                            $product->getId()
+                        ),
+                        LogLevel::DEBUG,
+                    ],
+                    [
+                        'End an update of a single document.',
+                        LogLevel::DEBUG,
+                    ],
                 ],
                 'persist',
             ],
@@ -140,39 +174,62 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                'debug',
                 [
-                    sprintf('Start update single document of type %s id: %s', get_class($product), $product->getId()),
-                    'End an update of a single document.',
+                    [
+                        sprintf(
+                            'Start update single document of type %s id: %s',
+                            get_class($product),
+                            $product->getId()
+                        ),
+                        LogLevel::DEBUG,
+                    ],
+                    [
+                        'End an update of a single document.',
+                        LogLevel::DEBUG,
+                    ],
                 ],
                 'persist',
             ],
             [
                 'product',
                 new SyncImportItem(new TestProduct(), $product, ['type' => '']),
-                'notice',
-                ["No valid operation type defined for document id: {$documentId}"],
+                [
+                    [
+                        sprintf(
+                            'Start update single document of type %s id: %s',
+                            get_class($product),
+                            $product->getId()
+                        ),
+                        LogLevel::DEBUG,
+                    ],
+                    [
+                        sprintf(
+                            'Failed to update document of type  %s id: %s',
+                            get_class($product),
+                            $product->getId()
+                        ),
+                        LogLevel::DEBUG,
+                    ],
+                    ["No valid operation type defined for document id: {$documentId}", LogLevel::NOTICE],
+                ],
                 null,
             ],
             [
                 'product',
                 new SyncImportItem(new TestProduct(), $product, []),
-                'notice',
-                ["No operation type defined for document id: {$documentId}"],
+                [["No operation type defined for document id: {$documentId}", LogLevel::NOTICE]],
                 null,
             ],
             [
                 'product',
                 new SyncImportItem(new TestProduct(), new Product(), []),
-                'notice',
-                ['No document id found. Update skipped.'],
+                [['No document id found. Update skipped.', LogLevel::NOTICE]],
                 null,
             ],
             [
                 'product',
                 new \stdClass,
-                'notice',
-                ['Item provided is not an SyncImportItem'],
+                [['Item provided is not an SyncImportItem', LogLevel::NOTICE]],
                 null,
             ],
         ];

@@ -18,13 +18,14 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
 
 /**
  * SyncImportConsumeEvent class, called after modify event. Puts/updates or deletes document into/from Elasticsearch.
  */
 class SyncImportConsumeEvent implements LoggerAwareInterface
 {
-    use LoggerAwareTrait;
+    use EventLoggerAwareTrait;
 
     /**
      * @var Manager $manager
@@ -65,9 +66,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
         $item = $event->getItem();
 
         if (!$item instanceof SyncImportItem) {
-            if ($this->logger) {
-                $this->logger->notice('Item provided is not an SyncImportItem');
-            }
+            $this->log('Item provided is not an SyncImportItem', LogLevel::NOTICE);
 
             return false;
         }
@@ -76,29 +75,19 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
         $document = $event->getItem()->getDocument();
 
         if ($document->getId() === null) {
-            if ($this->logger) {
-                $this->logger->notice('No document id found. Update skipped.');
-            }
+            $this->log('No document id found. Update skipped.', LogLevel::NOTICE);
 
             return false;
         }
 
         $pantherData = $item->getPantherData();
         if (!isset($pantherData['type'])) {
-            if ($this->logger) {
-                $this->logger->notice(
-                    sprintf('No operation type defined for document id: %s', $document->getId())
-                );
-            }
+            $this->log(sprintf('No operation type defined for document id: %s', $document->getId()), LogLevel::NOTICE);
 
             return false;
         }
 
-        if ($this->logger) {
-            $this->logger->debug(
-                sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId())
-            );
-        }
+        $this->log(sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId()));
 
         switch ($pantherData['type']) {
             case PantherInterface::OPERATION_CREATE:
@@ -112,15 +101,16 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
                 break;
             default:
                 if ($this->logger) {
-                    $this->logger->debug(
+                    $this->log(
                         sprintf(
                             'Failed to update document of type  %s id: %s',
                             get_class($document),
                             $document->getId()
                         )
                     );
-                    $this->logger->notice(
-                        sprintf('No valid operation type defined for document id: %s', $document->getId())
+                    $this->log(
+                        sprintf('No valid operation type defined for document id: %s', $document->getId()),
+                        LogLevel::NOTICE
                     );
                 }
 
@@ -128,11 +118,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
         }
         $this->panther->deleteItem($pantherData['id'], [$pantherData['shop_id']]);
 
-        if ($this->logger) {
-            $this->logger->debug(
-                'End an update of a single document.'
-            );
-        }
+        $this->log('End an update of a single document.');
 
         return true;
     }

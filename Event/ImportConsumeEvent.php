@@ -16,13 +16,14 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
 
 /**
  * ImportConsumeEvent class, called after modify event. Puts document into Elasticsearch.
  */
 class ImportConsumeEvent implements LoggerAwareInterface
 {
-    use LoggerAwareTrait;
+    use EventLoggerAwareTrait;
 
     /**
      * @var Manager
@@ -49,9 +50,7 @@ class ImportConsumeEvent implements LoggerAwareInterface
         $item = $event->getItem();
 
         if (!$item instanceof ImportItem) {
-            if ($this->logger) {
-                $this->logger->notice('Item provided is not an ImportItem');
-            }
+            $this->log('Item provided is not an ImportItem', LogLevel::NOTICE);
 
             return false;
         }
@@ -60,26 +59,16 @@ class ImportConsumeEvent implements LoggerAwareInterface
         $document = $event->getItem()->getDocument();
 
         if ($document->getId() === null) {
-            if ($this->logger) {
-                $this->logger->notice('No document id found. Update skipped.');
-            }
+            $this->log('No document id found. Update skipped.', LogLevel::NOTICE);
 
             return false;
         }
 
-        if ($this->logger) {
-            $this->logger->debug(
-                sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId())
-            );
-        }
+        $this->log(sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId()));
 
         $this->manager->persist($document);
 
-        if ($this->logger) {
-            $this->logger->debug(
-                'End an update of a single document.'
-            );
-        }
+        $this->log('End an update of a single document.');
 
         return true;
     }

@@ -196,10 +196,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     public function testLogger()
     {
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods(['notice', 'debug'])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        $logger->expects($this->atLeastOnce())->method('notice', 'debug')->will($this->returnValue(null));
+        $logger->expects($this->atLeastOnce())->method('log')->will($this->returnValue(null));
 
         $manager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()

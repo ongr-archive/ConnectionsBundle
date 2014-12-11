@@ -16,6 +16,7 @@ use ONGR\ConnectionsBundle\Event\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
+use Psr\Log\LogLevel;
 
 class ImportConsumeEventTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,11 +38,11 @@ class ImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods(['notice'])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
         $logger->expects($this->once())
-            ->method('notice')
-            ->with($this->equalTo($notice));
+            ->method('log')
+            ->with(LogLevel::NOTICE, $this->equalTo($notice), []);
 
         $event = new ImportConsumeEvent($manager);
 
