@@ -24,7 +24,7 @@ class CommandBenchmark
     private $output;
 
     /**
-     * @var float Time in microsecond of operation start.
+     * @var float|string Time in microsecond of operation start.
      */
     private $start;
 
