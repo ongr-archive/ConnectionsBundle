@@ -48,7 +48,8 @@ class BinlogDiffProvider extends DiffProvider
     public function getFromDate()
     {
         if (empty($this->fromDate)) {
-            return new \DateTime();
+            // Temporary BinLog parser hack (solution is being developed - issue #2).
+            return new \DateTime('now -1 day');
         }
 
         return $this->fromDate;
