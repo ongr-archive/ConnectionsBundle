@@ -36,20 +36,20 @@ class SyncTriggersTableCleanupCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $benchmark = new CommandBenchmark($output);
+        $benchmark->start();
+
         try {
-            $start = microtime(true);
             /** @var JobsCleanupService $service */
             $service = $this->getContainer()->get('ongr_connections.jobs_cleanup_service');
 
             $service->doCleanup();
 
-            $output->writeln('');
-            $output->writeln(sprintf('<info>Job finished in %.2f s</info>', microtime(true) - $start));
-
         } catch (\Exception $e) {
             $output->writeln('<error>Something went really wrong!!!</error>');
             $output->writeln('<error>' . $e . '</error>');
         }
-        $output->writeln(sprintf('<info>Memory usage: %.2f MB</info>', memory_get_peak_usage() >> 20));
+
+        $benchmark->finish();
     }
 }
