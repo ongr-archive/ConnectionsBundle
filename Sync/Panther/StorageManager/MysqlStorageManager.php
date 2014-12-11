@@ -115,9 +115,8 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                     VALUES
                         (:operationType, :documentType, :documentId, :timestamp, :status)'
                 );
-
-                $connection->executeUpdate(
-                    $sql,
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'operationType' => $operationType,
                         'documentType' => $documentType,
@@ -162,8 +161,8 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                         AND `document_id` = :documentId
                         AND `status` = :status'
                 );
-                $connection->executeUpdate(
-                    $sql,
+                $statement = $connection->prepare($sql);
+                $statement->execute(
                     [
                         'dateTime' => $dateTime->format('Y-m-d H:i:s'),
                         'operationType' => $operationType,
