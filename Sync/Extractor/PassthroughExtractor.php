@@ -29,11 +29,7 @@ class PassthroughExtractor implements ExtractorInterface
     private $storage;
 
     /**
-     * Extract data to full stack.
-     *
-     * @param BaseDiffItem $item
-     *
-     * @throws InvalidArgumentException
+     * {@inheritdoc}
      */
     public function extract(BaseDiffItem $item)
     {
@@ -69,9 +65,7 @@ class PassthroughExtractor implements ExtractorInterface
     }
 
     /**
-     * Set Panther storage facility.
-     *
-     * @param PantherInterface $storage
+     * {@inheritdoc}
      */
     public function setStorageFacility(PantherInterface $storage)
     {
@@ -79,9 +73,7 @@ class PassthroughExtractor implements ExtractorInterface
     }
 
     /**
-     * Panther storage facility.
-     *
-     * @return PantherInterface
+     * {@inheritdoc}
      */
     public function getStorageFacility()
     {

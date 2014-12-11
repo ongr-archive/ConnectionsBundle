@@ -18,6 +18,7 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
+use ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation;
 use ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
@@ -50,11 +51,13 @@ class DoctrineExtractor implements ExtractorInterface
         $connection = $this->getConnection();
         $relations = $this->getRelationsCollection()->getRelations();
         $action = $this->resolveItemAction($item);
-
         /** @var \ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation $relation */
         foreach ($relations as $relation) {
             $table = $relation->getTable();
             if ($table === $item->getCategory() && $action === $relation->getTriggerTypeAlias()) {
+                if ($action === ActionTypes::UPDATE && !$this->isTrackedFieldModified($item, $relation)) {
+                    continue;
+                }
                 $insertList = $relation->getSqlInsertList();
                 $idField = $insertList[JobTableFields::ID]['value'];
 
@@ -198,5 +201,31 @@ class DoctrineExtractor implements ExtractorInterface
                 $item->getTimestamp()
             );
         }
+    }
+
+    /**
+     * Checks whether any of tracked fields has been modified.
+     *
+     * @param UpdateDiffItem      $item
+     * @param ComposedSqlRelation $relation
+     *
+     * @return bool
+     */
+    private function isTrackedFieldModified(UpdateDiffItem $item, ComposedSqlRelation $relation)
+    {
+        $trackedFields = $relation->getUpdateFields();
+        if (empty($trackedFields)) {
+            return true;
+        }
+
+        $itemRow = $item->getItem();
+        $oldItemRow = $item->getOldItem();
+        foreach (array_keys($trackedFields) as $key) {
+            if ($itemRow[$key] !== $oldItemRow[$key]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
