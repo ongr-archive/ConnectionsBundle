@@ -51,13 +51,13 @@ class SyncStorageUpdateCommandTest extends TestBase
         );
 
         $actual = $this->getConnection()->getSchemaManager()->listTableDetails(
-            'ongr_sync_storage_storage_' . $testShopId
+            'ongr_sync_storage_' . $testShopId
         );
 
-        $this->getConnection()->getSchemaManager()->dropTable('ongr_sync_storage_storage_' . $testShopId);
+        $this->getConnection()->getSchemaManager()->dropTable('ongr_sync_storage_' . $testShopId);
         $this->importData('SyncStorage/tableSingle_shop' . $testShopId . '.sql');
         $expected = $this->getConnection()->getSchemaManager()->listTableDetails(
-            'ongr_sync_storage_storage_' . $testShopId
+            'ongr_sync_storage_' . $testShopId
         );
 
         $this->compareTable($expected, $actual);

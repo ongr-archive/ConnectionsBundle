@@ -21,7 +21,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
  */
 class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
 {
-    const TABLE_NAME = 'sync_storage_storage_test';
+    const TABLE_NAME = 'sync_storage_test';
 
     /**
      * @var Connection|MockObject

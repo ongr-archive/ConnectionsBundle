@@ -13,13 +13,13 @@ By default sync storage storage is set up for MySQL like this:
         sync_storage:
             mysql:
                 connection: default
-                table_name: ongr_sync_storage_storage
+                table_name: ongr_sync_storage
 ..
 
 By default MySQL storage engine and @doctrine.dbal.default connection will be
-used for data storage. Data will be stored in "ongr_sync_storage_storage" table
+used for data storage. Data will be stored in "ongr_sync_storage" table
 (if you initialize storage for multiple shops, there will be multiple
-tables, e.g.: ongr_sync_storage_storage_1, ongr_sync_storage_storage_2, etc.)
+tables, e.g.: ongr_sync_storage_1, ongr_sync_storage_2, etc.)
 
 2. Data provider and consumer setup
 -----------------------------------

@@ -59,7 +59,7 @@ class Configuration implements ConfigurationInterface
                                     ->addDefaultsIfNotSet()
                                     ->children()
                                         ->scalarNode('connection')->defaultValue('default')->end()
-                                        ->scalarNode('table_name')->defaultValue('ongr_sync_storage_storage')->end()
+                                        ->scalarNode('table_name')->defaultValue('ongr_sync_storage')->end()
                                     ->end()
                                 ->end()
                             ->end()

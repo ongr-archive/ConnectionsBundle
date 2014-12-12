@@ -1,4 +1,4 @@
-CREATE TABLE `ongr_sync_storage_storage_14` (
+CREATE TABLE `ongr_sync_storage_14` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(1) COLLATE utf8_unicode_ci NOT NULL COMMENT 'C-CREATE(INSERT),U-UPDATE,D-DELETE',
   `document_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
