@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Functional;
+namespace ONGR\ConnectionsBundle\Tests\Functional\UrlInvalidator;
 
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
