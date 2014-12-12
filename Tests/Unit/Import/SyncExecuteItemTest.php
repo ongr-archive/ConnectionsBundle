@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 
@@ -20,22 +20,20 @@ class SyncExecuteItemTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test SyncExecuteItem getter and setter.
-     *
-     * @return void
      */
-    public function testPantherDataGetterSetter()
+    public function testSyncStorageDataGetterSetter()
     {
         $entity = new TestProduct();
         $document = new Product();
-        $pantherData = [];
-        $syncImportItem = new SyncExecuteItem($entity, $document, $pantherData);
-        $pantherData = [
+        $syncStorageData = [];
+        $syncImportItem = new SyncExecuteItem($entity, $document, $syncStorageData);
+        $syncStorageData = [
             'id' => '1',
-            'type' => PantherInterface::OPERATION_CREATE,
+            'type' => SyncStorageInterface::OPERATION_CREATE,
             'document_type' => 'product',
         ];
-        $syncImportItem->setPantherData($pantherData);
-        $result = $syncImportItem->getPantherData();
-        $this->assertEquals($pantherData, $result);
+        $syncImportItem->setSyncStorageData($syncStorageData);
+        $result = $syncImportItem->getSyncStorageData();
+        $this->assertEquals($syncStorageData, $result);
     }
 }

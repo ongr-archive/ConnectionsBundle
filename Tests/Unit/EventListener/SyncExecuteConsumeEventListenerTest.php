@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 use ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener;
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 use Psr\Log\LogLevel;
@@ -46,7 +46,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
         $manager->method('getRepository')
             ->willReturn($repo);
 
-        $panther = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\Panther\Panther')
+        $syncStorage = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -90,7 +90,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                 break;
         }
 
-        $listener = new SyncExecuteConsumeEventListener($manager, $documentType, $panther, 1);
+        $listener = new SyncExecuteConsumeEventListener($manager, $documentType, $syncStorage, 1);
         $listener->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
@@ -115,7 +115,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => PantherInterface::OPERATION_DELETE,
+                        'type' => SyncStorageInterface::OPERATION_DELETE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]
@@ -142,7 +142,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => PantherInterface::OPERATION_UPDATE,
+                        'type' => SyncStorageInterface::OPERATION_UPDATE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]
@@ -169,7 +169,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => PantherInterface::OPERATION_CREATE,
+                        'type' => SyncStorageInterface::OPERATION_CREATE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]

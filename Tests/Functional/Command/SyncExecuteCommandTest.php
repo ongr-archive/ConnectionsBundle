@@ -24,14 +24,12 @@ class SyncExecuteCommandTest extends ESDoctrineTestCase
 {
     /**
      * Check if a document is saved as expected after collecting data from providers.
-     *
-     * @return void
      */
     public function testExecute()
     {
         $kernel = self::createClient()->getKernel();
         $this->importData('SyncCommandsTest/ProductsInitialDummyData.sql');
-        $this->importData('SyncCommandsTest/PantherStorageWithDummyData.sql');
+        $this->importData('SyncCommandsTest/SyncStorageWithDummyData.sql');
         $this->importData('SyncCommandsTest/UpdateProductsData.sql');
 
         $manager = $this->getManager();

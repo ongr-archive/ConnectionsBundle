@@ -109,11 +109,11 @@ services:
              - %test.sync.execute.doctrine_entity_type%
              - @es.manager
              - %test.sync.execute.elastic_document_type%
-             - @ongr_connections.sync.panther
+             - @ongr_connections.sync.sync_storage
            calls:
              - [ setChunkSize, [ %test.sync.execute.chunk_size% ] ]
              - [ setShopId, [ %test.sync.execute.shop_id% ]]
-             - [ setDocumentType, [ %test.sync.execute.panther_document_type% ]]
+             - [ setDocumentType, [ %test.sync.execute.sync_storage_document_type% ]]
            tags:
              - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.default.source, method: onSource }
 
@@ -129,7 +129,7 @@ services:
             arguments:
               - @es.manager
               - %test.sync.execute.elastic_document_type%
-              - @ongr_connections.sync.panther
+              - @ongr_connections.sync.sync_storage
             tags:
               - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.default.consume, method: onConsume }
 

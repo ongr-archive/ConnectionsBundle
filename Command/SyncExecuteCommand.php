@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command which checks panther for updated/created/deleted data and imports changes to elastic search.
+ * Command which checks sync storage for updated/created/deleted data and imports changes to elastic search.
  */
 class SyncExecuteCommand extends ContainerAwareCommand
 {
@@ -29,7 +29,7 @@ class SyncExecuteCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ongr:sync:execute')
-            ->setDescription('Imports data from panther.')
+            ->setDescription('Imports data from SyncStorage.')
             ->addArgument(
                 'target',
                 InputArgument::OPTIONAL,

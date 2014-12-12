@@ -29,8 +29,6 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
      *
      * @param DocumentInterface $document
      * @param mixed             $data
-     *
-     * @return void
      */
     protected function assignDataToDocument(DocumentInterface $document, $data)
     {
@@ -45,8 +43,6 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
      * Modify event.
      *
      * @param ItemPipelineEvent $event
-     *
-     * @return void
      */
     public function onModify(ItemPipelineEvent $event)
     {

@@ -23,8 +23,6 @@ interface ExtractorInterface
      * Extract data to full stack.
      *
      * @param BaseDiffItem $item
-     *
-     * @return void
      */
     public function extract(BaseDiffItem $item);
 
@@ -32,8 +30,6 @@ interface ExtractorInterface
      * Set SyncStorage storage facility.
      *
      * @param SyncStorageInterface $storage
-     *
-     * @return void
      */
     public function setStorageFacility(SyncStorageInterface $storage);
 

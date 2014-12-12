@@ -48,8 +48,6 @@ abstract class AbstractImportItem
 
     /**
      * @param mixed $entity
-     *
-     * @return void
      */
     public function setEntity($entity)
     {
@@ -66,8 +64,6 @@ abstract class AbstractImportItem
 
     /**
      * @param DocumentInterface $document
-     *
-     * @return void
      */
     public function setDocument(DocumentInterface $document)
     {

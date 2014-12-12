@@ -13,19 +13,19 @@ namespace ONGR\ConnectionsBundle\Sync;
 
 use Doctrine\ORM\EntityManagerInterface;
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 
 /**
  * This class is able to iterate over entities without storing objects in memory.
  */
-class PantherImportIterator implements \Iterator
+class SyncStorageImportIterator implements \Iterator
 {
     /**
-     * @var Panther
+     * @var SyncStorage
      */
-    private $panther;
+    private $syncStorage;
 
     /**
      * @var Repository $repository Elasticsearch repository.
@@ -68,20 +68,20 @@ class PantherImportIterator implements \Iterator
     private $valid;
 
     /**
-     * @param array                  $pantherParams
+     * @param array                  $syncStorageParams
      * @param Repository             $repository
      * @param EntityManagerInterface $entityManager
      * @param string                 $entityClass
      */
     public function __construct(
-        $pantherParams,
+        $syncStorageParams,
         Repository $repository,
         EntityManagerInterface $entityManager,
         $entityClass
     ) {
-        $this->panther = $pantherParams['panther'];
-        $this->shopId = $pantherParams['shop_id'];
-        $this->documentType = $pantherParams['document_type'];
+        $this->syncStorage = $syncStorageParams['sync_storage'];
+        $this->shopId = $syncStorageParams['shop_id'];
+        $this->documentType = $syncStorageParams['document_type'];
         $this->repository = $repository;
         $this->entityManager = $entityManager;
         $this->entityClass = $entityClass;
@@ -112,7 +112,7 @@ class PantherImportIterator implements \Iterator
      */
     public function next()
     {
-        $this->currentChunk = $this->panther->getChunk(1, $this->documentType, $this->shopId);
+        $this->currentChunk = $this->syncStorage->getChunk(1, $this->documentType, $this->shopId);
 
         if (empty($this->currentChunk)) {
             $this->valid = false;
@@ -126,7 +126,7 @@ class PantherImportIterator implements \Iterator
             ->entityManager
             ->getRepository($this->entityClass)->find($this->currentChunk[0]['document_id']);
 
-        if (!empty($this->currentEntity) || $this->currentChunk[0]['type'] == PantherInterface::OPERATION_DELETE) {
+        if (!empty($this->currentEntity) || $this->currentChunk[0]['type'] == SyncStorageInterface::OPERATION_DELETE) {
             $this->valid = true;
 
             return;

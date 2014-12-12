@@ -15,4 +15,4 @@ parameters:
     test.sync.execute.chunk_size: 1
     test.sync.execute.elastic_document_type: ONGRTestingBundle:Product
     test.sync.execute.doctrine_entity_type: Test:TestProduct
-    test.sync.execute.panther_document_type: product
+    test.sync.execute.sync_storage_document_type: product

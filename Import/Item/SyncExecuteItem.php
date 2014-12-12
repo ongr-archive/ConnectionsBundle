@@ -19,36 +19,34 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 class SyncExecuteItem extends AbstractImportItem
 {
     /**
-     * @var array $pantherData
+     * @var array $syncStorageData
      */
-    protected $pantherData;
+    protected $syncStorageData;
 
     /**
      * @param mixed             $entity
      * @param DocumentInterface $document
-     * @param array             $pantherData
+     * @param array             $syncStorageData
      */
-    public function __construct($entity, DocumentInterface $document, $pantherData)
+    public function __construct($entity, DocumentInterface $document, $syncStorageData)
     {
         parent::__construct($entity, $document);
-        $this->pantherData = $pantherData;
+        $this->syncStorageData = $syncStorageData;
     }
 
     /**
      * @return array
      */
-    public function getPantherData()
+    public function getSyncStorageData()
     {
-        return $this->pantherData;
+        return $this->syncStorageData;
     }
 
     /**
-     * @param array $pantherData
-     *
-     * @return void
+     * @param array $syncStorageData
      */
-    public function setPantherData($pantherData)
+    public function setSyncStorageData($syncStorageData)
     {
-        $this->pantherData = $pantherData;
+        $this->syncStorageData = $syncStorageData;
     }
 }

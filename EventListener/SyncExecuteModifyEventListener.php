@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\EventListener;
 
 use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
@@ -29,9 +29,9 @@ class SyncExecuteModifyEventListener extends AbstractImportModifyEventListener
     protected function modify(AbstractImportItem $eventItem)
     {
         /** @var SyncExecuteItem $eventItem */
-        if ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_CREATE) {
+        if ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_CREATE) {
             $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
-        } elseif ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_UPDATE) {
+        } elseif ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_UPDATE) {
             $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
         }
     }

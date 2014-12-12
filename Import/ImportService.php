@@ -22,8 +22,6 @@ class ImportService extends AbstractPipelineExecuteService
      * Runs import process.
      *
      * @param string $target
-     *
-     * @return void
      */
     public function import($target = null)
     {

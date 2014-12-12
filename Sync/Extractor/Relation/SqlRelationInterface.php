@@ -18,15 +18,11 @@ interface SqlRelationInterface
 {
     /**
      * @param string $type
-     *
-     * @return void
      */
     public function setTriggerType($type);
 
     /**
      * @param string $name
-     *
-     * @return void
      */
     public function setTriggerName($name);
 
@@ -34,8 +30,6 @@ interface SqlRelationInterface
      * Table name setter that will be used for trigger.
      *
      * @param string $name
-     *
-     * @return void
      */
     public function setTable($name);
 

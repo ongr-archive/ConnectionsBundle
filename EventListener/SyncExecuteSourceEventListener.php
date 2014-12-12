@@ -4,8 +4,8 @@ namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
-use ONGR\ConnectionsBundle\Sync\PantherImportIterator;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorageImportIterator;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
@@ -14,9 +14,9 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 {
     /**
-     * @var PantherInterface
+     * @var SyncStorageInterface
      */
-    protected $panther;
+    protected $syncStorage;
 
     /**
      * @var int
@@ -34,33 +34,33 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
     protected $documentType = '';
 
     /**
-     * @param EntityManager    $manager
-     * @param string           $entityClass
-     * @param Manager          $elasticsearchManager
-     * @param string           $documentClass
-     * @param PantherInterface $panther
+     * @param EntityManager        $manager
+     * @param string               $entityClass
+     * @param Manager              $elasticsearchManager
+     * @param string               $documentClass
+     * @param SyncStorageInterface $syncStorage
      */
     public function __construct(
         EntityManager $manager,
         $entityClass,
         Manager $elasticsearchManager,
         $documentClass,
-        $panther
+        $syncStorage
     ) {
         parent::__construct($manager, $entityClass, $elasticsearchManager, $documentClass);
-        $this->panther = $panther;
+        $this->syncStorage = $syncStorage;
     }
 
     /**
      * Gets iterator for all which need to be updated.
      *
-     * @return PantherImportIterator
+     * @return SyncStorageImportIterator
      */
     public function getDocuments()
     {
-        return new PantherImportIterator(
+        return new SyncStorageImportIterator(
             [
-                'panther' => $this->panther,
+                'sync_storage' => $this->syncStorage,
                 'shop_id' => $this->shopId,
                 'document_type' => $this->documentType,
             ],
@@ -74,8 +74,6 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
      * Gets data and adds source.
      *
      * @param SourcePipelineEvent $event
-     *
-     * @return void
      */
     public function onSource(SourcePipelineEvent $event)
     {
@@ -92,8 +90,6 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 
     /**
      * @param int $chunkSize
-     *
-     * @return void
      */
     public function setChunkSize($chunkSize)
     {
@@ -110,8 +106,6 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 
     /**
      * @param int $shopId
-     *
-     * @return void
      */
     public function setShopId($shopId)
     {
@@ -128,8 +122,6 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 
     /**
      * @param string $documentType
-     *
-     * @return void
      */
     public function setDocumentType($documentType)
     {

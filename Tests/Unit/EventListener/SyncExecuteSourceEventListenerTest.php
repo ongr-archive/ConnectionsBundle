@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
@@ -29,9 +29,9 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
     private $elasticsearchManager;
 
     /**
-     * @var Panther
+     * @var SyncStorage
      */
-    private $panther;
+    private $syncStorage;
 
     /**
      * @var SyncExecuteSourceEventListener
@@ -40,8 +40,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SyncExecuteItem ChunkSize getter and setter.
-     *
-     * @return void
      */
     public function testChunkSizeGetterSetter()
     {
@@ -54,8 +52,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SyncExecuteItem ShopId getter and setter.
-     *
-     * @return void
      */
     public function testShopIdGetterSetter()
     {
@@ -68,8 +64,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SyncExecuteItem DocumentType getter and setter.
-     *
-     * @return void
      */
     public function testDocumentTypeGetterSetter()
     {
@@ -82,8 +76,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Prepares variables for test.
-     *
-     * @return void
      */
     protected function setUp()
     {
@@ -95,7 +87,7 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->panther = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\Panther\Panther')
+        $this->syncStorage = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -104,7 +96,7 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
             'p',
             $this->elasticsearchManager,
             'p',
-            $this->panther
+            $this->syncStorage
         );
     }
 }

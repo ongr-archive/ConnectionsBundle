@@ -14,15 +14,17 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
 /**
- * SyncExecuteConsumeEventListener class, called after modify event. Puts/updates or deletes document into/from Elasticsearch.
+ * SyncExecuteConsumeEventListener class, called after modify event.
+ *
+ * Puts/updates or deletes document into/from Elasticsearch.
  */
 class SyncExecuteConsumeEventListener implements LoggerAwareInterface
 {
@@ -39,20 +41,20 @@ class SyncExecuteConsumeEventListener implements LoggerAwareInterface
     protected $documentType;
 
     /**
-     * @var Panther
+     * @var SyncStorage
      */
-    protected $panther;
+    protected $syncStorage;
 
     /**
-     * @param Manager $manager
-     * @param string  $documentType
-     * @param Panther $panther
+     * @param Manager     $manager
+     * @param string      $documentType
+     * @param SyncStorage $syncStorage
      */
-    public function __construct(Manager $manager, $documentType, Panther $panther)
+    public function __construct(Manager $manager, $documentType, SyncStorage $syncStorage)
     {
         $this->manager = $manager;
         $this->documentType = $documentType;
-        $this->panther = $panther;
+        $this->syncStorage = $syncStorage;
     }
 
     /**
@@ -81,8 +83,8 @@ class SyncExecuteConsumeEventListener implements LoggerAwareInterface
             return false;
         }
 
-        $pantherData = $item->getPantherData();
-        if (!isset($pantherData['type'])) {
+        $syncStorageData = $item->getSyncStorageData();
+        if (!isset($syncStorageData['type'])) {
             $this->log(sprintf('No operation type defined for document id: %s', $document->getId()), LogLevel::NOTICE);
 
             return false;
@@ -90,14 +92,14 @@ class SyncExecuteConsumeEventListener implements LoggerAwareInterface
 
         $this->log(sprintf('Start update single document of type %s id: %s', get_class($document), $document->getId()));
 
-        switch ($pantherData['type']) {
-            case PantherInterface::OPERATION_CREATE:
+        switch ($syncStorageData['type']) {
+            case SyncStorageInterface::OPERATION_CREATE:
                 $this->manager->persist($document);
                 break;
-            case PantherInterface::OPERATION_UPDATE:
+            case SyncStorageInterface::OPERATION_UPDATE:
                 $this->manager->persist($document);
                 break;
-            case PantherInterface::OPERATION_DELETE:
+            case SyncStorageInterface::OPERATION_DELETE:
                 $this->manager->getRepository($this->documentType)->remove($document->getId());
                 break;
             default:
@@ -111,7 +113,7 @@ class SyncExecuteConsumeEventListener implements LoggerAwareInterface
 
                 return false;
         }
-        $this->panther->deleteItem($pantherData['id'], [$pantherData['shop_id']]);
+        $this->syncStorage->deleteItem($syncStorageData['id'], [$syncStorageData['shop_id']]);
 
         $this->log('End an update of a single document.');
 
