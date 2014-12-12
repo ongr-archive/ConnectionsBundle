@@ -11,15 +11,14 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Service\ImportService;
-use ONGR\ConnectionsBundle\Sync\SyncImportService;
+use ONGR\ConnectionsBundle\Sync\SyncExecuteService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command which handles data import.
+ * Command which checks panther for updated/created/deleted data and imports changes to elastic search.
  */
 class SyncExecuteCommand extends ContainerAwareCommand
 {

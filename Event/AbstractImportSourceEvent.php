@@ -33,7 +33,7 @@ abstract class AbstractImportSourceEvent
     /**
      * @var Manager
      */
-    protected $elasticSearchManager;
+    protected $elasticsearchManager;
 
     /**
      * @var string Classname of Elasticsearch document. (e.g. Product).
@@ -43,14 +43,14 @@ abstract class AbstractImportSourceEvent
     /**
      * @param EntityManager $manager
      * @param string        $entityClass
-     * @param Manager       $elasticSearchManager
+     * @param Manager       $elasticsearchManager
      * @param string        $documentClass
      */
-    public function __construct(EntityManager $manager, $entityClass, Manager $elasticSearchManager, $documentClass)
+    public function __construct(EntityManager $manager, $entityClass, Manager $elasticsearchManager, $documentClass)
     {
         $this->entityManager = $manager;
         $this->entityClass = $entityClass;
-        $this->elasticSearchManager = $elasticSearchManager;
+        $this->elasticsearchManager = $elasticsearchManager;
         $this->documentClass = $documentClass;
     }
 

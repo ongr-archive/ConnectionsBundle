@@ -37,18 +37,18 @@ class SyncExecuteSourceEvent extends AbstractImportSourceEvent
     /**
      * @param EntityManager    $manager
      * @param string           $entityClass
-     * @param Manager          $elasticSearchManager
+     * @param Manager          $elasticsearchManager
      * @param string           $documentClass
      * @param PantherInterface $panther
      */
     public function __construct(
         EntityManager $manager,
         $entityClass,
-        Manager $elasticSearchManager,
+        Manager $elasticsearchManager,
         $documentClass,
         $panther
     ) {
-        parent::__construct($manager, $entityClass, $elasticSearchManager, $documentClass);
+        parent::__construct($manager, $entityClass, $elasticsearchManager, $documentClass);
         $this->panther = $panther;
     }
 
@@ -65,7 +65,7 @@ class SyncExecuteSourceEvent extends AbstractImportSourceEvent
                 'shop_id' => $this->shopId,
                 'document_type' => $this->documentType,
             ],
-            $this->elasticSearchManager->getRepository($this->documentClass),
+            $this->elasticsearchManager->getRepository($this->documentClass),
             $this->entityManager,
             $this->entityClass
         );

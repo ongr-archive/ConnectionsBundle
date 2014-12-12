@@ -33,7 +33,7 @@ class ImportSourceEvent extends AbstractImportSourceEvent
     /**
      * @var Manager
      */
-    protected $elasticSearchManager;
+    protected $elasticsearchManager;
 
     /**
      * @var string Classname of Elasticsearch document. (e.g. Product).
@@ -50,7 +50,7 @@ class ImportSourceEvent extends AbstractImportSourceEvent
         return new DoctrineImportIterator(
             $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
             $this->entityManager,
-            $this->elasticSearchManager->getRepository($this->documentClass)
+            $this->elasticsearchManager->getRepository($this->documentClass)
         );
     }
 

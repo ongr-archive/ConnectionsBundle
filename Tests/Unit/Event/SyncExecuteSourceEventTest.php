@@ -26,7 +26,7 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Manager
      */
-    private $elasticSearchManager;
+    private $elasticsearchManager;
 
     /**
      * @var Panther
@@ -91,7 +91,7 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->elasticSearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
+        $this->elasticsearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -102,7 +102,7 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
         $this->event = new SyncExecuteSourceEvent(
             $this->manager,
             'p',
-            $this->elasticSearchManager,
+            $this->elasticsearchManager,
             'p',
             $this->panther
         );

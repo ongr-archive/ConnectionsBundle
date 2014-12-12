@@ -68,7 +68,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected function getMockElasticsearchManager()
     {
-        $elasticSearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
+        $elasticsearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()
             ->setMethods(['getRepository', 'persist', 'commit'])
             ->getMock();
@@ -80,12 +80,12 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $document = $this->getMockDocument();
 
-        $elasticSearchManager->expects($this->once())->method('getRepository')->will($this->returnValue($repository));
-        $elasticSearchManager->expects($this->once())->method('persist')->will($this->returnValue(true));
-        $elasticSearchManager->expects($this->once())->method('commit')->will($this->returnValue(true));
+        $elasticsearchManager->expects($this->once())->method('getRepository')->will($this->returnValue($repository));
+        $elasticsearchManager->expects($this->once())->method('persist')->will($this->returnValue(true));
+        $elasticsearchManager->expects($this->once())->method('commit')->will($this->returnValue(true));
         $repository->expects($this->exactly(2))->method('createDocument')->will($this->returnValue($document));
 
-        return $elasticSearchManager;
+        return $elasticsearchManager;
     }
 
     /**
@@ -127,11 +127,11 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     {
         $doctrineEntityManager = $this->getMockDoctrineEntityManager();
 
-        $elasticSearchManager = $this->getMockElasticsearchManager();
+        $elasticsearchManager = $this->getMockElasticsearchManager();
 
         $document = $this->getMockDocument();
 
-        $sourceListener = new ImportSourceEvent($doctrineEntityManager, 'Test', $elasticSearchManager, 'Test');
+        $sourceListener = new ImportSourceEvent($doctrineEntityManager, 'Test', $elasticsearchManager, 'Test');
         $sourceEvent = new SourcePipelineEvent();
         $sourceListener->onSource($sourceEvent);
         $sources = $sourceEvent->getSources();
@@ -141,8 +141,8 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             }
         }
         $modifyListener = new ImportModifyEvent();
-        $consumeListener = new ImportConsumeEvent($elasticSearchManager);
-        $finishListener = new ImportFinishEvent($elasticSearchManager);
+        $consumeListener = new ImportConsumeEvent($elasticsearchManager);
+        $finishListener = new ImportFinishEvent($elasticsearchManager);
         $eventItem = new ItemPipelineEvent(new ImportItem(['Test'], $document));
 
         $dispatcher = $this->getMockDispatcher($finishListener, $consumeListener, $eventItem, $modifyListener);

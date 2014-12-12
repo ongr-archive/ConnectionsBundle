@@ -25,10 +25,10 @@ class SyncExecuteItemTest extends \PHPUnit_Framework_TestCase
      */
     public function testPantherDataGetterSetter()
     {
-        $doctrineItem = new TestProduct();
-        $elasticItem = new Product();
+        $entity = new TestProduct();
+        $document = new Product();
         $pantherData = [];
-        $syncImportItem = new SyncExecuteItem($doctrineItem, $elasticItem, $pantherData);
+        $syncImportItem = new SyncExecuteItem($entity, $document, $pantherData);
         $pantherData = [
             'id' => '1',
             'type' => PantherInterface::OPERATION_CREATE,

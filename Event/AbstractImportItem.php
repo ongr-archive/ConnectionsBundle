@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Event;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
- * Import event item carrying both Doctrine element and ES element.
+ * Import event item carrying both Doctrine entity and ES document.
  */
 abstract class AbstractImportItem
 {
@@ -29,13 +29,13 @@ abstract class AbstractImportItem
     protected $document;
 
     /**
-     * @param mixed             $doctrineItem
-     * @param DocumentInterface $elasticItem
+     * @param mixed             $entity
+     * @param DocumentInterface $document
      */
-    public function __construct($doctrineItem, DocumentInterface $elasticItem)
+    public function __construct($entity, DocumentInterface $document)
     {
-        $this->setEntity($doctrineItem);
-        $this->setDocument($elasticItem);
+        $this->setEntity($entity);
+        $this->setDocument($document);
     }
 
     /**
@@ -47,13 +47,13 @@ abstract class AbstractImportItem
     }
 
     /**
-     * @param mixed $doctrineItem
+     * @param mixed $entity
      *
      * @return void
      */
-    public function setEntity($doctrineItem)
+    public function setEntity($entity)
     {
-        $this->entity = $doctrineItem;
+        $this->entity = $entity;
     }
 
     /**
@@ -65,12 +65,12 @@ abstract class AbstractImportItem
     }
 
     /**
-     * @param DocumentInterface $elasticItem
+     * @param DocumentInterface $document
      *
      * @return void
      */
-    public function setDocument(DocumentInterface $elasticItem)
+    public function setDocument(DocumentInterface $document)
     {
-        $this->document = $elasticItem;
+        $this->document = $document;
     }
 }

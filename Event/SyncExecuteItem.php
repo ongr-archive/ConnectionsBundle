@@ -24,13 +24,13 @@ class SyncExecuteItem extends AbstractImportItem
     protected $pantherData;
 
     /**
-     * @param mixed             $doctrineItem
-     * @param DocumentInterface $elasticItem
+     * @param mixed             $entity
+     * @param DocumentInterface $document
      * @param array             $pantherData
      */
-    public function __construct($doctrineItem, DocumentInterface $elasticItem, $pantherData)
+    public function __construct($entity, DocumentInterface $document, $pantherData)
     {
-        parent::__construct($doctrineItem, $elasticItem);
+        parent::__construct($entity, $document);
         $this->pantherData = $pantherData;
     }
 
