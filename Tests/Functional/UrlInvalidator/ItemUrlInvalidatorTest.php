@@ -30,7 +30,7 @@ class ItemUrlInvalidatorTest extends WebTestCase
             'dummypipeline.default',
             ['consumers' => [PipelineFactory::CONSUMER_RETURN]]
         );
-        $pipeline->execute();
+        $pipeline->start();
 
         $invalidator = $kernel->getContainer()->get('project.item_url_invalidator.dummy');
 
