@@ -27,7 +27,7 @@ Gets Client data needed to synchronize.
 
 Client data source could be any data provider: DB, WS, etc.
 
-Abstract provider class: :doc:`diff_provider`
+Abstract provider class: `Diff Provider <diff_provider.rst>`
 
 2. Store data to temp storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,19 +36,19 @@ Formats, modifies, explodes and stores synchronization data to temp storage (abs
 
 Temp storage could be any data storage: Mysql, Redis, etc.
 
-Abstract extractor class: :doc:`_extractor`
+Abstract extractor class: `Extractor <extractor.rst>`
 
-Abstract storage class (codename): :doc:`panther`
+Abstract storage class (codename): `Panther <panther.rst>`
 
 3. Save changes to ES
 ~~~~~~~~~~~~~~~~~~~~~
 
 Saves all changes to ES.
 
-Abstract import class: :doc:`diff_import`
+Abstract import class: `DiffImport <diff_import.rst>`
 
 4. Delete data from temp storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Deletes saved changes from temp storage (:doc:`panther`).
+Deletes saved changes from temp storage (`Panther <panther.rst>`).
 
