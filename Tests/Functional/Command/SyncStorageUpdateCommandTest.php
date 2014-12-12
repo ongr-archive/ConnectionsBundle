@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use Doctrine\DBAL\Schema\Table;
 use ONGR\ConnectionsBundle\Command\SyncStorageCreateCommand;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -40,20 +40,20 @@ class SyncStorageUpdateCommandTest extends TestBase
         $commandTester->execute(
             [
                 'command' => $command->getName(),
-                'storage' => Panther::STORAGE_MYSQL,
+                'storage' => SyncStorage::STORAGE_MYSQL,
                 '--shop-id' => $testShopId,
             ]
         );
 
         $this->assertEquals(
-            'Storage successfully created for ' . Panther::STORAGE_MYSQL . '.' . PHP_EOL,
+            'Storage successfully created for ' . SyncStorage::STORAGE_MYSQL . '.' . PHP_EOL,
             $commandTester->getDisplay()
         );
 
         $actual = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_panther_storage_' . $testShopId);
 
         $this->getConnection()->getSchemaManager()->dropTable('ongr_panther_storage_' . $testShopId);
-        $this->importData('Panther/tableSingle_shop' . $testShopId . '.sql');
+        $this->importData('SyncStorage/tableSingle_shop' . $testShopId . '.sql');
         $expected = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_panther_storage_' . $testShopId);
 
         $this->compareTable($expected, $actual);

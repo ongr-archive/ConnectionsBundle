@@ -14,13 +14,13 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Extractor;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 
 class DoctrineExtractorTest extends TestBase
 {
     /**
-     * Test extraction service to insert updates to Panther.
+     * Test extraction service to insert updates to SyncStorage.
      *
      * @throws \Doctrine\DBAL\DBALException
      */
@@ -36,9 +36,9 @@ class DoctrineExtractorTest extends TestBase
 
         // Get storage mock.
 
-        /** @var PantherInterface|\PHPUnit_Framework_MockObject_MockObject $dummyPanther */
-        $dummyPanther = $this->getMock('\ONGR\ConnectionsBundle\Sync\Panther\PantherInterface');
-        $dummyPanther
+        /** @var SyncStorageInterface|\PHPUnit_Framework_MockObject_MockObject $dummySyncStorage */
+        $dummySyncStorage = $this->getMock('\ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface');
+        $dummySyncStorage
             ->expects($this->exactly(3))
             ->method('save')
             ->withConsecutive(
@@ -47,7 +47,7 @@ class DoctrineExtractorTest extends TestBase
                 [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')]
             );
 
-        $extractor->setStorageFacility($dummyPanther);
+        $extractor->setStorageFacility($dummySyncStorage);
 
         // Execute.
 
