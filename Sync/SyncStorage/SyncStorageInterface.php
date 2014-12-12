@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Panther;
+namespace ONGR\ConnectionsBundle\Sync\SyncStorage;
 
 use DateTime;
 
 /**
  * Temp data storage. (codename: Panther).
  */
-interface PantherInterface
+interface SyncStorageInterface
 {
     const STORAGE_MYSQL = 'mysql';
 

@@ -16,7 +16,7 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**
  * Very simple data extractor for data synchronization.
@@ -24,7 +24,7 @@ use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 class PassthroughExtractor implements ExtractorInterface
 {
     /**
-     * @var PantherInterface
+     * @var SyncStorageInterface
      */
     private $storage;
 
@@ -40,7 +40,7 @@ class PassthroughExtractor implements ExtractorInterface
 
         if ($item instanceof CreateDiffItem) {
             $this->storage->save(
-                PantherInterface::OPERATION_CREATE,
+                SyncStorageInterface::OPERATION_CREATE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()
@@ -48,7 +48,7 @@ class PassthroughExtractor implements ExtractorInterface
         }
         if ($item instanceof UpdateDiffItem) {
             $this->storage->save(
-                PantherInterface::OPERATION_UPDATE,
+                SyncStorageInterface::OPERATION_UPDATE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()
@@ -56,7 +56,7 @@ class PassthroughExtractor implements ExtractorInterface
         }
         if ($item instanceof DeleteDiffItem) {
             $this->storage->save(
-                PantherInterface::OPERATION_DELETE,
+                SyncStorageInterface::OPERATION_DELETE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()
@@ -67,7 +67,7 @@ class PassthroughExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function setStorageFacility(PantherInterface $storage)
+    public function setStorageFacility(SyncStorageInterface $storage)
     {
         $this->storage = $storage;
     }

@@ -1,25 +1,25 @@
-=======
-Panther
-=======
+===========
+SyncStorage
+===========
 
 1. Storage configuration
 ------------------------
 
-By default panther storage is set up for MySQL like this:
+By default sync storage storage is set up for MySQL like this:
 
 .. code-block:: yaml
 
     ongr_connections:
-        panther:
+        sync_storage:
             mysql:
                 connection: default
-                table_name: ongr_panther_storage
+                table_name: ongr_sync_storage
 ..
 
 By default MySQL storage engine and @doctrine.dbal.default connection will be
-used for data storage. Data will be stored in "ongr_panther_storage" table
+used for data storage. Data will be stored in "ongr_sync_storage" table
 (if you initialize storage for multiple shops, there will be multiple
-tables, e.g.: ongr_panther_storage_1, ongr_panther_storage_2, etc.)
+tables, e.g.: ongr_sync_storage_1, ongr_sync_storage_2, etc.)
 
 2. Data provider and consumer setup
 -----------------------------------
@@ -66,7 +66,7 @@ You must initialize storage before using it. Use the following console command t
 where <storage_engine> can only be "mysql" at the moment, shop-id is optional. If you have one shop, you can omit shop-id
 option:
 
-    $ php app/console ongr:panther:init mysql
+    $ php app/console ongr:sync:storage:create mysql
 
 If you have multiple shops, you should call this command multiple times:
 
@@ -78,9 +78,9 @@ If you have multiple shops, you should call this command multiple times:
 4. Running data synchronization
 -------------------------------
 
-Use the following console command to start pipeline for data import into Panther storage:
+Use the following console command to start pipeline for data import into SyncStorage storage:
 
     ongr:sync:execute [<pipeline_name>]
 
 Optional <pipeline_name> is "default" by default. You might want to specify different pipeline names if you have several
-data sources to import data from. Keep in mind that event listeners for Panther must be configured to use <pipeline_name>.
+data sources to import data from. Keep in mind that event listeners for SyncStorage must be configured to use <pipeline_name>.

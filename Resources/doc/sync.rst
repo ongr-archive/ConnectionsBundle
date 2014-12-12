@@ -38,7 +38,7 @@ Temp storage could be any data storage: Mysql, Redis, etc.
 
 Abstract extractor class: `Extractor <extractor.rst>`_
 
-Abstract storage class (codename): `Panther <panther.rst>`_
+Abstract storage class (codename): `SyncStorage <sync_storage.rst>`_
 
 3. Save changes to ES
 ~~~~~~~~~~~~~~~~~~~~~
@@ -50,5 +50,5 @@ Abstract import class: `DiffImport <diff_import.rst>`_
 4. Delete data from temp storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Deletes saved changes from temp storage (`Panther <panther.rst>`_).
+Deletes saved changes from temp storage (`SyncStorage <sync_storage.rst>`_).
 

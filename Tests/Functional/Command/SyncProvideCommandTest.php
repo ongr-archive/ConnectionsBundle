@@ -12,8 +12,8 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -38,9 +38,9 @@ class SyncProvideCommandTest extends TestBase
         $kernel = self::createClient()->getKernel();
         $container = $kernel->getContainer();
 
-        /** @var MysqlStorageManager $pantherMysql */
-        $pantherMysql = $container->get('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
-        $pantherMysql->createStorage();
+        /** @var MysqlStorageManager $syncStorageMysql */
+        $syncStorageMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
+        $syncStorageMysql->createStorage();
         $this->importData('ExtractorTest/sample_db.sql');
 
         $application = new Application($kernel);
@@ -114,20 +114,20 @@ class SyncProvideCommandTest extends TestBase
             ]
         );
 
-        /** @var Panther $panther */
-        $panther = $container->get('ongr_connections.sync.panther');
-        $pantherData = $panther->getChunk(count($expectedData));
+        /** @var SyncStorage $syncStorage */
+        $syncStorage = $container->get('ongr_connections.sync.sync_storage');
+        $syncStorageData = $syncStorage->getChunk(count($expectedData));
 
         // Remove `id` and `timestamp` from result array.
         array_filter(
-            $pantherData,
+            $syncStorageData,
             function (&$var) {
                 unset($var['id']);
                 unset($var['timestamp']);
             }
         );
 
-        $this->assertEquals($expectedData, $pantherData);
+        $this->assertEquals($expectedData, $syncStorageData);
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Success.', $output);

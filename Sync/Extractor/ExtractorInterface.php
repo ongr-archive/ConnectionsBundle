@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync\Extractor;
 
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**
  * Sync data extractor.
@@ -29,18 +29,18 @@ interface ExtractorInterface
     public function extract(BaseDiffItem $item);
 
     /**
-     * Set Panther storage facility.
+     * Set SyncStorage storage facility.
      *
-     * @param PantherInterface $storage
+     * @param SyncStorageInterface $storage
      *
      * @return void
      */
-    public function setStorageFacility(PantherInterface $storage);
+    public function setStorageFacility(SyncStorageInterface $storage);
 
     /**
-     * Panther storage facility.
+     * SyncStorage storage facility.
      *
-     * @return PantherInterface
+     * @return SyncStorageInterface
      */
     public function getStorageFacility();
 }
