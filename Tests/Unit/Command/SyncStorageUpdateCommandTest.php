@@ -12,8 +12,8 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncStorageCreateCommand;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -46,7 +46,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand($result, $message)
     {
         $storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager'
+            'ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager'
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -67,7 +67,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 'command' => $commandForTesting->getName(),
-                'storage' => Panther::STORAGE_MYSQL,
+                'storage' => SyncStorage::STORAGE_MYSQL,
             ]
         );
 
@@ -83,7 +83,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
 
         /** @var MysqlStorageManager|MockObject $storageManager */
         $storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager'
+            'ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager'
         )
             ->disableOriginalConstructor()
             ->getMock();

@@ -16,8 +16,8 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 
 class PassthroughExtractorTest extends TestBase
@@ -30,9 +30,9 @@ class PassthroughExtractorTest extends TestBase
     private $extractor;
 
     /**
-     * @var Panther
+     * @var SyncStorage
      */
-    private $panther;
+    private $syncStorage;
 
     /**
      * @var MysqlStorageManager
@@ -47,9 +47,9 @@ class PassthroughExtractorTest extends TestBase
         parent::setUp();
 
         $this->storageManager = new MysqlStorageManager($this->getConnection(), self::TABLE_NAME);
-        $this->panther = new Panther($this->storageManager);
+        $this->syncStorage = new SyncStorage($this->storageManager);
         $this->extractor = new PassthroughExtractor();
-        $this->extractor->setStorageFacility($this->panther);
+        $this->extractor->setStorageFacility($this->syncStorage);
     }
 
     /**
