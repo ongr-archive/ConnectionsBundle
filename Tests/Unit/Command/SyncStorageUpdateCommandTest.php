@@ -36,7 +36,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test ongr:panther:init behavior.
+     * Test ongr:sync:storage:init behavior.
      *
      * @param mixed  $result
      * @param string $message
@@ -54,7 +54,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
         $storageManager->expects($this->once())->method('createStorage')->willReturn($result);
 
         $container = new ContainerBuilder();
-        $container->set('ongr_connections.sync.panther.storage_manager.mysql_storage_manager', $storageManager);
+        $container->set('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager', $storageManager);
         $container->set('doctrine.dbal.default_connection', $this->getMock('Doctrine\DBAL\Driver\Connection'));
 
         $command = new SyncStorageCreateCommand();
@@ -91,7 +91,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
         $storageManager->expects($this->never())->method('createTable');
 
         $container = new ContainerBuilder();
-        $container->set('ongr_connections.sync.panther.storage_manager.mysql_storage_manager', $storageManager);
+        $container->set('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager', $storageManager);
         $container->set('doctrine.dbal.default_connection', $this->getMock('Doctrine\DBAL\Driver\Connection'));
 
         $command = new SyncStorageCreateCommand();

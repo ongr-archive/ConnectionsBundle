@@ -83,17 +83,17 @@ class ONGRConnectionsExtension extends Extension
      */
     private function initSyncStorage(ContainerBuilder $container, array $config)
     {
-        if (!isset($config['sync']['panther']) || empty($config['sync']['panther'])) {
-            throw new \LogicException('Parameter \'ongr_connections.sync.panther\' must be set');
+        if (!isset($config['sync']['sync_storage']) || empty($config['sync']['sync_storage'])) {
+            throw new \LogicException('Parameter \'ongr_connections.sync.sync_storage\' must be set');
         }
 
-        $availableStorages = array_keys($config['sync']['panther']);
+        $availableStorages = array_keys($config['sync']['sync_storage']);
         $syncStorageStorage = current($availableStorages);
         if (empty($syncStorageStorage)) {
             throw new \LogicException('Storage for SyncStorage must be set.');
         }
 
-        $syncStorageStorageConfig = $config['sync']['panther'][$syncStorageStorage];
+        $syncStorageStorageConfig = $config['sync']['sync_storage'][$syncStorageStorage];
 
         switch ($syncStorageStorage) {
             case SyncStorage::STORAGE_MYSQL:
@@ -114,7 +114,7 @@ class ONGRConnectionsExtension extends Extension
     {
         // Initiate MySQL storage manager.
         $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['connection']);
-        $definition = $container->getDefinition('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
+        $definition = $container->getDefinition('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
         $definition->setArguments(
             [
                 new Reference($doctrineConnection, ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
@@ -123,9 +123,9 @@ class ONGRConnectionsExtension extends Extension
         );
 
         // Initiate SyncStorage and inject storage manager into it.
-        $definition = $container->getDefinition('ongr_connections.sync.panther');
+        $definition = $container->getDefinition('ongr_connections.sync.sync_storage');
         $definition->setArguments(
-            [$container->getDefinition('ongr_connections.sync.panther.storage_manager.mysql_storage_manager')]
+            [$container->getDefinition('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager')]
         );
     }
 }

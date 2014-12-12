@@ -39,7 +39,7 @@ class SyncProvideCommandTest extends TestBase
         $container = $kernel->getContainer();
 
         /** @var MysqlStorageManager $syncStorageMysql */
-        $syncStorageMysql = $container->get('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
+        $syncStorageMysql = $container->get('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
         $syncStorageMysql->createStorage();
         $this->importData('ExtractorTest/sample_db.sql');
 
@@ -115,7 +115,7 @@ class SyncProvideCommandTest extends TestBase
         );
 
         /** @var SyncStorage $syncStorage */
-        $syncStorage = $container->get('ongr_connections.sync.panther');
+        $syncStorage = $container->get('ongr_connections.sync.sync_storage');
         $syncStorageData = $syncStorage->getChunk(count($expectedData));
 
         // Remove `id` and `timestamp` from result array.

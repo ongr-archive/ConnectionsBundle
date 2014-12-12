@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Integration test for ongr:panther:init command.
+ * Integration test for ongr:sync:storage:init command.
  */
 class SyncStorageUpdateCommandTest extends TestBase
 {
@@ -50,11 +50,11 @@ class SyncStorageUpdateCommandTest extends TestBase
             $commandTester->getDisplay()
         );
 
-        $actual = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_panther_storage_' . $testShopId);
+        $actual = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_sync_storage_storage_' . $testShopId);
 
-        $this->getConnection()->getSchemaManager()->dropTable('ongr_panther_storage_' . $testShopId);
+        $this->getConnection()->getSchemaManager()->dropTable('ongr_sync_storage_storage_' . $testShopId);
         $this->importData('SyncStorage/tableSingle_shop' . $testShopId . '.sql');
-        $expected = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_panther_storage_' . $testShopId);
+        $expected = $this->getConnection()->getSchemaManager()->listTableDetails('ongr_sync_storage_storage_' . $testShopId);
 
         $this->compareTable($expected, $actual);
     }

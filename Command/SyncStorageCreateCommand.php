@@ -65,7 +65,7 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
                 $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
                 /** @var StorageManagerInterface $storageManager */
                 $storageManager = $this->getContainer()
-                    ->get('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
+                    ->get('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
                 break;
             default:
                 throw new InvalidArgumentException('Storage "' . $storage . '" is not implemented yet.');

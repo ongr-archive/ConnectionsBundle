@@ -36,7 +36,7 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test ongr:panther:init behavior.
+     * Test ongr:sync:storage:init behavior.
      */
     public function testCommand()
     {
