@@ -26,7 +26,7 @@ interface PipelineInterface
     /**
      * Execute pipeline.
      */
-    public function execute();
+    public function start();
 
     /**
      * @return EventDispatcherInterface

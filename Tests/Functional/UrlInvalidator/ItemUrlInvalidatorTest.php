@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Functional;
+namespace ONGR\ConnectionsBundle\Tests\Functional\UrlInvalidator;
 
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -30,7 +30,7 @@ class ItemUrlInvalidatorTest extends WebTestCase
             'dummypipeline.default',
             ['consumers' => [PipelineFactory::CONSUMER_RETURN]]
         );
-        $pipeline->execute();
+        $pipeline->start();
 
         $invalidator = $kernel->getContainer()->get('project.item_url_invalidator.dummy');
 
