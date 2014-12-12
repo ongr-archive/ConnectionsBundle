@@ -12,7 +12,6 @@
 namespace ONGR\ConnectionsBundle;
 
 use ONGR\ConnectionsBundle\DependencyInjection\Compiler\SqlRelationPass;
-use ONGR\ConnectionsBundle\DependencyInjection\Compiler\UrlInvalidatorPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -28,7 +27,6 @@ class ONGRConnectionsBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new UrlInvalidatorPass());
         $container->addCompilerPass(new SqlRelationPass());
     }
 }
