@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ItemUrlInvalidator;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\FinishPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Service\AbstractItemUrlInvalidator;
+use ONGR\ConnectionsBundle\UrlInvalidator\AbstractItemUrlInvalidator;
 
 /**
  * Dummy item invalidator class for tests.

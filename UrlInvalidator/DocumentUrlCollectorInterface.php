@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Service;
+namespace ONGR\ConnectionsBundle\UrlInvalidator;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Symfony\Component\Routing\RouterInterface;

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Service;
+namespace ONGR\ConnectionsBundle\Tests\Unit\UrlInvalidator;
 
-use ONGR\ConnectionsBundle\Service\DocumentUrlCollectorInterface;
-use ONGR\ConnectionsBundle\Service\UrlInvalidatorService;
+use ONGR\ConnectionsBundle\UrlInvalidator\DocumentUrlCollectorInterface;
+use ONGR\ConnectionsBundle\UrlInvalidator\UrlInvalidatorService;
 use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Symfony\Component\Routing\RouterInterface;
@@ -76,7 +76,7 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
         $documentParams = [],
         $typeUrls = []
     ) {
-        $collector = $this->getMock('ONGR\ConnectionsBundle\Service\DocumentUrlCollectorInterface');
+        $collector = $this->getMock('ONGR\ConnectionsBundle\UrlInvalidator\DocumentUrlCollectorInterface');
 
         $collector->expects($this->any())->method('getDocumentUrls')->will($this->returnValue($documentUrls));
         $collector->expects($this->any())->method('getDocumentParameters')->will($this->returnValue($documentParams));
