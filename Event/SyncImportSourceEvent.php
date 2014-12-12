@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 class SyncImportSourceEvent extends AbstractImportSourceEvent
 {
     /**
-     * @var Panther
+     * @var PantherInterface
      */
     protected $panther;
 

@@ -11,44 +11,16 @@
 
 namespace ONGR\ConnectionsBundle\Import;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuterTrait;
-use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
-
 /**
  * ImportService class - creates pipeline for the import process and executes it.
  */
-class ImportService
+class ImportService extends AbstractImportService
 {
-    use PipelineExecuterTrait;
-
     /**
-     * @var PipelineFactory
-     */
-    private $pipelineFactory;
-
-    /**
-     * Runs import process.
-     *
-     * @param string $target
+     * {@inheritdoc}
      */
     public function import($target = null)
     {
-        $this->getPipelineFactory()->create($this->preparePipelineName('import.', $target))->execute();
-    }
-
-    /**
-     * @return PipelineFactory
-     */
-    public function getPipelineFactory()
-    {
-        return $this->pipelineFactory;
-    }
-
-    /**
-     * @param PipelineFactory $pipelineFactory
-     */
-    public function setPipelineFactory($pipelineFactory)
-    {
-        $this->pipelineFactory = $pipelineFactory;
+        $this->executePipeline('import.', $target);
     }
 }

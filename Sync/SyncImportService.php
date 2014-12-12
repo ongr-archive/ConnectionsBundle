@@ -2,48 +2,18 @@
 
 namespace ONGR\ConnectionsBundle\Sync;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuterTrait;
-use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
+use ONGR\ConnectionsBundle\Import\AbstractImportService;
 
 /**
  * SyncImportService class.
  */
-class SyncImportService
+class SyncImportService extends AbstractImportService
 {
-    use PipelineExecuterTrait;
-
     /**
-     * @var PipelineFactory
-     */
-    private $pipelineFactory;
-
-    /**
-     * Runs import from panther process.
-     *
-     * @param string $target
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function import($target = null)
     {
-        $this->getPipelineFactory()->create($this->preparePipelineName('sync.import.', $target))->execute();
-    }
-
-    /**
-     * @return PipelineFactory
-     */
-    public function getPipelineFactory()
-    {
-        return $this->pipelineFactory;
-    }
-
-    /**
-     * @param PipelineFactory $pipelineFactory
-     *
-     * @return void
-     */
-    public function setPipelineFactory($pipelineFactory)
-    {
-        $this->pipelineFactory = $pipelineFactory;
+        $this->executePipeline('sync.import.', $target);
     }
 }
