@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Import\Item;
 
 /**
  * Import event item carrying both Doctrine element and ES element.

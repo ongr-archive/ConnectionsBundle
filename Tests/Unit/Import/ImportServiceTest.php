@@ -12,11 +12,11 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Import;
 
 use ArrayObject;
-use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\ImportFinishEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
-use ONGR\ConnectionsBundle\Event\ImportModifyEvent;
-use ONGR\ConnectionsBundle\Event\ImportSourceEvent;
+use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
+use ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
+use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
@@ -89,10 +89,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param ImportFinishEvent  $finishListener
-     * @param ImportConsumeEvent $consumeListener
-     * @param ImportModifyEvent  $eventItem
-     * @param ImportModifyEvent  $modifyListener
+     * @param ImportFinishEventListener  $finishListener
+     * @param ImportConsumeEventListener $consumeListener
+     * @param ImportModifyEventListener  $eventItem
+     * @param ImportModifyEventListener  $modifyListener
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -131,7 +131,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $document = $this->getMockDocument();
 
-        $sourceListener = new ImportSourceEvent($doctrineEntityManager, 'Test', $elasticsearchManager, 'Test');
+        $sourceListener = new ImportSourceEventListener($doctrineEntityManager, 'Test', $elasticsearchManager, 'Test');
         $sourceEvent = new SourcePipelineEvent();
         $sourceListener->onSource($sourceEvent);
         $sources = $sourceEvent->getSources();
@@ -140,9 +140,9 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
                 unset($item);
             }
         }
-        $modifyListener = new ImportModifyEvent();
-        $consumeListener = new ImportConsumeEvent($elasticsearchManager);
-        $finishListener = new ImportFinishEvent($elasticsearchManager);
+        $modifyListener = new ImportModifyEventListener();
+        $consumeListener = new ImportConsumeEventListener($elasticsearchManager);
+        $finishListener = new ImportFinishEventListener($elasticsearchManager);
         $eventItem = new ItemPipelineEvent(new ImportItem(['Test'], $document));
 
         $dispatcher = $this->getMockDispatcher($finishListener, $consumeListener, $eventItem, $modifyListener);
@@ -163,7 +163,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document = new ProductModel();
         $data = ['id' => 1, 'title' => 'test', 'description' => 'test description'];
 
-        $event = new ImportModifyEvent();
+        $event = new ImportModifyEventListener();
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
 
         $event->onModify($eventItem);
@@ -184,7 +184,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $event = new ImportConsumeEvent($manager);
+        $event = new ImportConsumeEventListener($manager);
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
 
         $this->assertFalse($event->onConsume($eventItem));
@@ -208,7 +208,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document = new ProductModel();
         $data = [];
 
-        $event = new ImportConsumeEvent($manager);
+        $event = new ImportConsumeEventListener($manager);
         $event->setLogger($logger);
 
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));

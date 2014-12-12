@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Import\Item;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 

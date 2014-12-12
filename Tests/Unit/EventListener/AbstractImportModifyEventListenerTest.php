@@ -11,8 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
+use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
@@ -43,13 +43,13 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
             ->method('notice')
             ->with($this->equalTo($notice));
 
-        $event = $this->getMockBuilder('ONGR\ConnectionsBundle\Event\AbstractImportModifyEventListener')
+        $listener = $this->getMockBuilder('ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener')
             ->getMockForAbstractClass();
 
-        $event->setLogger($logger);
+        $listener->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
-        $event->onModify($pipelineEvent);
+        $listener->onModify($pipelineEvent);
     }
 
     /**

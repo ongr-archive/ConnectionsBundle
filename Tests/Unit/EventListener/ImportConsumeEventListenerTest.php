@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
+namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
-use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
+use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 use Psr\Log\LogLevel;
 
-class ImportConsumeEventTest extends \PHPUnit_Framework_TestCase
+class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests what notices are provided to logger in different cases.
@@ -44,12 +44,12 @@ class ImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ->method('log')
             ->with(LogLevel::NOTICE, $this->equalTo($notice), []);
 
-        $event = new ImportConsumeEvent($manager);
+        $listener = new ImportConsumeEventListener($manager);
 
-        $event->setLogger($logger);
+        $listener->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
-        $event->onConsume($pipelineEvent);
+        $listener->onConsume($pipelineEvent);
     }
 
     /**

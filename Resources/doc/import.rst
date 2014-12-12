@@ -24,11 +24,11 @@ Defining a source (data provider)
 
 To define your own source you need to create a source event listener.
 
-Take, for example, this predefined ImportSourceEvent:
+Take, for example, this predefined ImportSourceEventListener:
 
 .. code-block:: php
 
-    class ImportSourceEvent
+    class ImportSourceEventListener
     {
         /**
          * @var EntityManager
@@ -123,7 +123,7 @@ Example:
 
 .. code-block:: php
 
-    class ImportModifyEvent extends AbstractImportModifyEventListener
+    class ImportModifyEventListener extends AbstractImportModifyEventListener
     {
         /**
          * Assigns raw data to given object.
@@ -183,7 +183,7 @@ Example:
 
 .. code-block:: php
 
-    class ImportConsumeEvent implements LoggerAwareInterface
+    class ImportConsumeEventListener implements LoggerAwareInterface
     {
         use LoggerAwareTrait;
 
@@ -278,7 +278,7 @@ Example:
 
 .. code-block:: php
 
-    class ImportFinishEvent
+    class ImportFinishEventListener
     {
         /**
          * @var Manager $manager

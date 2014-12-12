@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
+namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use ONGR\ConnectionsBundle\Event\SyncExecuteSourceEvent;
+use ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
-class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
+class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var EntityManager
@@ -34,9 +34,9 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
     private $panther;
 
     /**
-     * @var SyncExecuteSourceEvent
+     * @var SyncExecuteSourceEventListener
      */
-    private $event;
+    private $listener;
 
     /**
      * Test SyncExecuteItem ChunkSize getter and setter.
@@ -47,8 +47,8 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUp();
         $data = 1;
-        $this->event->setChunkSize($data);
-        $result = $this->event->getChunkSize();
+        $this->listener->setChunkSize($data);
+        $result = $this->listener->getChunkSize();
         $this->assertEquals($data, $result);
     }
 
@@ -61,8 +61,8 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUp();
         $data = 1;
-        $this->event->setShopId($data);
-        $result = $this->event->getShopId();
+        $this->listener->setShopId($data);
+        $result = $this->listener->getShopId();
         $this->assertEquals($data, $result);
     }
 
@@ -75,8 +75,8 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUp();
         $data = 'product';
-        $this->event->setDocumentType($data);
-        $result = $this->event->getDocumentType();
+        $this->listener->setDocumentType($data);
+        $result = $this->listener->getDocumentType();
         $this->assertEquals($data, $result);
     }
 
@@ -99,7 +99,7 @@ class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->event = new SyncExecuteSourceEvent(
+        $this->listener = new SyncExecuteSourceEventListener(
             $this->manager,
             'p',
             $this->elasticsearchManager,

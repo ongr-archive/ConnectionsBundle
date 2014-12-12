@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
@@ -17,7 +17,7 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
 /**
  * Data Sync SourceEvent.
  */
-class DataSyncSourceEvent
+class DataSyncSourceEventListener
 {
     /**
      * @var DiffProvider

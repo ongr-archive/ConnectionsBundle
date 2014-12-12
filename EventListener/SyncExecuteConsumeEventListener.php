@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
@@ -21,9 +22,9 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
 /**
- * SyncImportConsumeEvent class, called after modify event. Puts/updates or deletes document into/from Elasticsearch.
+ * SyncExecuteConsumeEventListener class, called after modify event. Puts/updates or deletes document into/from Elasticsearch.
  */
-class SyncExecuteConsumeEvent implements LoggerAwareInterface
+class SyncExecuteConsumeEventListener implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 
@@ -66,7 +67,7 @@ class SyncExecuteConsumeEvent implements LoggerAwareInterface
         $item = $event->getItem();
 
         if (!$item instanceof SyncExecuteItem) {
-            $this->log('Item provided is not an SyncImportItem', LogLevel::NOTICE);
+            $this->log('Item provided is not an SyncExecuteItem', LogLevel::NOTICE);
 
             return false;
         }

@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
+
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 
 /**
- * ImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
+ * ImportModifyEventListener class - assigns data from doctrine item to Elasticsearch document.
  */
-class ImportModifyEvent extends AbstractImportModifyEventListener
+class ImportModifyEventListener extends AbstractImportModifyEventListener
 {
     /**
      * Modifies EventItem.

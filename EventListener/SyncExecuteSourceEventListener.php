@@ -1,6 +1,6 @@
 <?php
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
@@ -9,9 +9,9 @@ use ONGR\ConnectionsBundle\Sync\PantherImportIterator;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class ImportSourceEvent.
+ * Class SyncExecuteSourceEventListener.
  */
-class SyncExecuteSourceEvent extends AbstractImportSourceEventListener
+class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 {
     /**
      * @var PantherInterface

@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use ONGR\ConnectionsBundle\Import\DoctrineImportIterator;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class AbstractImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
+ * Class  ImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
  */
-abstract class AbstractImportSourceEventListener
+class ImportSourceEventListener extends AbstractImportSourceEventListener
 {
     /**
      * @var EntityManager
@@ -41,17 +42,17 @@ abstract class AbstractImportSourceEventListener
     protected $documentClass;
 
     /**
-     * @param EntityManager $manager
-     * @param string        $entityClass
-     * @param Manager       $elasticsearchManager
-     * @param string        $documentClass
+     * Gets all documents by given type.
+     *
+     * @return DoctrineImportIterator
      */
-    public function __construct(EntityManager $manager, $entityClass, Manager $elasticsearchManager, $documentClass)
+    public function getAllDocuments()
     {
-        $this->entityManager = $manager;
-        $this->entityClass = $entityClass;
-        $this->elasticsearchManager = $elasticsearchManager;
-        $this->documentClass = $documentClass;
+        return new DoctrineImportIterator(
+            $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
+            $this->entityManager,
+            $this->elasticsearchManager->getRepository($this->documentClass)
+        );
     }
 
     /**
@@ -59,5 +60,8 @@ abstract class AbstractImportSourceEventListener
      *
      * @param SourcePipelineEvent $event
      */
-    abstract public function onSource(SourcePipelineEvent $event);
+    public function onSource(SourcePipelineEvent $event)
+    {
+        $event->addSource($this->getAllDocuments());
+    }
 }

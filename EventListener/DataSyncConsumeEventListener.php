@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Extractor\ExtractorInterface;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
 /**
  * Data Sync ConsumeEvent.
  */
-class DataSyncConsumeEvent implements LoggerAwareInterface
+class DataSyncConsumeEventListener implements LoggerAwareInterface
 {
-    use LoggerAwareTrait;
+    use EventLoggerAwareTrait;
 
     /**
      * @var ExtractorInterface

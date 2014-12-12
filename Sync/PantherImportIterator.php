@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;

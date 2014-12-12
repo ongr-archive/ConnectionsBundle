@@ -4,8 +4,8 @@ parameters:
     ongr_connections.sync.panther.storage_manager.mysql_storage_manager.class: ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager
     ongr_connections.sync.panther.class: ONGR\ConnectionsBundle\Sync\Panther\Panther
     # data sync pipeline event parent classes
-    ongr_connections.sync.data_sync.source.class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
-    ongr_connections.sync.data_sync.consume.class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
+    ongr_connections.sync.data_sync.source.class: ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener
+    ongr_connections.sync.data_sync.consume.class: ONGR\ConnectionsBundle\EventListener\DataSyncConsumeEventListener
 
 services:
     ongr_connections.sync.table_manager:

@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
@@ -19,9 +20,9 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
 /**
- * ImportConsumeEvent class, called after modify event. Puts document into Elasticsearch.
+ * ImportConsumeEventListener class, called after modify event. Puts document into Elasticsearch.
  */
-class ImportConsumeEvent implements LoggerAwareInterface
+class ImportConsumeEventListener implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 

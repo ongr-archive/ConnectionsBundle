@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class ImportSourceEvent - gets items from Doctrine, creates empty Elasticsearch documents.
+ * Class AbstractImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
  */
-class ImportSourceEvent extends AbstractImportSourceEventListener
+abstract class AbstractImportSourceEventListener
 {
     /**
      * @var EntityManager
@@ -41,17 +41,17 @@ class ImportSourceEvent extends AbstractImportSourceEventListener
     protected $documentClass;
 
     /**
-     * Gets all documents by given type.
-     *
-     * @return DoctrineImportIterator
+     * @param EntityManager $manager
+     * @param string        $entityClass
+     * @param Manager       $elasticsearchManager
+     * @param string        $documentClass
      */
-    public function getAllDocuments()
+    public function __construct(EntityManager $manager, $entityClass, Manager $elasticsearchManager, $documentClass)
     {
-        return new DoctrineImportIterator(
-            $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
-            $this->entityManager,
-            $this->elasticsearchManager->getRepository($this->documentClass)
-        );
+        $this->entityManager = $manager;
+        $this->entityClass = $entityClass;
+        $this->elasticsearchManager = $elasticsearchManager;
+        $this->documentClass = $documentClass;
     }
 
     /**
@@ -59,8 +59,5 @@ class ImportSourceEvent extends AbstractImportSourceEventListener
      *
      * @param SourcePipelineEvent $event
      */
-    public function onSource(SourcePipelineEvent $event)
-    {
-        $event->addSource($this->getAllDocuments());
-    }
+    abstract public function onSource(SourcePipelineEvent $event);
 }

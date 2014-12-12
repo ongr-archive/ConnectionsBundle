@@ -9,15 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;
 
 /**
- * Abstract InitialSyncModifyEvent.
+ * Abstract import modify event listener.
  */
 abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
 {

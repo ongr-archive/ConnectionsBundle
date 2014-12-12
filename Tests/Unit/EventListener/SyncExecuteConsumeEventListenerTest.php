@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
+namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
-use ONGR\ConnectionsBundle\Event\SyncExecuteConsumeEvent;
-use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
+use ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener;
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 use Psr\Log\LogLevel;
 
-class SyncExecuteConsumeEventTest extends \PHPUnit_Framework_TestCase
+class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests what notices are provided to logger in different cases.
@@ -90,11 +90,11 @@ class SyncExecuteConsumeEventTest extends \PHPUnit_Framework_TestCase
                 break;
         }
 
-        $event = new SyncExecuteConsumeEvent($manager, $documentType, $panther, 1);
-        $event->setLogger($logger);
+        $listener = new SyncExecuteConsumeEventListener($manager, $documentType, $panther, 1);
+        $listener->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
-        $event->onConsume($pipelineEvent);
+        $listener->onConsume($pipelineEvent);
     }
 
     /**
@@ -229,7 +229,7 @@ class SyncExecuteConsumeEventTest extends \PHPUnit_Framework_TestCase
             [
                 'product',
                 new \stdClass,
-                [['Item provided is not an SyncImportItem', LogLevel::NOTICE]],
+                [['Item provided is not an SyncExecuteItem', LogLevel::NOTICE]],
                 null,
             ],
         ];

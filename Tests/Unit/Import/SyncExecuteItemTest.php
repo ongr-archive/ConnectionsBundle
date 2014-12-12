@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
@@ -19,7 +19,7 @@ use ONGR\TestingBundle\Document\Product;
 class SyncExecuteItemTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test SyncImportSourceEventTest getter and setter.
+     * Test SyncExecuteItem getter and setter.
      *
      * @return void
      */

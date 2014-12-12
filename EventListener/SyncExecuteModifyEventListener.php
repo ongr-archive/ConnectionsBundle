@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
- * SyncImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
+ * SyncExecuteModifyEventListener class - assigns data from doctrine item to Elasticsearch document.
  */
-class SyncExecuteModifyEvent extends AbstractImportModifyEventListener
+class SyncExecuteModifyEventListener extends AbstractImportModifyEventListener
 {
     /**
      * Modifies EventItem.
