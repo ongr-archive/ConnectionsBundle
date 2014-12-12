@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Panther\StorageManager;
+namespace ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager;
 
 use DateTime;
 use Doctrine\DBAL\DBALException;
@@ -19,7 +19,7 @@ use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager;
 
 /**
- * The service to create/update database table and manipulate its data for Panther.
+ * The service to create/update database table and manipulate its data for SyncStorage.
  */
 class MysqlStorageManager extends TableManager implements StorageManagerInterface
 {
@@ -179,7 +179,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     /**
      * {@inheritdoc}
      */
-    public function removeRecord($pantherStorageRecordId, array $shopIds = null)
+    public function removeRecord($syncStorageStorageRecordId, array $shopIds = null)
     {
         if (empty($shopIds)) {
             $shopIds = [null];
@@ -189,7 +189,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
 
         foreach ($shopIds as $shopId) {
             try {
-                $connection->delete($this->getTableName($shopId), ['id' => $pantherStorageRecordId]);
+                $connection->delete($this->getTableName($shopId), ['id' => $syncStorageStorageRecordId]);
             } catch (\Exception $e) {
                 continue;
             }

@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Panther\StorageManager;
+namespace ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager;
 
 use DateTime;
 
 /**
- * Interface for Panther Storage Manager.
+ * Interface for SyncStorage Storage Manager.
  */
 interface StorageManagerInterface
 {
@@ -48,12 +48,12 @@ interface StorageManagerInterface
     /**
      * Removes record from storage for selected shops.
      *
-     * @param int   $PantherStorageRecordId
+     * @param int   $syncStorageStorageRecordId
      * @param array $shopIds
      *
      * @return void
      */
-    public function removeRecord($PantherStorageRecordId, array $shopIds = null);
+    public function removeRecord($syncStorageStorageRecordId, array $shopIds = null);
 
     /**
      * Returns next $count (or less) of records available for processing.
