@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Event;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * ImportFinishEvent class.
+ * Commits changes after import is completed.
  */
 class ImportFinishEvent
 {

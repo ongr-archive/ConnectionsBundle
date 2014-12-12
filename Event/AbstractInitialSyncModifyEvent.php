@@ -16,7 +16,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
- * Abstract InitialSyncModifyEvent.
+ * Helper class for modify events.
  */
 abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
 {
