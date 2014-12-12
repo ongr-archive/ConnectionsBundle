@@ -51,6 +51,6 @@ abstract class AbstractPipelineExecuteService
             $target = 'default';
         }
 
-        $this->getPipelineFactory()->create($prefix . $target)->execute();
+        $this->getPipelineFactory()->create($prefix . $target)->start();
     }
 }
