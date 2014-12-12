@@ -18,7 +18,7 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 /**
  * Class ImportSourceEvent - gets items from Doctrine, creates empty Elasticsearch documents.
  */
-class ImportSourceEvent extends AbstractImportSourceEvent
+class ImportSourceEvent extends AbstractImportSourceEventListener
 {
     /**
      * @var EntityManager
