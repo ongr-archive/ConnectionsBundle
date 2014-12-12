@@ -36,7 +36,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test ongr:sync:storage:init behavior.
+     * Test ongr:sync:storage:create behavior.
      *
      * @param mixed  $result
      * @param string $message

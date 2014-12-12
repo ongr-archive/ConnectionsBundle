@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Integration test for ongr:sync:storage:init command.
+ * Integration test for ongr:sync:storage:create command.
  */
 class SyncStorageUpdateCommandTest extends TestBase
 {
