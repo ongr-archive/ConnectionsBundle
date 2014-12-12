@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -39,7 +39,7 @@ class SyncProvideCommandTest extends TestBase
         $container = $kernel->getContainer();
 
         /** @var MysqlStorageManager $syncStorageMysql */
-        $syncStorageMysql = $container->get('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
+        $syncStorageMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
         $syncStorageMysql->createStorage();
         $this->importData('ExtractorTest/sample_db.sql');
 

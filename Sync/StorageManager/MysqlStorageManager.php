@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager;
+namespace ONGR\ConnectionsBundle\Sync\StorageManager;
 
 use DateTime;
 use Doctrine\DBAL\DBALException;

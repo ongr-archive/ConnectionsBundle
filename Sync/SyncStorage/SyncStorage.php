@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Sync\SyncStorage;
 
 use DateTime;
 use InvalidArgumentException;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 
 /**
  * Class for SyncStorage storage manipulation.

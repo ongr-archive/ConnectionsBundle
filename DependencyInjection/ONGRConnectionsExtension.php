@@ -115,7 +115,7 @@ class ONGRConnectionsExtension extends Extension
         // Initiate MySQL storage manager.
         $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['connection']);
         $definition = $container->getDefinition(
-            'ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager'
+            'ongr_connections.sync.storage_manager.mysql_storage_manager'
         );
         $definition->setArguments(
             [
@@ -127,7 +127,7 @@ class ONGRConnectionsExtension extends Extension
         // Initiate SyncStorage and inject storage manager into it.
         $definition = $container->getDefinition('ongr_connections.sync.sync_storage');
         $definition->setArguments(
-            [$container->getDefinition('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager')]
+            [$container->getDefinition('ongr_connections.sync.storage_manager.mysql_storage_manager')]
         );
     }
 }

@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncStorageCreateCommand;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -46,7 +46,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand($result, $message)
     {
         $storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager'
+            'ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager'
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -54,7 +54,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
         $storageManager->expects($this->once())->method('createStorage')->willReturn($result);
 
         $container = new ContainerBuilder();
-        $container->set('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager', $storageManager);
+        $container->set('ongr_connections.sync.storage_manager.mysql_storage_manager', $storageManager);
         $container->set('doctrine.dbal.default_connection', $this->getMock('Doctrine\DBAL\Driver\Connection'));
 
         $command = new SyncStorageCreateCommand();
@@ -83,7 +83,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
 
         /** @var MysqlStorageManager|MockObject $storageManager */
         $storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager'
+            'ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager'
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -91,7 +91,7 @@ class SyncStorageUpdateCommandTest extends \PHPUnit_Framework_TestCase
         $storageManager->expects($this->never())->method('createTable');
 
         $container = new ContainerBuilder();
-        $container->set('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager', $storageManager);
+        $container->set('ongr_connections.sync.storage_manager.mysql_storage_manager', $storageManager);
         $container->set('doctrine.dbal.default_connection', $this->getMock('Doctrine\DBAL\Driver\Connection'));
 
         $command = new SyncStorageCreateCommand();

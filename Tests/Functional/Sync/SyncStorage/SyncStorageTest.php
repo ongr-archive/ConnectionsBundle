@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage;
 
 use DateTime;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
@@ -38,7 +38,7 @@ class SyncStorageTest extends TestBase
     protected function setUp()
     {
         $this->storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\StorageManagerInterface'
+            'ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface'
         )->getMock();
 
         $this->service = new SyncStorage($this->storageManager);

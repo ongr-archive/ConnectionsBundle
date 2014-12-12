@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Sync\SyncStorage\StorageManager;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**

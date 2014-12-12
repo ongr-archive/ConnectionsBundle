@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Command;
 
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -65,7 +65,7 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
                 $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
                 /** @var StorageManagerInterface $storageManager */
                 $storageManager = $this->getContainer()
-                    ->get('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
+                    ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
                 break;
             default:
                 throw new InvalidArgumentException('Storage "' . $storage . '" is not implemented yet.');
