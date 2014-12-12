@@ -37,7 +37,7 @@ class ImportService
             "import.$target"
         );
 
-        $pipeline->execute();
+        $pipeline->start();
     }
 
     /**

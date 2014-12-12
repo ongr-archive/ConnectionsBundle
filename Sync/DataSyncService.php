@@ -32,7 +32,7 @@ class DataSyncService
     {
         $pipeline = $this->getPipelineFactory()->create('data_sync.' . $pipelineName);
 
-        $pipeline->execute();
+        $pipeline->start();
     }
 
     /**

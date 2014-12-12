@@ -44,7 +44,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function execute()
+    public function start()
     {
         $dispatcher = $this->getDispatcher();
         $sourceEvent = new SourcePipelineEvent();
