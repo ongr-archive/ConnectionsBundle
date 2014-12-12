@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Event;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
+use ONGR\ConnectionsBundle\Service\ImportItem;
 
 /**
  * ImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.

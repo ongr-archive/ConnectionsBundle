@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Command;
 
 use ONGR\ConnectionsBundle\Sync\DataSyncService;
+use ONGR\ConnectionsBundle\Service\ImportItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
