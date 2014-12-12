@@ -11,13 +11,19 @@
 
 namespace ONGR\ConnectionsBundle\Import;
 
+use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
+
 /**
  * ImportService class - creates pipeline for the import process and executes it.
  */
-class ImportService extends AbstractImportService
+class ImportService extends AbstractPipelineExecuteService
 {
     /**
-     * {@inheritdoc}
+     * Runs import process.
+     *
+     * @param string $target
+     *
+     * @return void
      */
     public function import($target = null)
     {

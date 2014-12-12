@@ -2,15 +2,19 @@
 
 namespace ONGR\ConnectionsBundle\Sync;
 
-use ONGR\ConnectionsBundle\Import\AbstractImportService;
+use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 
 /**
  * SyncImportService class.
  */
-class SyncImportService extends AbstractImportService
+class SyncImportService extends AbstractPipelineExecuteService
 {
     /**
-     * {@inheritdoc}
+     * Runs import process.
+     *
+     * @param string $target
+     *
+     * @return void
      */
     public function import($target = null)
     {

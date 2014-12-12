@@ -11,47 +11,20 @@
 
 namespace ONGR\ConnectionsBundle\Sync;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
+use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 
 /**
  * Data synchronization service.
  */
-class DataSyncService
+class DataSyncService extends AbstractPipelineExecuteService
 {
-    /**
-     * @var PipelineFactory
-     */
-    private $pipelineFactory;
-
     /**
      * Executes pipeline.
      *
-     * @param string $pipelineName
+     * @param string $target
      */
-    public function startPipeline($pipelineName = 'default')
+    public function startPipeline($target = null)
     {
-        $pipeline = $this->getPipelineFactory()->create('data_sync.' . $pipelineName);
-
-        $pipeline->execute();
-    }
-
-    /**
-     * @return PipelineFactory
-     */
-    public function getPipelineFactory()
-    {
-        return $this->pipelineFactory;
-    }
-
-    /**
-     * @param PipelineFactory $pipelineFactory
-     *
-     * @return $this
-     */
-    public function setPipelineFactory($pipelineFactory)
-    {
-        $this->pipelineFactory = $pipelineFactory;
-
-        return $this;
+        $this->executePipeline('data_sync.', $target);
     }
 }

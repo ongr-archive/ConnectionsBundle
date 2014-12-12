@@ -9,29 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Import;
+namespace ONGR\ConnectionsBundle\Pipeline;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuterTrait;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 
 /**
- * ImportService class - creates pipeline for the import process and executes it.
+ * AbstractPipelineExecuteService class - creates pipeline and executes it.
  */
-abstract class AbstractImportService
+abstract class AbstractPipelineExecuteService
 {
     /**
      * @var PipelineFactory
      */
     private $pipelineFactory;
-
-    /**
-     * Runs import process.
-     *
-     * @param string $target
-     *
-     * @return void
-     */
-    abstract public function import($target);
 
     /**
      * @return PipelineFactory
