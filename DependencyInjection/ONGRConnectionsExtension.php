@@ -114,7 +114,9 @@ class ONGRConnectionsExtension extends Extension
     {
         // Initiate MySQL storage manager.
         $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['connection']);
-        $definition = $container->getDefinition('ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager');
+        $definition = $container->getDefinition(
+            'ongr_connections.sync.sync_storage.storage_manager.mysql_storage_manager'
+        );
         $definition->setArguments(
             [
                 new Reference($doctrineConnection, ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
