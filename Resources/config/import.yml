@@ -7,9 +7,9 @@ parameters:
     ongr_connections.import_data_directory.data_dir: data
 
     # sync import pipeline event parent classes
-    ongr_connections.sync.import.source.class: ONGR\ConnectionsBundle\Event\SyncImportSourceEvent
-    ongr_connections.sync.import.modifier.class: ONGR\ConnectionsBundle\Event\SyncImportModifyEvent
-    ongr_connections.sync.import.consumer.class: ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent
+    ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\Event\SyncExecuteSourceEvent
+    ongr_connections.sync.execute.modifier.class: ONGR\ConnectionsBundle\Event\SyncExecuteModifyEvent
+    ongr_connections.sync.execute.consumer.class: ONGR\ConnectionsBundle\Event\SyncExecuteConsumeEvent
 
 services:
     ongr_connections.import_service:

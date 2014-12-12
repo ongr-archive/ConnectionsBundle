@@ -11,15 +11,15 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Event\SyncImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\SyncImportItem;
+use ONGR\ConnectionsBundle\Event\SyncExecuteConsumeEvent;
+use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 use Psr\Log\LogLevel;
 
-class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
+class SyncExecuteConsumeEventTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests what notices are provided to logger in different cases.
@@ -90,7 +90,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
                 break;
         }
 
-        $event = new SyncImportConsumeEvent($manager, $documentType, $panther, 1);
+        $event = new SyncExecuteConsumeEvent($manager, $documentType, $panther, 1);
         $event->setLogger($logger);
 
         $pipelineEvent = new ItemPipelineEvent($eventItem);
@@ -111,7 +111,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'product',
-                new SyncImportItem(
+                new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -138,7 +138,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(
+                new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -165,7 +165,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(
+                new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -192,7 +192,7 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(new TestProduct(), $product, ['type' => '']),
+                new SyncExecuteItem(new TestProduct(), $product, ['type' => '']),
                 [
                     [
                         sprintf(
@@ -216,13 +216,13 @@ class SyncImportConsumeEventTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'product',
-                new SyncImportItem(new TestProduct(), $product, []),
+                new SyncExecuteItem(new TestProduct(), $product, []),
                 [["No operation type defined for document id: {$documentId}", LogLevel::NOTICE]],
                 null,
             ],
             [
                 'product',
-                new SyncImportItem(new TestProduct(), new Product(), []),
+                new SyncExecuteItem(new TestProduct(), new Product(), []),
                 [['No document id found. Update skipped.', LogLevel::NOTICE]],
                 null,
             ],

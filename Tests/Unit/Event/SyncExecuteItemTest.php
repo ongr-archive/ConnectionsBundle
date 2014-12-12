@@ -11,12 +11,12 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Event\SyncImportItem;
+use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 
-class SyncImportItemTest extends \PHPUnit_Framework_TestCase
+class SyncExecuteItemTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test SyncImportSourceEventTest getter and setter.
@@ -28,7 +28,7 @@ class SyncImportItemTest extends \PHPUnit_Framework_TestCase
         $doctrineItem = new TestProduct();
         $elasticItem = new Product();
         $pantherData = [];
-        $syncImportItem = new SyncImportItem($doctrineItem, $elasticItem, $pantherData);
+        $syncImportItem = new SyncExecuteItem($doctrineItem, $elasticItem, $pantherData);
         $pantherData = [
             'id' => '1',
             'type' => PantherInterface::OPERATION_CREATE,

@@ -6,7 +6,7 @@ parameters:
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
     ongr_connections.import_service.class: ONGR\ConnectionsBundle\Import\ImportService
-    ongr_connections.sync.import_service.class: ONGR\ConnectionsBundle\Sync\SyncImportService
+    ongr_connections.sync.execute_service.class: ONGR\ConnectionsBundle\Sync\SyncExecuteService
 
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
@@ -79,8 +79,8 @@ services:
         calls:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
 
-    ongr_connections.sync.import_service:
-        class: %ongr_connections.sync.import_service.class%
+    ongr_connections.sync.execute_service:
+        class: %ongr_connections.sync.execute_service.class%
         calls:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
 
@@ -120,14 +120,14 @@ services:
         calls:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
 
-    ongr_connections.sync.import.source:
-        class: %ongr_connections.sync.import.source.class%
+    ongr_connections.sync.execute.source:
+        class: %ongr_connections.sync.execute.source.class%
 
-    ongr_connections.sync.import.modifier:
-        class: %ongr_connections.sync.import.modifier.class%
+    ongr_connections.sync.execute.modifier:
+        class: %ongr_connections.sync.execute.modifier.class%
 
-    ongr_connections.sync.import.consumer:
-        class: %ongr_connections.sync.import.consumer.class%
+    ongr_connections.sync.execute.consumer:
+        class: %ongr_connections.sync.execute.consumer.class%
 
-    ongr_connections.sync.import.finish:
+    ongr_connections.sync.execute.finish:
         class: %ongr_connections.import.finish.class%

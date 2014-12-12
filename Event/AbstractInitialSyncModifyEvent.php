@@ -14,14 +14,13 @@ namespace ONGR\ConnectionsBundle\Event;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
 /**
  * Abstract InitialSyncModifyEvent.
  */
 abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
 {
-    use LoggerAwareTrait;
+    use EventLoggerAwareTrait;
 
     /**
      * Assigns raw data to given object.

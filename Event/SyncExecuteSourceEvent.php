@@ -12,7 +12,7 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 /**
  * Class ImportSourceEvent.
  */
-class SyncImportSourceEvent extends AbstractImportSourceEvent
+class SyncExecuteSourceEvent extends AbstractImportSourceEvent
 {
     /**
      * @var PantherInterface

@@ -11,8 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\Sync;
 
-use Doctrine\ORM\EntityManager;
-use ONGR\ConnectionsBundle\Event\SyncImportItem;
+use Doctrine\ORM\EntityManagerInterface;
+use ONGR\ConnectionsBundle\Event\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;
@@ -53,7 +53,7 @@ class PantherImportIterator implements \Iterator
     private $documentType;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
@@ -68,13 +68,17 @@ class PantherImportIterator implements \Iterator
     private $valid;
 
     /**
-     * @param array         $pantherParams
-     * @param Repository    $repository
-     * @param EntityManager $entityManager
-     * @param string        $entityClass
+     * @param array                  $pantherParams
+     * @param Repository             $repository
+     * @param EntityManagerInterface $entityManager
+     * @param string                 $entityClass
      */
-    public function __construct($pantherParams, Repository $repository, EntityManager $entityManager, $entityClass)
-    {
+    public function __construct(
+        $pantherParams,
+        Repository $repository,
+        EntityManagerInterface $entityManager,
+        $entityClass
+    ) {
         $this->panther = $pantherParams['panther'];
         $this->shopId = $pantherParams['shop_id'];
         $this->documentType = $pantherParams['document_type'];
@@ -96,7 +100,7 @@ class PantherImportIterator implements \Iterator
      */
     public function current()
     {
-        return new SyncImportItem(
+        return new SyncExecuteItem(
             $this->currentEntity,
             $this->repository->createDocument(),
             $this->currentChunk[0]

@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command which handles data import.
  */
-class SyncImportCommand extends ContainerAwareCommand
+class SyncExecuteCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -29,7 +29,7 @@ class SyncImportCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ongr:sync:import')
+            ->setName('ongr:sync:execute')
             ->setDescription('Imports data from panther.')
             ->addArgument(
                 'target',
@@ -46,8 +46,8 @@ class SyncImportCommand extends ContainerAwareCommand
         $benchmark = new CommandBenchmark($output);
         $benchmark->start();
 
-        /** @var SyncImportService $service */
-        $service = $this->getContainer()->get('ongr_connections.sync.import_service');
+        /** @var SyncExecuteService $service */
+        $service = $this->getContainer()->get('ongr_connections.sync.execute_service');
 
         $service->import($input->getArgument('target'));
 

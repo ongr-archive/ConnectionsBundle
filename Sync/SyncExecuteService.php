@@ -7,7 +7,7 @@ use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 /**
  * SyncImportService class.
  */
-class SyncImportService extends AbstractPipelineExecuteService
+class SyncExecuteService extends AbstractPipelineExecuteService
 {
     /**
      * Runs import process.
@@ -18,6 +18,6 @@ class SyncImportService extends AbstractPipelineExecuteService
      */
     public function import($target = null)
     {
-        $this->executePipeline('sync.import.', $target);
+        $this->executePipeline('sync.execute.', $target);
     }
 }

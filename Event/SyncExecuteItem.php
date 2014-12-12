@@ -16,7 +16,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 /**
  * Import event item carrying both Doctrine element and ES element.
  */
-class SyncImportItem extends AbstractImportItem
+class SyncExecuteItem extends AbstractImportItem
 {
     /**
      * @var array $pantherData

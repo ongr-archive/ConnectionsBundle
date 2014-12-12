@@ -17,7 +17,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 /**
  * SyncImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
  */
-class SyncImportModifyEvent extends AbstractInitialSyncModifyEvent
+class SyncExecuteModifyEvent extends AbstractInitialSyncModifyEvent
 {
     /**
      * Modifies EventItem.
@@ -26,7 +26,7 @@ class SyncImportModifyEvent extends AbstractInitialSyncModifyEvent
      */
     protected function modify(AbstractImportItem $eventItem)
     {
-        /** @var SyncImportItem $eventItem */
+        /** @var SyncExecuteItem $eventItem */
         if ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_CREATE) {
             $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
         } elseif ($eventItem->getPantherData()['type'] == PantherInterface::OPERATION_UPDATE) {

@@ -23,7 +23,7 @@ use Psr\Log\LogLevel;
 /**
  * SyncImportConsumeEvent class, called after modify event. Puts/updates or deletes document into/from Elasticsearch.
  */
-class SyncImportConsumeEvent implements LoggerAwareInterface
+class SyncExecuteConsumeEvent implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 
@@ -65,7 +65,7 @@ class SyncImportConsumeEvent implements LoggerAwareInterface
     {
         $item = $event->getItem();
 
-        if (!$item instanceof SyncImportItem) {
+        if (!$item instanceof SyncExecuteItem) {
             $this->log('Item provided is not an SyncImportItem', LogLevel::NOTICE);
 
             return false;

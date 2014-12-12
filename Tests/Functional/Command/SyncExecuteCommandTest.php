@@ -11,16 +11,16 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
-use ONGR\ConnectionsBundle\Command\SyncImportCommand;
+use ONGR\ConnectionsBundle\Command\SyncExecuteCommand;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
 use ONGR\TestingBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Functional test for ongr:sync:import command.
+ * Functional test for ongr:sync:execute command.
  */
-class SyncImportCommandTest extends ESDoctrineTestCase
+class SyncExecuteCommandTest extends ESDoctrineTestCase
 {
     /**
      * Check if a document is saved as expected after collecting data from providers.
@@ -38,8 +38,8 @@ class SyncImportCommandTest extends ESDoctrineTestCase
         $repository = $manager->getRepository('ONGRTestingBundle:Product');
 
         $application = new Application($kernel);
-        $application->add(new SyncImportCommand());
-        $command = $application->find('ongr:sync:import');
+        $application->add(new SyncExecuteCommand());
+        $command = $application->find('ongr:sync:execute');
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['command' => $command->getName()]);

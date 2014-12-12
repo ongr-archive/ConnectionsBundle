@@ -12,11 +12,11 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
 use Doctrine\ORM\EntityManager;
-use ONGR\ConnectionsBundle\Event\SyncImportSourceEvent;
+use ONGR\ConnectionsBundle\Event\SyncExecuteSourceEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
-class SyncImportSourceEventTest extends \PHPUnit_Framework_TestCase
+class SyncExecuteSourceEventTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var EntityManager
@@ -34,12 +34,12 @@ class SyncImportSourceEventTest extends \PHPUnit_Framework_TestCase
     private $panther;
 
     /**
-     * @var SyncImportSourceEvent
+     * @var SyncExecuteSourceEvent
      */
     private $event;
 
     /**
-     * Test SyncImportItem ChunkSize getter and setter.
+     * Test SyncExecuteItem ChunkSize getter and setter.
      *
      * @return void
      */
@@ -53,7 +53,7 @@ class SyncImportSourceEventTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test SyncImportItem ShopId getter and setter.
+     * Test SyncExecuteItem ShopId getter and setter.
      *
      * @return void
      */
@@ -67,7 +67,7 @@ class SyncImportSourceEventTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test SyncImportItem DocumentType getter and setter.
+     * Test SyncExecuteItem DocumentType getter and setter.
      *
      * @return void
      */
@@ -99,6 +99,12 @@ class SyncImportSourceEventTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->event = new SyncImportSourceEvent($this->manager, 'p', $this->elasticSearchManager, 'p', $this->panther);
+        $this->event = new SyncExecuteSourceEvent(
+            $this->manager,
+            'p',
+            $this->elasticSearchManager,
+            'p',
+            $this->panther
+        );
     }
 }
