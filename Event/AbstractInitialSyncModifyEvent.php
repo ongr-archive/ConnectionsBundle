@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Event;
 
+use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;

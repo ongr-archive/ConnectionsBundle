@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Log;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;

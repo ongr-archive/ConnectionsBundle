@@ -11,13 +11,13 @@
 
 namespace ONGR\ConnectionsBundle\Event;
 
+use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Panther\Panther;
 use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
 
 /**
