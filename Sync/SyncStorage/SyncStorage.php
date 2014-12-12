@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Panther;
+namespace ONGR\ConnectionsBundle\Sync\SyncStorage;
 
 use DateTime;
 use InvalidArgumentException;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 
 /**
- * Class for Panther storage manipulation.
+ * Class for SyncStorage storage manipulation.
  */
-class Panther implements PantherInterface
+class SyncStorage implements SyncStorageInterface
 {
     /**
      * @var StorageManagerInterface

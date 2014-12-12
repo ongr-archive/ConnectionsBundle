@@ -13,8 +13,8 @@ namespace ONGR\ConnectionsBundle\Command;
 
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command which creates storage place for Panther data.
+ * Command which creates storage place for SyncStorage data.
  */
 class SyncStorageCreateCommand extends ContainerAwareCommand
 {
@@ -33,11 +33,11 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ongr:sync:storage:create')
-            ->setDescription('Creates storage place for Panther')
+            ->setDescription('Creates storage place for SyncStorage')
             ->addArgument(
                 'storage',
                 InputArgument::REQUIRED,
-                'Storage to use. Available: ' . Panther::STORAGE_MYSQL
+                'Storage to use. Available: ' . SyncStorage::STORAGE_MYSQL
             )
             ->addOption(
                 'shop-id',
@@ -57,7 +57,7 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
         $shopId = (int)$shopId;
 
         switch ($storage) {
-            case Panther::STORAGE_MYSQL:
+            case SyncStorage::STORAGE_MYSQL:
                 if (!$this->getContainer()->has('doctrine.dbal.default_connection')) {
                     throw new InvalidArgumentException('DBAL connection was not found.');
                 }
@@ -65,7 +65,7 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
                 $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
                 /** @var StorageManagerInterface $storageManager */
                 $storageManager = $this->getContainer()
-                    ->get('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
+                    ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
                 break;
             default:
                 throw new InvalidArgumentException('Storage "' . $storage . '" is not implemented yet.');

@@ -15,13 +15,13 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PantherInterface|MockObject
+     * @var SyncStorageInterface|MockObject
      */
     private $storage;
 
@@ -35,7 +35,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->storage = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\Panther\PantherInterface')
+        $this->storage = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface')
             ->disableOriginalConstructor()
             ->getMock();
         $this->service = new PassthroughExtractor();

@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Sync\DiffImport;
 
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**
  * Class for import sync data to ElasticSearch.
@@ -19,7 +19,7 @@ use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
 abstract class DiffImport
 {
     /**
-     * @var PantherInterface
+     * @var SyncStorageInterface
      */
     private $storage;
 
@@ -29,19 +29,19 @@ abstract class DiffImport
     abstract public function import();
 
     /**
-     * Set Panther storage facility.
+     * Set SyncStorage storage facility.
      *
-     * @param PantherInterface $storage
+     * @param SyncStorageInterface $storage
      */
-    public function setStorageFacility(PantherInterface $storage)
+    public function setStorageFacility(SyncStorageInterface $storage)
     {
         $this->storage = $storage;
     }
 
     /**
-     * Panther storage facility.
+     * SyncStorage storage facility.
      *
-     * @return PantherInterface
+     * @return SyncStorageInterface
      */
     public function getStorageFacility()
     {
