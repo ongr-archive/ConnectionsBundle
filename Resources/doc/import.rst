@@ -123,7 +123,7 @@ Example:
 
 .. code-block:: php
 
-    class ImportModifyEvent extends AbstractInitialSyncModifyEvent
+    class ImportModifyEvent extends AbstractImportModifyEventListener
     {
         /**
          * Assigns raw data to given object.

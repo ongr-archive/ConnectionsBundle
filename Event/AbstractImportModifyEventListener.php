@@ -19,7 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Abstract InitialSyncModifyEvent.
  */
-abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
+abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 

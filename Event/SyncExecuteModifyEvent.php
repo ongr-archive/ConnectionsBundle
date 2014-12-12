@@ -17,7 +17,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 /**
  * SyncImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
  */
-class SyncExecuteModifyEvent extends AbstractInitialSyncModifyEvent
+class SyncExecuteModifyEvent extends AbstractImportModifyEventListener
 {
     /**
      * Modifies EventItem.

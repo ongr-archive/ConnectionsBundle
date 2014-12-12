@@ -17,7 +17,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 
-class AbstractInitialSyncModifyEventTest extends \PHPUnit_Framework_TestCase
+class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests what notices are provided to logger in different cases.
@@ -43,7 +43,7 @@ class AbstractInitialSyncModifyEventTest extends \PHPUnit_Framework_TestCase
             ->method('notice')
             ->with($this->equalTo($notice));
 
-        $event = $this->getMockBuilder('ONGR\ConnectionsBundle\Event\AbstractInitialSyncModifyEvent')
+        $event = $this->getMockBuilder('ONGR\ConnectionsBundle\Event\AbstractImportModifyEventListener')
             ->getMockForAbstractClass();
 
         $event->setLogger($logger);

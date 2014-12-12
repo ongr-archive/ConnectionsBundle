@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Event;
 /**
  * ImportModifyEvent class - assigns data from doctrine item to Elasticsearch document.
  */
-class ImportModifyEvent extends AbstractInitialSyncModifyEvent
+class ImportModifyEvent extends AbstractImportModifyEventListener
 {
     /**
      * Modifies EventItem.
