@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Event;
 
 use Doctrine\ORM\EntityManagerInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;
+use ONGR\ConnectionsBundle\Service\ImportItem;
 use Traversable;
 
 /**
