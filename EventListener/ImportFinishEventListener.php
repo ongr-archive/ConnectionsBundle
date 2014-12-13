@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * ImportFinishEventListener class.
+ * ImportFinishEventListener - commits document to elasticsearch.
  */
 class ImportFinishEventListener
 {

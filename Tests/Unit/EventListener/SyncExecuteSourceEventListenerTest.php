@@ -43,7 +43,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testChunkSizeGetterSetter()
     {
-        $this->setUp();
         $data = 1;
         $this->listener->setChunkSize($data);
         $result = $this->listener->getChunkSize();
@@ -55,7 +54,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testShopIdGetterSetter()
     {
-        $this->setUp();
         $data = 1;
         $this->listener->setShopId($data);
         $result = $this->listener->getShopId();
@@ -67,7 +65,6 @@ class SyncExecuteSourceEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testDocumentTypeGetterSetter()
     {
-        $this->setUp();
         $data = 'product';
         $this->listener->setDocumentType($data);
         $result = $this->listener->getDocumentType();

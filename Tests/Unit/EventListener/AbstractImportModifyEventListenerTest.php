@@ -17,6 +17,9 @@ use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
 
+/**
+ * Tests what notices are provided to logger in different cases.
+ */
 class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**

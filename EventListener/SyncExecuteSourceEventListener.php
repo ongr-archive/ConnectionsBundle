@@ -9,7 +9,7 @@ use ONGR\ConnectionsBundle\Sync\SyncStorageImportIterator;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class SyncExecuteSourceEventListener.
+ * Class SyncExecuteSourceEventListener - creates iterator which provides modified entities.
  */
 class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
 {

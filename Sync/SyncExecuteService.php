@@ -5,7 +5,7 @@ namespace ONGR\ConnectionsBundle\Sync;
 use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 
 /**
- * SyncImportService class.
+ * SyncExecuteService - executes  sync import pipeline.
  */
 class SyncExecuteService extends AbstractPipelineExecuteService
 {

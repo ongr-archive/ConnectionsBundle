@@ -17,7 +17,7 @@ use ONGR\ConnectionsBundle\Sync\Extractor\ExtractorInterface;
 use Psr\Log\LoggerAwareInterface;
 
 /**
- * Data Sync ConsumeEvent.
+ * DataSyncConsumeEventListener - extracts item onConsume event.
  */
 class DataSyncConsumeEventListener implements LoggerAwareInterface
 {

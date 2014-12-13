@@ -18,7 +18,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;
 
 /**
- * Abstract import modify event listener.
+ * AbstractImportModifyEventListener - assigns data from entity to document.
  */
 abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
 {
