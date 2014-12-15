@@ -63,6 +63,6 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $this->assertContains('Success.', $commandTester->getDisplay());
+        $this->assertContains('Job finished', $commandTester->getDisplay());
     }
 }

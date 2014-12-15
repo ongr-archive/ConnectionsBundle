@@ -152,7 +152,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $pipelineFactory->setDispatcher($dispatcher);
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
-        $dataImportService->import();
+        $dataImportService->startPipeline();
     }
 
     /**

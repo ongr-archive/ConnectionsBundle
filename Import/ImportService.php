@@ -23,7 +23,7 @@ class ImportService extends AbstractPipelineExecuteService
      *
      * @param string $target
      */
-    public function import($target = null)
+    public function startPipeline($target = null)
     {
         $this->executePipeline('import.', $target);
     }

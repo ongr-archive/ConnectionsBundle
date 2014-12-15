@@ -130,6 +130,6 @@ class SyncProvideCommandTest extends TestBase
         $this->assertEquals($expectedData, $syncStorageData);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains('Success.', $output);
+        $this->assertContains('Job finished', $output);
     }
 }

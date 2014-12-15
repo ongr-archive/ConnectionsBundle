@@ -22,6 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SyncExecuteCommand extends ContainerAwareCommand
 {
+    use StartServiceHelperTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -42,14 +44,6 @@ class SyncExecuteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $benchmark = new CommandBenchmark($output);
-        $benchmark->start();
-
-        /** @var SyncExecuteService $service */
-        $service = $this->getContainer()->get('ongr_connections.sync.execute_service');
-
-        $service->import($input->getArgument('target'));
-
-        $benchmark->finish();
+        $this->startService($input, $output, 'ongr_connections.sync.execute_service');
     }
 }

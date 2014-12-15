@@ -24,9 +24,9 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand()
     {
         $import = $this->getMockBuilder('ONGR\ConnectionsBundle\Command\ImportCommand')
-            ->setMethods(['import'])
+            ->setMethods(['startPipeline'])
             ->getMock();
-        $import->expects($this->once())->method('import')->will($this->returnValue(null));
+        $import->expects($this->once())->method('startPipeline')->will($this->returnValue(null));
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $import);
         $command = new ImportFullCommand();
@@ -48,9 +48,9 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommandWithTargetParameter()
     {
         $initialSync = $this->getMockBuilder('ONGR\ConnectionsBundle\Command\ImportCommand')
-            ->setMethods(['import'])
+            ->setMethods(['startPipeline'])
             ->getMock();
-        $initialSync->expects($this->once())->method('import')->with(['test'])->will($this->returnValue(null));
+        $initialSync->expects($this->once())->method('startPipeline')->with(['test'])->will($this->returnValue(null));
 
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $initialSync);
