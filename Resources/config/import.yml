@@ -3,8 +3,6 @@ parameters:
     ongr_connections.import.modifier.class: ONGR\ConnectionsBundle\Event\ImportModifyEvent
     ongr_connections.import.consumer.class: ONGR\ConnectionsBundle\Event\ImportConsumeEvent
     ongr_connections.import.finish.class: ONGR\ConnectionsBundle\Event\ImportFinishEvent
-    ongr_connections.import_data_directory.class: ONGR\ConnectionsBundle\Service\ImportDataDirectory
-    ongr_connections.import_data_directory.data_dir: data
 
 services:
     ongr_connections.import_service:
@@ -23,11 +21,3 @@ services:
 
     ongr_connections.import.finish:
         class: %ongr_connections.import.finish.class%
-
-    ongr_connections.import_data_directory:
-        class: %ongr_connections.import_data_directory.class%
-        arguments:
-            - %kernel.root_dir%
-            - %ongr_connections.import_data_directory.data_dir%
-        calls:
-            - [setDateHelper, [@ongr_connections.date_helper]]

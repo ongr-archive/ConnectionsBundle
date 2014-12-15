@@ -2,7 +2,6 @@ parameters:
     ongr_connections.jobs_cleanup_service.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobsCleanupService
     ongr_connections.sync.job_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobManager
     ongr_connections.mapping_listener.class: ONGR\ConnectionsBundle\EventListener\LoadClassMetadataListener
-    ongr_connections.date_helper.class: ONGR\ConnectionsBundle\Service\DateHelper
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
     ongr_connections.import_service.class: ONGR\ConnectionsBundle\Import\ImportService
@@ -35,9 +34,6 @@ services:
         abstract: true
         calls:
             - [ setDispatcher, [ @event_dispatcher ] ]
-
-    ongr_connections.date_helper:
-        class: %ongr_connections.date_helper.class%
 
     ongr_connections.sync_task_complete_blocker_listener:
         class: %ongr_connections.sync_task_complete_blocker_listener.class%
