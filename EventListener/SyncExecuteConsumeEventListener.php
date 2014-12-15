@@ -70,7 +70,7 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
                 sprintf('No operation type defined for document id: %s', $this->document->getId()),
                 LogLevel::NOTICE
             );
-            $this->syncStorageData = null;
+            $this->syncStorageData = [];
 
             return false;
         }

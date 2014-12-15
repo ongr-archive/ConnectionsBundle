@@ -120,8 +120,6 @@ class SyncStorageImportIterator implements \Iterator
             return;
         }
 
-        $this->valid = true;
-
         $this->currentEntity = $this
             ->entityManager
             ->getRepository($this->entityClass)->find($this->currentChunk[0]['document_id']);
@@ -141,7 +139,7 @@ class SyncStorageImportIterator implements \Iterator
     public function key()
     {
         if ($this->valid()) {
-            return key($this->currentChunk[0]['document_id']);
+            return $this->currentChunk[0]['document_id'];
         }
 
         return 0;

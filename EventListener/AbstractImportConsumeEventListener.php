@@ -59,8 +59,6 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
      */
     public function onConsume(ItemPipelineEvent $event)
     {
-        $this->document = null;
-
         if (!$this->validateItem($event)) {
             return false;
         }

@@ -13,9 +13,9 @@ CREATE TABLE `ongr_sync_storage_1` (
 -- adds dummy data to sync storage table
 INSERT INTO `ongr_sync_storage_1` (`id`, `type`, `document_type`, `document_id`, `timestamp`, `status`)
 VALUES
-  (1, 'c', 'product', 3, '2014-12-09 09:00:00', 0),
-  (2, 'c', 'product', 4, '2014-12-09 09:00:00', 0),
-  (3, 'c', 'product', 5, '2014-12-09 09:00:00', 0),
-  (4, 'c', 'product', 6, '2014-12-09 09:00:00', 0),
-  (5, 'u', 'product', 1, '2014-12-01 10:00:00', 0),
-  (6, 'd', 'product', 2, '2014-12-01 11:00:00', 0);
+  (11, 'c', 'product', 3, '2014-12-09 09:00:00', 0),
+  (12, 'c', 'product', 4, '2014-12-09 09:00:00', 0),
+  (13, 'c', 'product', 5, '2014-12-09 09:00:00', 0),
+  (14, 'c', 'product', 6, '2014-12-09 09:00:00', 0),
+  (15, 'u', 'product', 1, '2014-12-11 10:00:00', 0),
+  (16, 'd', 'product', 2, '2014-12-11 11:00:00', 0);
