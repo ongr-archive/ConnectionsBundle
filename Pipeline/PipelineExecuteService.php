@@ -14,9 +14,9 @@ namespace ONGR\ConnectionsBundle\Pipeline;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 
 /**
- * AbstractPipelineExecuteService class - creates pipeline and executes it.
+ * PipelineExecuteService class - creates pipeline and executes it.
  */
-abstract class AbstractPipelineExecuteService
+class PipelineExecuteService
 {
     /**
      * @var PipelineFactory
@@ -45,7 +45,7 @@ abstract class AbstractPipelineExecuteService
      * @param string $prefix
      * @param string $target
      */
-    protected function executePipeline($prefix, $target)
+    public function executePipeline($prefix, $target)
     {
         if ($target === null) {
             $target = 'default';

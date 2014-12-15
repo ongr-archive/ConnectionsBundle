@@ -19,6 +19,7 @@ use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
 
@@ -147,12 +148,12 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $dispatcher = $this->getMockDispatcher($finishListener, $consumeListener, $eventItem, $modifyListener);
 
-        $dataImportService = new \ONGR\ConnectionsBundle\Import\ImportService();
+        $dataImportService = new PipelineExecuteService();
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher($dispatcher);
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
-        $dataImportService->startPipeline();
+        $dataImportService->executePipeline('import.', null);
     }
 
     /**

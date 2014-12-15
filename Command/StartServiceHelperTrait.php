@@ -11,7 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Import\ImportService;
+use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
+use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,18 +25,18 @@ trait StartServiceHelperTrait
     /**
      * Starts service by provided parameters.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param string          $service
+     * @param InputInterface         $input
+     * @param OutputInterface        $output
+     * @param PipelineExecuteService $service
+     * @param string                 $prefix
      */
-    private function start(InputInterface $input, OutputInterface $output, $service)
+    private function start(InputInterface $input, OutputInterface $output, $service, $prefix)
     {
         $benchmark = new CommandBenchmark($output);
         $benchmark->start();
 
-        $service = $this->getContainer()->get($service);
-
-        $service->startPipeline($input->getArgument('target'));
+        /** @var PipelineExecuteService $service */
+        $service->executePipeline($prefix, $input->getArgument('target'));
 
         $benchmark->finish();
     }

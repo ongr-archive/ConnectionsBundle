@@ -41,6 +41,11 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->start($input, $output, 'ongr_connections.sync.data_sync_service');
+        $this->start(
+            $input,
+            $output,
+            $this->getContainer()->get('ongr_connections.sync.data_sync_service'),
+            'data_sync.'
+        );
     }
 }

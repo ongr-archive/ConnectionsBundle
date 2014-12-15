@@ -41,6 +41,11 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->start($input, $output, 'ongr_connections.import_service');
+        $this->start(
+            $input,
+            $output,
+            $this->getContainer()->get('ongr_connections.import_service'),
+            'import.'
+        );
     }
 }
