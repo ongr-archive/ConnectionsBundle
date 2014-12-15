@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\ImportFullCommand;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
-use ONGR\ConnectionsBundle\Tests\app\fixture\Acme\TestBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 

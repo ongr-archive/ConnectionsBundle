@@ -9,17 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\app\fixture\Acme\TestBundle\Document;
+namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle;
 
-use ONGR\ElasticsearchBundle\Annotation as ES;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Category document for testing.
- *
- * @ES\Object
+ * AcmeTestBundle for testing.
  */
-class Category
+class AcmeTestBundle extends Bundle
 {
 
-    public $hiddenField;
 }
