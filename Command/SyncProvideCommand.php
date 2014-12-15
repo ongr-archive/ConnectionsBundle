@@ -11,9 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Sync\DataSyncService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -29,11 +27,9 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this
-            ->setName('ongr:sync:provide')
-            ->setDescription('Starts data synchronization pipeline');
+        $this->setName('ongr:sync:provide')->setDescription('Starts data synchronization pipeline');
 
-        $this->addStandardArgument();
+        $this->addStandardArgument($this);
     }
 
     /**
@@ -41,11 +37,7 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->start(
-            $input,
-            $output,
-            $this->getContainer()->get('ongr_connections.sync.data_sync_service'),
-            'data_sync.'
-        );
+        $service = $this->getContainer()->get('ongr_connections.sync.data_sync_service');
+        $this->start($input, $output, $service, 'data_sync.');
     }
 }

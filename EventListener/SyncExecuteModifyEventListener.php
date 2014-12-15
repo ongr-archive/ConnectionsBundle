@@ -14,7 +14,6 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
  * SyncExecuteModifyEventListener class - assigns data from doctrine item to Elasticsearch document.

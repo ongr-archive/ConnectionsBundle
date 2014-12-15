@@ -11,7 +11,6 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

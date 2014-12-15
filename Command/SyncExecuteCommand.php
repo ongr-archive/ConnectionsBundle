@@ -11,9 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Sync\SyncExecuteService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -29,11 +27,9 @@ class SyncExecuteCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this
-            ->setName('ongr:sync:execute')
-            ->setDescription('Imports data from SyncStorage.');
+        $this->setName('ongr:sync:execute')->setDescription('Imports data from SyncStorage.');
 
-        $this->addStandardArgument();
+        $this->addStandardArgument($this);
     }
 
     /**
@@ -41,11 +37,7 @@ class SyncExecuteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->start(
-            $input,
-            $output,
-            $this->getContainer()->get('ongr_connections.sync.execute_service'),
-            'sync.execute.'
-        );
+        $service = $this->getContainer()->get('ongr_connections.sync.execute_service');
+        $this->start($input, $output, $service, 'sync.execute.');
     }
 }

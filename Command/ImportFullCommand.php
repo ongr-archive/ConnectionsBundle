@@ -29,9 +29,7 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this
-            ->setName('ongr:import:full')
-            ->setDescription('Imports data from defined sources into relevant consumers.');
+        $this->setName('ongr:import:full')->setDescription('Imports data from defined sources into consumers.');
 
         $this->addStandardArgument($this);
     }
@@ -41,11 +39,7 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->start(
-            $input,
-            $output,
-            $this->getContainer()->get('ongr_connections.import_service'),
-            'import.'
-        );
+        $service = $this->getContainer()->get('ongr_connections.import_service');
+        $this->start($input, $output, $service, 'import.');
     }
 }
