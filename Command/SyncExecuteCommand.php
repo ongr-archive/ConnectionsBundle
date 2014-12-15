@@ -31,12 +31,9 @@ class SyncExecuteCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ongr:sync:execute')
-            ->setDescription('Imports data from SyncStorage.')
-            ->addArgument(
-                'target',
-                InputArgument::OPTIONAL,
-                'Set a specific pipeline event name.'
-            );
+            ->setDescription('Imports data from SyncStorage.');
+
+        $this->addStandardArgument();
     }
 
     /**
@@ -44,6 +41,6 @@ class SyncExecuteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->startService($input, $output, 'ongr_connections.sync.execute_service');
+        $this->start($input, $output, 'ongr_connections.sync.execute_service');
     }
 }

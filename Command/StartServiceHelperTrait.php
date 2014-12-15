@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Command;
 
 use ONGR\ConnectionsBundle\Import\ImportService;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,7 +28,7 @@ trait StartServiceHelperTrait
      * @param OutputInterface $output
      * @param string          $service
      */
-    private function startService(InputInterface $input, OutputInterface $output, $service)
+    private function start(InputInterface $input, OutputInterface $output, $service)
     {
         $benchmark = new CommandBenchmark($output);
         $benchmark->start();
@@ -37,5 +38,17 @@ trait StartServiceHelperTrait
         $service->startPipeline($input->getArgument('target'));
 
         $benchmark->finish();
+    }
+
+    /**
+     * Adds argument with standard parameters.
+     */
+    private function addStandardArgument()
+    {
+        $this->addArgument(
+            'target',
+            InputArgument::OPTIONAL,
+            'Set a specific pipeline event name.'
+        );
     }
 }

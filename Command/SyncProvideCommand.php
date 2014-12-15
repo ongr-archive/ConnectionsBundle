@@ -31,12 +31,9 @@ class SyncProvideCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ongr:sync:provide')
-            ->setDescription('Starts data synchronization pipeline')
-            ->addArgument(
-                'target',
-                InputArgument::OPTIONAL,
-                'Set a specific pipeline event name.'
-            );
+            ->setDescription('Starts data synchronization pipeline');
+
+        $this->addStandardArgument();
     }
 
     /**
@@ -44,6 +41,6 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->startService($input, $output, 'ongr_connections.sync.data_sync_service');
+        $this->start($input, $output, 'ongr_connections.sync.data_sync_service');
     }
 }

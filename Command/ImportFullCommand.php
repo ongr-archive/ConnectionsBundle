@@ -31,12 +31,9 @@ class ImportFullCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ongr:import:full')
-            ->setDescription('Imports data from defined sources into relevant consumers.')
-            ->addArgument(
-                'target',
-                InputArgument::OPTIONAL,
-                'Set a specific pipeline event name.'
-            );
+            ->setDescription('Imports data from defined sources into relevant consumers.');
+
+        $this->addStandardArgument();
     }
 
     /**
@@ -44,6 +41,6 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->startService($input, $output, 'ongr_connections.import_service');
+        $this->start($input, $output, 'ongr_connections.import_service');
     }
 }
