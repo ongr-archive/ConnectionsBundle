@@ -17,25 +17,27 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+
 /**
- * Simplifies command execute.
+ * AbstractStartServiceCommand -  starts service.
  */
-trait StartServiceHelperTrait
+abstract class AbstractStartServiceCommand extends ContainerAwareCommand
 {
     /**
      * Starts service by provided parameters.
      *
-     * @param InputInterface         $input
-     * @param OutputInterface        $output
-     * @param PipelineExecuteService $service
-     * @param string                 $prefix
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param string          $serviceClass
+     * @param string          $prefix
      */
-    private function start(InputInterface $input, OutputInterface $output, $service, $prefix)
+    protected function start(InputInterface $input, OutputInterface $output, $serviceClass, $prefix)
     {
         $benchmark = new CommandBenchmark($output);
         $benchmark->start();
 
         /** @var PipelineExecuteService $service */
+        $service = $this->getContainer()->get($serviceClass);
         $service->executePipeline($prefix, $input->getArgument('target'));
 
         $benchmark->finish();
@@ -43,12 +45,10 @@ trait StartServiceHelperTrait
 
     /**
      * Adds argument with standard parameters.
-     *
-     * @param ContainerAwareCommand $command
      */
-    private function addStandardArgument($command)
+    protected function addStandardArgument()
     {
-        $command->addArgument(
+        $this->addArgument(
             'target',
             InputArgument::OPTIONAL,
             'Set a specific pipeline event name.'

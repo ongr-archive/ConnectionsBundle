@@ -11,17 +11,14 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to start synchronization pipeline process.
  */
-class SyncProvideCommand extends ContainerAwareCommand
+class SyncProvideCommand extends AbstractStartServiceCommand
 {
-    use StartServiceHelperTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +34,6 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $service = $this->getContainer()->get('ongr_connections.sync.data_sync_service');
-        $this->start($input, $output, $service, 'data_sync.');
+        $this->start($input, $output, 'ongr_connections.sync.data_sync_service', 'data_sync.');
     }
 }

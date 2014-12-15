@@ -11,17 +11,14 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command which checks sync storage for updated/created/deleted data and imports changes to elastic search.
  */
-class SyncExecuteCommand extends ContainerAwareCommand
+class SyncExecuteCommand extends AbstractStartServiceCommand
 {
-    use StartServiceHelperTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +34,6 @@ class SyncExecuteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $service = $this->getContainer()->get('ongr_connections.sync.execute_service');
-        $this->start($input, $output, $service, 'sync.execute.');
+        $this->start($input, $output, 'ongr_connections.sync.execute_service', 'sync.execute.');
     }
 }

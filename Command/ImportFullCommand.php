@@ -20,10 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command which handles data import.
  */
-class ImportFullCommand extends ContainerAwareCommand
+class ImportFullCommand extends AbstractStartServiceCommand
 {
-    use StartServiceHelperTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -39,7 +37,6 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $service = $this->getContainer()->get('ongr_connections.import_service');
-        $this->start($input, $output, $service, 'import.');
+        $this->start($input, $output, 'ongr_connections.import_service', 'import.');
     }
 }
