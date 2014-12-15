@@ -33,7 +33,7 @@ class ImportFullCommand extends ContainerAwareCommand
             ->setName('ongr:import:full')
             ->setDescription('Imports data from defined sources into relevant consumers.');
 
-        $this->addStandardArgument();
+        $this->addStandardArgument($this);
     }
 
     /**

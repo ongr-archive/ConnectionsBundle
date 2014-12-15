@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Command;
 
 use ONGR\ConnectionsBundle\Pipeline\AbstractPipelineExecuteService;
 use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,10 +44,12 @@ trait StartServiceHelperTrait
 
     /**
      * Adds argument with standard parameters.
+     *
+     * @param ContainerAwareCommand $command
      */
-    private function addStandardArgument()
+    private function addStandardArgument($command)
     {
-        $this->addArgument(
+        $command->addArgument(
             'target',
             InputArgument::OPTIONAL,
             'Set a specific pipeline event name.'
