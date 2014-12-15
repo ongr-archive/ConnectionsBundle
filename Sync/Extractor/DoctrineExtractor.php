@@ -21,15 +21,15 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation;
 use ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
-use ONGR\ConnectionsBundle\Sync\Panther\PantherInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**
- * Extractor that joins entities for insertion to Panther.
+ * Extractor that joins entities for insertion to SyncStorage.
  */
 class DoctrineExtractor implements ExtractorInterface
 {
     /**
-     * @var PantherInterface
+     * @var SyncStorageInterface
      */
     private $storage;
 
@@ -106,7 +106,7 @@ class DoctrineExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function setStorageFacility(PantherInterface $storage)
+    public function setStorageFacility(SyncStorageInterface $storage)
     {
         $this->storage = $storage;
     }

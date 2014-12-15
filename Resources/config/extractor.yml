@@ -8,12 +8,12 @@ services:
         calls:
             - [ setRelationsCollection, [ @ongr_connections.sync.relations_collection ] ]
             - [ setConnection, [ @database_connection ] ]
-            - [ setStorageFacility, [ @ongr_connections.sync.panther ] ]
+            - [ setStorageFacility, [ @ongr_connections.sync.sync_storage ] ]
 
     ongr_connections.sync.extractor.passthrough_extractor:
         class: %ongr_connections.extractor.passthrough_extractor.class%
         calls:
-            - [ setStorageFacility, [ @ongr_connections.sync.panther ] ]
+            - [ setStorageFacility, [ @ongr_connections.sync.sync_storage ] ]
 
     ongr_connections.sync.relations_collection:
         class: %ongr_connections.sync.relations_collection.class%

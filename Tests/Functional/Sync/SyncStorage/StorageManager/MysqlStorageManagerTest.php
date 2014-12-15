@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Panther\StorageManager;
+namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage\StorageManager;
 
 use DateTime;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 
 class MysqlStorageManagerTest extends TestBase
 {
-    const TABLE_NAME = 'panther_test_storage';
+    const TABLE_NAME = 'sync_storage_test_storage';
 
     /**
      * @var MysqlStorageManager

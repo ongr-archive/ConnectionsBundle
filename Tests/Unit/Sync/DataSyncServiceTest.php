@@ -52,7 +52,7 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
         $pipelineName = 'some-target';
 
         $this->pipeline->expects($this->once())
-            ->method('execute');
+            ->method('start');
 
         $this->pipelineFactory->expects($this->once())
             ->method('create')

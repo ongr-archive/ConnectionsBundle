@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Panther;
+namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage;
 
 use DateTime;
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
- * Functional test for Panther.
+ * Functional test for SyncStorage.
  */
-class PantherTest extends TestBase
+class SyncStorageTest extends TestBase
 {
     /**
      * @var StorageManagerInterface|MockObject
@@ -28,7 +28,7 @@ class PantherTest extends TestBase
     private $storageManager;
 
     /**
-     * @var Panther
+     * @var SyncStorage
      */
     private $service;
 
@@ -38,10 +38,10 @@ class PantherTest extends TestBase
     protected function setUp()
     {
         $this->storageManager = $this->getMockBuilder(
-            'ONGR\ConnectionsBundle\Sync\Panther\StorageManager\StorageManagerInterface'
+            'ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface'
         )->getMock();
 
-        $this->service = new Panther($this->storageManager);
+        $this->service = new SyncStorage($this->storageManager);
 
         parent::setUp();
     }
@@ -49,7 +49,7 @@ class PantherTest extends TestBase
     /**
      * Test save action.
      */
-    public function testPantherSaveAction()
+    public function testSyncStorageSaveAction()
     {
         $shopIds = [1, 2, 3];
 
@@ -77,7 +77,7 @@ class PantherTest extends TestBase
     /**
      * Test delete action.
      */
-    public function testPantherDeleteItem()
+    public function testSyncStorageDeleteItem()
     {
         $valueMap = [
             [123, [1], null],
@@ -96,7 +96,7 @@ class PantherTest extends TestBase
     /**
      * Test getChunk action.
      */
-    public function testPantherGetChunk()
+    public function testSyncStorageGetChunk()
     {
         $valueMap = [
             [1, null, null, [1]],

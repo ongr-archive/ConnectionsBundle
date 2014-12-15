@@ -11,7 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\DependencyInjection;
 
-use ONGR\ConnectionsBundle\Sync\Panther\Panther;
+use LogicException;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,19 +41,44 @@ class ONGRConnectionsExtension extends Extension
         $loader->load('extractor.yml');
         $loader->load('sync_storage.yml');
 
-        $activeShop = !empty($config['active_shop']) ? $config['active_shop'] : null;
-        $container->setParameter('ongr_connections.active_shop', $activeShop);
-        $container->setParameter('ongr_connections.shops', $config['shops']);
-        $container->setParameter('ongr_connections.sync.jobs_table_name', $config['sync']['jobs_table_name']);
+        $this->initShops($container, $config);
+        $this->initJobs($container, $config);
+        $this->initSyncStorage($container, $config);
+        $this->initMappingListener($container, $config);
+    }
 
+    /**
+     * Set up shops.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     *
+     * @throws LogicException
+     */
+    private function initShops(ContainerBuilder $container, array $config)
+    {
+        $activeShop = !empty($config['active_shop']) ? $config['active_shop'] : null;
         if ($activeShop !== null && !isset($config['shops'][$activeShop])) {
-            throw new \LogicException(
-                "Parameter 'ongr_connections.active_shop' must have value one of defined in 'ongr_connections.shops'."
+            throw new LogicException(
+                "Parameter 'ongr_connections.active_shop' must be set to one" .
+                "of the values defined in 'ongr_connections.shops'."
             );
         }
 
-        $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['sync']['jobs_connection']);
+        $container->setParameter('ongr_connections.active_shop', $activeShop);
+        $container->setParameter('ongr_connections.shops', $config['shops']);
+    }
 
+    /**
+     * Set up jobs.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function initJobs(ContainerBuilder $container, array $config)
+    {
+        $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['sync']['jobs_connection']);
+        $container->setParameter('ongr_connections.sync.jobs_table_name', $config['sync']['jobs_table_name']);
         $definition = $container->getDefinition('ongr_connections.sync.table_manager');
         $definition->setArguments(
             [
@@ -61,60 +87,48 @@ class ONGRConnectionsExtension extends Extension
                 array_keys($config['shops']),
             ]
         );
-
-        // Panther service setup.
-        $this->initPanther($container, $config);
-
-        $definition = $container->getDefinition('ongr_connections.mapping_listener');
-
-        $definition->addMethodCall('addReplacement', ['@sync_jobs_table', $config['sync']['jobs_table_name']]);
-
-        $activeShopReplacement = !empty($activeShop) ? "_{$activeShop}" : '';
-        $definition->addMethodCall('addReplacement', ['@active_shop', $activeShopReplacement]);
     }
 
     /**
-     * Initializes Panther service.
+     * Initializes SyncStorage service.
      *
      * @param ContainerBuilder $container
      * @param array            $config
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
-    private function initPanther(ContainerBuilder $container, array $config)
+    private function initSyncStorage(ContainerBuilder $container, array $config)
     {
-        if (!isset($config['sync']['panther']) || empty($config['sync']['panther'])) {
-            throw new \LogicException('Parameter \'ongr_connections.sync.panther\' must be set');
+        $availableStorages = array_keys($config['sync']['sync_storage']);
+        $syncStorageStorage = current($availableStorages);
+        if (empty($syncStorageStorage)) {
+            throw new LogicException('Data synchronization storage must be set.');
         }
 
-        $availableStorages = array_keys($config['sync']['panther']);
-        $pantherStorage = current($availableStorages);
-        if (empty($pantherStorage)) {
-            throw new \LogicException('Storage for Panther must be set.');
-        }
+        $syncStorageStorageConfig = $config['sync']['sync_storage'][$syncStorageStorage];
 
-        $pantherStorageConfig = $config['sync']['panther'][$pantherStorage];
-
-        switch ($pantherStorage) {
-            case Panther::STORAGE_MYSQL:
-                $this->initPantherForMysql($container, $pantherStorageConfig);
+        switch ($syncStorageStorage) {
+            case SyncStorage::STORAGE_MYSQL:
+                $this->initSyncStorageForMysql($container, $syncStorageStorageConfig);
                 break;
             default:
-                throw new \LogicException('Unknown storage for Panther.');
+                throw new LogicException("Unknown storage is set: {$syncStorageStorage}");
         }
     }
 
     /**
-     * Set-up Panther with MySQL storage.
+     * Set up Sync. storage with MySQL storage.
      *
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    private function initPantherForMysql(ContainerBuilder $container, array $config)
+    private function initSyncStorageForMysql(ContainerBuilder $container, array $config)
     {
         // Initiate MySQL storage manager.
         $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['connection']);
-        $definition = $container->getDefinition('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
+        $definition = $container->getDefinition(
+            'ongr_connections.sync.storage_manager.mysql_storage_manager'
+        );
         $definition->setArguments(
             [
                 new Reference($doctrineConnection, ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
@@ -122,10 +136,24 @@ class ONGRConnectionsExtension extends Extension
             ]
         );
 
-        // Initiate Panther and inject storage manager into it.
-        $definition = $container->getDefinition('ongr_connections.sync.panther');
+        // Initiate SyncStorage and inject storage manager into it.
+        $definition = $container->getDefinition('ongr_connections.sync.sync_storage');
         $definition->setArguments(
-            [$container->getDefinition('ongr_connections.sync.panther.storage_manager.mysql_storage_manager')]
+            [$container->getDefinition('ongr_connections.sync.storage_manager.mysql_storage_manager')]
         );
+    }
+
+    /**
+     * Set up mapping listener.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function initMappingListener(ContainerBuilder $container, array $config)
+    {
+        $definition = $container->getDefinition('ongr_connections.mapping_listener');
+        $definition->addMethodCall('addReplacement', ['@sync_jobs_table', $config['sync']['jobs_table_name']]);
+        $activeShopReplacement = !empty($activeShop) ? "_{$activeShop}" : '';
+        $definition->addMethodCall('addReplacement', ['@active_shop', $activeShopReplacement]);
     }
 }

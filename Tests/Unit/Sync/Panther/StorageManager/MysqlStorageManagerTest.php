@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Sync\Panther\StorageManager;
+namespace ONGR\ConnectionsBundle\Tests\Unit\Sync\SyncStorage\StorageManager;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
@@ -21,7 +21,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
  */
 class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
 {
-    const TABLE_NAME = 'panther_storage_test';
+    const TABLE_NAME = 'sync_storage_test';
 
     /**
      * @var Connection|MockObject
