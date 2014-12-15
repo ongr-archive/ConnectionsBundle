@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\Panther\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -39,8 +39,8 @@ class SyncProvideCommandTest extends TestBase
         $kernel = self::createClient()->getKernel();
         $container = $kernel->getContainer();
 
-        /** @var MysqlStorageManager $pantherMysql */
-        $pantherMysql = $this->getPantherStorageManager($container);
+        /** @var MysqlStorageManager $managerMysql */
+        $managerMysql = $this->getSyncStorageManager($container);
         $this->importData('ExtractorTest/sample_db_nodelay.sql');
 
         $expectedData = [
@@ -105,11 +105,11 @@ class SyncProvideCommandTest extends TestBase
         $commandTester = $this->executeCommand($kernel);
 
         // Ensure that there is no time difference between records (even though there might be).
-        $pantherMysql->getConnection()->executeQuery("update {$pantherMysql->getTableName()} set timestamp=NOW()");
+        $managerMysql->getConnection()->executeQuery("update {$managerMysql->getTableName()} set timestamp=NOW()");
 
-        $pantherData = $this->getPantherData($container, count($expectedData));
+        $storageData = $this->getSyncData($container, count($expectedData));
 
-        $this->assertEquals($expectedData, $pantherData);
+        $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Success.', $output);
@@ -123,7 +123,7 @@ class SyncProvideCommandTest extends TestBase
         $kernel = self::createClient()->getKernel();
         $container = $kernel->getContainer();
 
-        $this->getPantherStorageManager($container);
+        $this->getSyncStorageManager($container);
         $this->importData('ExtractorTest/sample_db.sql');
 
         $expectedData = [
@@ -187,9 +187,9 @@ class SyncProvideCommandTest extends TestBase
 
         $commandTester = $this->executeCommand($kernel);
 
-        $pantherData = $this->getPantherData($container, count($expectedData));
+        $storageData = $this->getSyncData($container, count($expectedData));
 
-        $this->assertEquals($expectedData, $pantherData);
+        $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Success.', $output);
@@ -219,18 +219,18 @@ class SyncProvideCommandTest extends TestBase
     }
 
     /**
-     * Sets up Panther storage, returns MysqlStorageManager.
+     * Sets up Sync storage, returns MysqlStorageManager.
      *
      * @param ContainerInterface $container
      *
      * @return MysqlStorageManager
      */
-    private function getPantherStorageManager($container)
+    private function getSyncStorageManager($container)
     {
-        $pantherMysql = $container->get('ongr_connections.sync.panther.storage_manager.mysql_storage_manager');
-        $pantherMysql->createStorage();
+        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
+        $managerMysql->createStorage();
 
-        return $pantherMysql;
+        return $managerMysql;
     }
 
     /**
@@ -241,20 +241,20 @@ class SyncProvideCommandTest extends TestBase
      *
      * @return array
      */
-    private function getPantherData($container, $count)
+    private function getSyncData($container, $count)
     {
-        $panther = $container->get('ongr_connections.sync.panther');
-        $pantherData = $panther->getChunk($count);
+        $syncStorage = $container->get('ongr_connections.sync.sync_storage');
+        $storageData = $syncStorage->getChunk($count);
 
         // Remove `id` and `timestamp` from result array.
         array_filter(
-            $pantherData,
+            $storageData,
             function (&$var) {
                 unset($var['id']);
                 unset($var['timestamp']);
             }
         );
 
-        return $pantherData;
+        return $storageData;
     }
 }
