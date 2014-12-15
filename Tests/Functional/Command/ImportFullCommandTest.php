@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\ImportFullCommand;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
-use ONGR\TestingBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\app\fixture\Acme\TestBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -31,7 +31,7 @@ class ImportFullCommandTest extends ESDoctrineTestCase
         $this->importData('ImportCommandTest/products.sql');
 
         $manager = $this->getManager();
-        $repository = $manager->getRepository('ONGRTestingBundle:Product');
+        $repository = $manager->getRepository('AcmeTestBundle:Product');
 
         $application = new Application($kernel);
         $application->add(new ImportFullCommand());

@@ -60,7 +60,7 @@ services:
              - @doctrine.orm.default_entity_manager
              - Test:TestProduct
              - @es.manager
-             - ONGRTestingBundle:Product
+             - AcmeTestBundle:Product
            tags:
              - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
 
