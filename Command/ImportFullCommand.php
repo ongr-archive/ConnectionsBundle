@@ -29,7 +29,7 @@ class ImportFullCommand extends AbstractStartServiceCommand
     {
         $this->setName('ongr:import:full')->setDescription('Imports data from defined sources into consumers.');
 
-        $this->addStandardArgument($this);
+        $this->addStandardArgument();
     }
 
     /**
