@@ -28,7 +28,7 @@ trait EventLoggerAwareTrait
      * @param string $level
      * @param array  $context
      */
-    private function log($message, $level = LogLevel::DEBUG, $context = [])
+    protected function log($message, $level = LogLevel::DEBUG, $context = [])
     {
         if ($this->logger) {
             $this->logger->log($level, $message, $context);

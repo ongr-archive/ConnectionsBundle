@@ -66,7 +66,7 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 new \stdClass,
-                'Item provided is not an ImportItem',
+                'Item provided is not an ONGR\ConnectionsBundle\Import\Item\ImportItem',
             ],
         ];
     }

@@ -229,7 +229,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             [
                 'product',
                 new \stdClass,
-                [['Item provided is not an SyncExecuteItem', LogLevel::NOTICE]],
+                [['Item provided is not an ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem', LogLevel::NOTICE]],
                 null,
             ],
         ];
