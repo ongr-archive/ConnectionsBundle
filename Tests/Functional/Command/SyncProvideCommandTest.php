@@ -234,7 +234,7 @@ class SyncProvideCommandTest extends TestBase
     }
 
     /**
-     * Gets data from Panther.
+     * Gets data from Sync storage.
      *
      * @param ContainerInterface $container
      * @param int                $count
