@@ -13,7 +13,6 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBund
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * Product document for testing.
@@ -29,47 +28,168 @@ class Product extends Item implements DocumentInterface
      *
      * @ES\Property(type="string", name="title", fields={@ES\MultiField(name="raw", type="string")})
      */
-    public $title;
+    private $title;
 
     /**
      * @var string
      *
      * @ES\Property(type="string", name="description")
      */
-    public $description;
+    private $description;
 
     /**
      * @var int
      *
      * @ES\Property(type="integer", name="price")
      */
-    public $price;
+    private $price;
 
     /**
      * @var string
      *
      * @ES\Property(type="geo_point", name="location")
      */
-    public $location;
+    private $location;
 
     /**
      * @var UrlObject[]|\Iterator
      *
      * @ES\Property(type="object", objectName="AcmeTestBundle:UrlObject", multiple=true, name="url")
      */
-    public $links;
-
-    /**
-     * @var ImagesNested[]|\Iterator
-     *
-     * @ES\Property(type="nested", objectName="AcmeTestBundle:ImagesNested", multiple=true, name="images")
-     */
-    public $images;
+    private $links;
 
     /**
      * @var Category[]|\Iterator
      *
      * @ES\Property(type="object", objectName="AcmeTestBundle:Category", multiple=true, name="categories")
      */
-    public $categories;
+    private $categories;
+
+    /**
+     * @return \Iterator|Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param \Iterator|Category[] $categories
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return \Iterator|UrlObject[]
+     */
+    public function getLinks()
+    {
+        return $this->links;
+    }
+
+    /**
+     * @param \Iterator|UrlObject[] $links
+     */
+    public function setLinks($links)
+    {
+        $this->links = $links;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param int $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 }

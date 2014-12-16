@@ -1,3 +1,6 @@
+/**
+ * Populates binlog with test data.
+ */
 CREATE TABLE `oxcategories` (
    OXID VARCHAR(100),
    OXTITLE VARCHAR(100)

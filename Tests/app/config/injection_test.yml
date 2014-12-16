@@ -4,6 +4,8 @@ parameters:
     ongr_project.sql_relations.related_table.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\JoinStatement
     ongr_project.sql_relations.category.fields:
         - OXTITLE
+    # import modifier test class.
+    ongr_connections.import.modifier.class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestModifyEventListener
 
 services:
     ongr_project.sql_relations.category.delete:

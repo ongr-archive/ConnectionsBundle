@@ -25,21 +25,30 @@ class UrlObject
      *
      * @ES\Property(name="url", type="string")
      */
-    public $url;
+    private $url;
 
     /**
      * @var string
      *
      * @ES\Property(name="key", type="string", index="no")
      */
-    public $urlKey;
+    private $urlKey;
 
     /**
-     * @var CdnObject
-     *
-     * @ES\Property(name="cdn", type="object", objectName="AcmeTestBundle:CdnObject")
+     * @param string $url
      */
-    public $cdn;
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
     /**
      * @param string $urlKey

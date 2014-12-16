@@ -25,7 +25,7 @@ class ImagesNested
      *
      * @ES\Property(name="url", type="string")
      */
-    public $url;
+    private $url;
 
     /**
      * @var string
@@ -33,19 +33,62 @@ class ImagesNested
      *
      * @ES\Property(name="title", type="string", index="no")
      */
-    public $title;
+    private $title;
 
     /**
      * @var string
      *
      * @ES\Property(name="description", type="string", index="no")
      */
-    public $description;
+    private $description;
 
     /**
-     * @var object
-     *
-     * @ES\Property(name="cdn", type="object", objectName="AcmeTestBundle:CdnObject")
+     * @return string
      */
-    public $cdn;
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+
 }

@@ -15,7 +15,7 @@ use ArrayObject;
 use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
 use ONGR\ConnectionsBundle\Event\ImportFinishEvent;
 use ONGR\ConnectionsBundle\Event\ImportItem;
-use ONGR\ConnectionsBundle\Event\ImportModifyEvent;
+use ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import\TestModifyEventListener;
 use ONGR\ConnectionsBundle\Event\ImportSourceEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
@@ -89,10 +89,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param ImportFinishEvent  $finishListener
-     * @param ImportConsumeEvent $consumeListener
-     * @param ImportModifyEvent  $eventItem
-     * @param ImportModifyEvent  $modifyListener
+     * @param ImportFinishEvent       $finishListener
+     * @param ImportConsumeEvent      $consumeListener
+     * @param TestModifyEventListener $eventItem
+     * @param TestModifyEventListener $modifyListener
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -140,7 +140,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
                 unset($item);
             }
         }
-        $modifyListener = new ImportModifyEvent();
+        $modifyListener = new TestModifyEventListener();
         $consumeListener = new ImportConsumeEvent($elasticSearchManager);
         $finishListener = new ImportFinishEvent($elasticSearchManager);
         $eventItem = new ItemPipelineEvent(new ImportItem(['Test'], $document));
@@ -153,23 +153,6 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
         $dataImportService->import();
-    }
-
-    /**
-     * Tests modify event assign data.
-     */
-    public function testModifyEventAssignData()
-    {
-        $document = new ProductModel();
-        $data = ['id' => 1, 'title' => 'test', 'description' => 'test description'];
-
-        $event = new ImportModifyEvent();
-        $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
-
-        $event->onModify($eventItem);
-        $this->assertEquals($data['id'], $eventItem->getItem()->getDocument()->id);
-        $this->assertEquals($data['title'], $eventItem->getItem()->getDocument()->title);
-        $this->assertEquals($data['description'], $eventItem->getItem()->getDocument()->description);
     }
 
     /**

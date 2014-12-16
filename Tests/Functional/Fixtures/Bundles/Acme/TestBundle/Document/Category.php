@@ -23,5 +23,21 @@ class Category
     /**
      * @var mixed
      */
-    public $hiddenField;
+    private $hiddenField;
+
+    /**
+     * @return mixed
+     */
+    public function getHiddenField()
+    {
+        return $this->hiddenField;
+    }
+
+    /**
+     * @param mixed $hiddenField
+     */
+    public function setHiddenField($hiddenField)
+    {
+        $this->hiddenField = $hiddenField;
+    }
 }
