@@ -13,6 +13,8 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use ONGR\ConnectionsBundle\Sync\DataSyncService;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DiffItemFactory;
+use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -64,5 +66,23 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertContains('Success.', $commandTester->getDisplay());
+    }
+
+    /**
+     * Test DiffItem factory.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateDefaultCase()
+    {
+        $diffItemFactory = new DiffItemFactory();
+
+        $diffItemFactory->create(ActionTypes::CREATE);
+
+        $diffItemFactory->create(ActionTypes::UPDATE);
+
+        $diffItemFactory->create(ActionTypes::DELETE);
+
+        $diffItemFactory->create(null);
     }
 }

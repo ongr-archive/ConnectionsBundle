@@ -26,6 +26,8 @@ class DeleteDiffItem extends BaseDiffItem
 
     /**
      * {@inheritdoc}
+     *
+     * @codeCoverageIgnore
      */
     public function setSetParams($params)
     {

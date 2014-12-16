@@ -163,7 +163,17 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document = new ProductModel();
         $data = ['id' => 1, 'title' => 'test', 'description' => 'test description'];
 
+        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
+            ->setMethods(['notice', 'debug'])
+            ->getMockForAbstractClass();
+
+        $logger->expects($this->atLeastOnce())->method('notice', 'debug')->will($this->returnValue(null));
+
+        $eventItem = new ItemPipelineEvent(null);
         $event = new ImportModifyEvent();
+        $event->setLogger($logger);
+        $event->onModify($eventItem);
+
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
 
         $event->onModify($eventItem);
@@ -217,6 +227,9 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document->setId('test');
 
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
+        $event->onConsume($eventItem);
+
+        $eventItem = new ItemPipelineEvent($eventItem);
         $event->onConsume($eventItem);
     }
 }

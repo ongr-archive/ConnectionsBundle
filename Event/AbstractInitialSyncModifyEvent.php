@@ -36,19 +36,14 @@ abstract class AbstractInitialSyncModifyEvent implements LoggerAwareInterface
      */
     public function onModify(ItemPipelineEvent $event)
     {
-        if ($event instanceof ItemPipelineEvent) {
-            $item = $event->getItem();
-            if ($item instanceof ImportItem) {
-                $this->modify($item);
-            } else {
-                if ($this->logger) {
-                    $this->logger->notice('Item provided is not an ImportItem');
-                }
-            }
-        } else {
+        $item = $event->getItem();
+        if (!$item instanceof ImportItem) {
             if ($this->logger) {
-                $this->logger->notice('Event provided is not an ItemPipelineEvent');
+                $this->logger->notice('Item provided is not an ImportItem');
             }
+
+            return;
         }
+        $this->modify($item);
     }
 }

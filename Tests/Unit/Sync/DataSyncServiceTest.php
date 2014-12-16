@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Service;
+namespace ONGR\ConnectionsBundle\Tests\Unit\Sync;
 
+use ONGR\ConnectionsBundle\Pipeline\Event\StartPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use ONGR\ConnectionsBundle\Sync\DataSyncService;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -89,5 +90,28 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
 
         $dataSyncService->setPipelineFactory($pipelineFactory);
         $dataSyncService->startPipeline($pipelineName);
+    }
+
+    /**
+     * Test pipeline factory exception.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPipelineFactoryException()
+    {
+        $pipelineFactory = new PipelineFactory();
+        $pipelineFactory->setClassName('ONGR\\ConnectionsBundle\\Pipeline\\Event\\SourcePipelineEvent');
+        $pipelineFactory->create(null);
+    }
+
+    /**
+     * Test start pipeline event.
+     */
+    public function testStartPipelineEvent()
+    {
+        $startPipelineEvent = new StartPipelineEvent();
+        $itemCount = 10;
+        $startPipelineEvent->setItemCount($itemCount);
+        $this->assertEquals($itemCount, $startPipelineEvent->getItemCount());
     }
 }
