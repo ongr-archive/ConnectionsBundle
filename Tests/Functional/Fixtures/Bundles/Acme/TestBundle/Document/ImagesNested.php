@@ -89,6 +89,4 @@ class ImagesNested
     {
         $this->url = $url;
     }
-
-
 }
