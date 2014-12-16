@@ -36,6 +36,11 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     protected $syncStorage;
 
     /**
+     * @var array
+     */
+    protected $syncStorageData;
+
+    /**
      * @param Manager     $manager
      * @param string      $documentType
      * @param SyncStorage $syncStorage
@@ -56,7 +61,9 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
             return false;
         }
 
-        if (!isset($this->importItem->getSyncStorageData()['type'])) {
+        $tempSyncStorageData = $this->importItem->getSyncStorageData();
+
+        if (!isset($tempSyncStorageData['type'])) {
             $this->log(
                 sprintf('No operation type defined for document id: %s', $this->importItem->getDocument()->getId()),
                 LogLevel::NOTICE
@@ -64,6 +71,7 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
 
             return false;
         }
+        $this->syncStorageData = $tempSyncStorageData;
 
         return true;
     }
@@ -73,7 +81,7 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
      */
     protected function persistDocument()
     {
-        switch ($this->importItem->getSyncStorageData()['type']) {
+        switch ($this->syncStorageData['type']) {
             case SyncStorageInterface::OPERATION_CREATE:
                 $this->manager->persist($this->importItem->getDocument());
                 break;
@@ -95,8 +103,8 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
                 return false;
         }
         $this->syncStorage->deleteItem(
-            $this->importItem->getSyncStorageData()['id'],
-            [$this->importItem->getSyncStorageData()['shop_id']]
+            $this->syncStorageData['id'],
+            [$this->syncStorageData['shop_id']]
         );
 
         return true;
