@@ -22,11 +22,9 @@ class ImportFullCommand extends AbstractStartServiceCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    public function __construct()
     {
-        $this->setName('ongr:import:full')->setDescription('Imports data from defined sources into consumers.');
-
-        parent::configure();
+        parent::__construct('ongr:import:full', 'Imports data from defined sources into consumers.');
     }
 
     /**

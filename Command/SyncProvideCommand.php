@@ -22,11 +22,9 @@ class SyncProvideCommand extends AbstractStartServiceCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    public function __construct()
     {
-        $this->setName('ongr:sync:provide')->setDescription('Starts data synchronization pipeline');
-
-        parent::configure();
+        parent::__construct('ongr:sync:provide', 'Starts data synchronization pipeline');
     }
 
     /**

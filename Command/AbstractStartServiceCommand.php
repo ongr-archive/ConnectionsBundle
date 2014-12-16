@@ -25,6 +25,15 @@ abstract class AbstractStartServiceCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
+    public function __construct($name, $description)
+    {
+        $this->setDescription($description);
+        parent::__construct($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->addStandardArgument();
