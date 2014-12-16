@@ -19,7 +19,7 @@ use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
+use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
 
@@ -148,12 +148,12 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $dispatcher = $this->getMockDispatcher($finishListener, $consumeListener, $eventItem, $modifyListener);
 
-        $dataImportService = new PipelineExecuteService();
+        $dataImportService = new PipelineStarter();
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher($dispatcher);
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
-        $dataImportService->executePipeline('import.', null);
+        $dataImportService->startPipeline('import.', null);
     }
 
     /**
@@ -188,7 +188,14 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $event = new ImportConsumeEventListener($manager);
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
 
-        $this->assertFalse($event->onConsume($eventItem));
+        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
+            ->setMethods(['log'])
+            ->getMockForAbstractClass();
+
+        $logger->expects($this->once())->method('log');
+
+        $event->setLogger($logger);
+        $event->onConsume($eventItem);
     }
 
     /**

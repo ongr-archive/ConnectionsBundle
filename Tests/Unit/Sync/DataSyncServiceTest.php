@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Sync;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
+use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,7 +29,7 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
     private $pipelineFactory;
 
     /**
-     * @var PipelineExecuteService
+     * @var PipelineStarter
      */
     private $service;
 
@@ -40,7 +40,7 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->pipeline = $this->getMock('ONGR\ConnectionsBundle\Pipeline\PipelineInterface');
         $this->pipelineFactory = $this->getMock('ONGR\ConnectionsBundle\Pipeline\PipelineFactory');
-        $this->service = new PipelineExecuteService();
+        $this->service = new PipelineStarter();
         $this->service->setPipelineFactory($this->pipelineFactory);
     }
 
@@ -59,7 +59,7 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
             ->with('data_sync.' . $pipelineName)
             ->will($this->returnValue($this->pipeline));
 
-        $this->service->executePipeline('data_sync.', $pipelineName);
+        $this->service->startPipeline('data_sync.', $pipelineName);
     }
 
     /**
@@ -81,13 +81,13 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
                 ['ongr.pipeline.data_sync.' . $pipelineName . '.modify', $this->anything()]
             );
 
-        $dataSyncService = new PipelineExecuteService();
+        $dataSyncService = new PipelineStarter();
 
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher($dispatcher);
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
 
         $dataSyncService->setPipelineFactory($pipelineFactory);
-        $dataSyncService->executePipeline('data_sync.', $pipelineName);
+        $dataSyncService->startPipeline('data_sync.', $pipelineName);
     }
 }

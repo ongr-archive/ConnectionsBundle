@@ -1,6 +1,6 @@
 parameters:
     ongr_connections.sync.table_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager
-    ongr_connections.sync.data_sync_service.class: ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService
+    ongr_connections.sync.data_sync_service.class: ONGR\ConnectionsBundle\Pipeline\PipelineStarter
     ongr_connections.sync.storage_manager.mysql_storage_manager.class: ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager
     ongr_connections.sync.sync_storage.class: ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage
     # data sync pipeline event parent classes

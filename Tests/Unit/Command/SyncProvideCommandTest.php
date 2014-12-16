@@ -30,7 +30,7 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->dataSyncService = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService')
+        $this->dataSyncService = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -43,7 +43,7 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
         $targetName = 'some-target';
 
         $this->dataSyncService->expects($this->once())
-            ->method('executePipeline')
+            ->method('startPipeline')
             ->with('data_sync.', $targetName);
 
         $container = new ContainerBuilder();

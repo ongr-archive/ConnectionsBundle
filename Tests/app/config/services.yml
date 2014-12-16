@@ -112,8 +112,8 @@ services:
             - @ongr_connections.sync.sync_storage
         calls:
             - [ setChunkSize, [ %test.sync.execute.chunk_size% ] ]
-            - [ setShopId, [ %test.sync.execute.shop_id% ]]
-            - [ setDocumentType, [ %test.sync.execute.sync_storage_document_type% ]]
+            - [ setShopId, [ %test.sync.execute.shop_id% ] ]
+            - [ setDocumentType, [ %test.sync.execute.sync_storage_document_type% ] ]
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.default.source, method: onSource }
 

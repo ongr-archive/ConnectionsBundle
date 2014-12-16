@@ -14,7 +14,6 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
@@ -55,13 +54,11 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
      * Consume event.
      *
      * @param ItemPipelineEvent $event
-     *
-     * @return bool
      */
     public function onConsume(ItemPipelineEvent $event)
     {
         if (!$this->setItem($event)) {
-            return false;
+            return;
         }
 
         $this->log(
@@ -73,12 +70,10 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
         );
 
         if (!$this->persistDocument()) {
-            return false;
+            return;
         };
 
         $this->log('End an update of a single document.');
-
-        return true;
     }
 
     /**

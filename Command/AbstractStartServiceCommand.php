@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineExecuteService;
+use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,9 +52,9 @@ abstract class AbstractStartServiceCommand extends ContainerAwareCommand
         $benchmark = new CommandBenchmark($output);
         $benchmark->start();
 
-        /** @var PipelineExecuteService $service */
+        /** @var PipelineStarter $service */
         $service = $this->getContainer()->get($serviceClass);
-        $service->executePipeline($prefix, $input->getArgument('target'));
+        $service->startPipeline($prefix, $input->getArgument('target'));
 
         $benchmark->finish();
     }
