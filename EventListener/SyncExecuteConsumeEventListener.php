@@ -11,12 +11,9 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
-use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;

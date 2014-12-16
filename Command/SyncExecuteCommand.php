@@ -26,7 +26,7 @@ class SyncExecuteCommand extends AbstractStartServiceCommand
     {
         $this->setName('ongr:sync:execute')->setDescription('Imports data from SyncStorage.');
 
-        $this->addStandardArgument();
+        parent::configure();
     }
 
     /**

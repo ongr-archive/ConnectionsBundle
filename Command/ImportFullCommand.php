@@ -11,9 +11,6 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Import\ImportService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -29,7 +26,7 @@ class ImportFullCommand extends AbstractStartServiceCommand
     {
         $this->setName('ongr:import:full')->setDescription('Imports data from defined sources into consumers.');
 
-        $this->addStandardArgument();
+        parent::configure();
     }
 
     /**

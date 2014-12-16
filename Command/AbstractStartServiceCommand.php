@@ -17,12 +17,19 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
  * AbstractStartServiceCommand -  starts service.
  */
 abstract class AbstractStartServiceCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        $this->addStandardArgument();
+    }
+
     /**
      * Starts service by provided parameters.
      *

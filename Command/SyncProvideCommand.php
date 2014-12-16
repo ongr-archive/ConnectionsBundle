@@ -26,7 +26,7 @@ class SyncProvideCommand extends AbstractStartServiceCommand
     {
         $this->setName('ongr:sync:provide')->setDescription('Starts data synchronization pipeline');
 
-        $this->addStandardArgument();
+        parent::configure();
     }
 
     /**
