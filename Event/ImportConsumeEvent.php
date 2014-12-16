@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Event;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
+use ONGR\ConnectionsBundle\Service\ImportItem;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
