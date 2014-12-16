@@ -25,5 +25,5 @@ class CdnObject
      *
      * @ES\Property(name="cdn_url", type="string")
      */
-    public $cdn_url;
+    public $cdnUrl;
 }

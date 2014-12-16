@@ -20,6 +20,8 @@ use ONGR\ElasticsearchBundle\Annotation as ES;
  */
 class Category
 {
-
+    /**
+     * @var mixed
+     */
     public $hiddenField;
 }
