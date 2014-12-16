@@ -40,7 +40,7 @@ abstract class AbstractStartServiceCommand extends ContainerAwareCommand
     }
 
     /**
-     * Starts service by provided parameters.
+     * Starts service with provided parameters.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output

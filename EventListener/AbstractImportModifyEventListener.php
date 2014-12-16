@@ -16,6 +16,7 @@ use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LogLevel;
 
 /**
  * AbstractImportModifyEventListener - assigns data from entity to document.
@@ -50,9 +51,16 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
         if ($item instanceof AbstractImportItem) {
             $this->modify($item);
         } else {
-            if ($this->logger) {
-                $this->logger->notice('Item provided is not an AbstractImportItem');
-            }
+            $this->log('Item provided is not an AbstractImportItem', LogLevel::NOTICE);
         }
+    }
+
+    /**
+     * Modifies event item.
+     *
+     * @param AbstractImportItem $eventItem
+     */
+    protected function modify(AbstractImportItem $eventItem)
+    {
     }
 }

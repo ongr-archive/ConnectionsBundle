@@ -52,7 +52,7 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
     }
 
     /**
-     * Gets iterator for all which need to be updated.
+     * Gets iterator for all documents which need to be updated.
      *
      * @return SyncStorageImportIterator
      */

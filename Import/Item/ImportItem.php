@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Import\Item;
 
 /**
- * Import event item carrying both Doctrine element and ES element.
+ * Import event item carrying both Doctrine entity and ES document.
  */
 class ImportItem extends AbstractImportItem
 {

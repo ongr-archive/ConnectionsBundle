@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Import\Item;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
- * Import event item carrying both Doctrine element and ES element.
+ * Import event item carrying both Doctrine entity and ES document.
  */
 class SyncExecuteItem extends AbstractImportItem
 {

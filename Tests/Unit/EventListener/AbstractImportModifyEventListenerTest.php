@@ -16,9 +16,10 @@ use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
+use Psr\Log\LogLevel;
 
 /**
- * Tests what notices are provided to logger in different cases.
+ * Tests what notice is provided.
  */
 class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,11 +41,12 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods(['notice'])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
+
         $logger->expects($this->once())
-            ->method('notice')
-            ->with($this->equalTo($notice));
+            ->method('log')
+            ->with(LogLevel::NOTICE, $this->equalTo($notice), []);
 
         $listener = $this->getMockBuilder('ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener')
             ->getMockForAbstractClass();

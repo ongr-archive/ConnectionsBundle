@@ -59,36 +59,18 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        // Check how many times log is called.
-        switch (count($loggerNotice)) {
-            case 1:
-                $logger->expects($this->once())
-                    ->method('log')
-                    ->withConsecutive(
-                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []]
-                    );
-                break;
-            case 2:
-                $logger->expects($this->exactly(2))
-                    ->method('log')
-                    ->withConsecutive(
-                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []],
-                        [$loggerNotice[1][1], $this->equalTo($loggerNotice[1][0]), []]
-                    );
-                break;
-            case 3:
-                $logger->expects($this->exactly(3))
-                    ->method('log')
-                    ->withConsecutive(
-                        [$loggerNotice[0][1], $this->equalTo($loggerNotice[0][0]), []],
-                        [$loggerNotice[1][1], $this->equalTo($loggerNotice[1][0]), []],
-                        [$loggerNotice[2][1], $this->equalTo($loggerNotice[2][0]), []]
-                    );
-                break;
-            default:
-                // Do nothing.
-                break;
+        $paramsArrays = [];
+
+        foreach ($loggerNotice as $notice) {
+            $paramsArrays[] = [$notice[1], $this->equalTo($notice[0]), []];
         }
+        call_user_func_array(
+            [
+                $logger->expects($this->exactly(count($paramsArrays)))->method('log'),
+                'withConsecutive',
+            ],
+            $paramsArrays
+        );
 
         $listener = new SyncExecuteConsumeEventListener($manager, $documentType, $syncStorage, 1);
         $listener->setLogger($logger);
@@ -110,8 +92,8 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
 
         return [
             [
-                'product',
-                new SyncExecuteItem(
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -120,7 +102,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                [
+                'logger_notice' => [
                     [
                         sprintf(
                             'Start update single document of type %s id: %s',
@@ -134,11 +116,11 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         LogLevel::DEBUG,
                     ],
                 ],
-                'getRepository',
+                'managerMethod' => 'getRepository',
             ],
             [
-                'product',
-                new SyncExecuteItem(
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -147,7 +129,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                [
+                'logger_notice' => [
                     [
                         sprintf(
                             'Start update single document of type %s id: %s',
@@ -161,11 +143,11 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         LogLevel::DEBUG,
                     ],
                 ],
-                'persist',
+                'managerMethod' => 'persist',
             ],
             [
-                'product',
-                new SyncExecuteItem(
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(
                     new TestProduct(),
                     $product,
                     [
@@ -174,7 +156,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         'shop_id' => 1,
                     ]
                 ),
-                [
+                'logger_notice' => [
                     [
                         sprintf(
                             'Start update single document of type %s id: %s',
@@ -188,12 +170,12 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                         LogLevel::DEBUG,
                     ],
                 ],
-                'persist',
+                'managerMethod' => 'persist',
             ],
             [
-                'product',
-                new SyncExecuteItem(new TestProduct(), $product, ['type' => '']),
-                [
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(new TestProduct(), $product, ['type' => '']),
+                'logger_notice' => [
                     [
                         sprintf(
                             'Start update single document of type %s id: %s',
@@ -204,33 +186,34 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     ],
                     [
                         sprintf(
-                            'Failed to update document of type  %s id: %s',
+                            'Failed to update document of type  %s id: %s: no valid operation type defined',
                             get_class($product),
                             $product->getId()
                         ),
                         LogLevel::DEBUG,
                     ],
-                    ["No valid operation type defined for document id: {$documentId}", LogLevel::NOTICE],
                 ],
-                null,
+                'managerMethod' => null,
             ],
             [
-                'product',
-                new SyncExecuteItem(new TestProduct(), $product, []),
-                [["No operation type defined for document id: {$documentId}", LogLevel::NOTICE]],
-                null,
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(new TestProduct(), $product, []),
+                'logger_notice' => [["No operation type defined for document id: {$documentId}", LogLevel::NOTICE]],
+                'managerMethod' => null,
             ],
             [
-                'product',
-                new SyncExecuteItem(new TestProduct(), new Product(), []),
-                [['No document id found. Update skipped.', LogLevel::NOTICE]],
-                null,
+                'document_type' => 'product',
+                'event_item' => new SyncExecuteItem(new TestProduct(), new Product(), []),
+                'logger_notice' => [['No document id found. Update skipped.', LogLevel::NOTICE]],
+                'managerMethod' => null,
             ],
             [
-                'product',
-                new \stdClass,
-                [['Item provided is not an ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem', LogLevel::NOTICE]],
-                null,
+                'document_type' => 'product',
+                'event_item' => new \stdClass,
+                'logger_notice' => [
+                    ['Item provided is not an ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem', LogLevel::NOTICE],
+                ],
+                'managerMethod' => null,
             ],
         ];
     }

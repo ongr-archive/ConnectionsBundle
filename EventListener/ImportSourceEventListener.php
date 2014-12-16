@@ -17,7 +17,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class  ImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
+ * Class ImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
  */
 class ImportSourceEventListener extends AbstractImportSourceEventListener
 {

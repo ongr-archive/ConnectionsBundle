@@ -12,14 +12,18 @@
 namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
+use Psr\Log\LoggerAwareInterface;
 
 /**
  * Class AbstractImportSourceEventListener - gets items from provider, creates empty Elasticsearch documents.
  */
-abstract class AbstractImportSourceEventListener
+abstract class AbstractImportSourceEventListener implements LoggerAwareInterface
 {
+    use EventLoggerAwareTrait;
+
     /**
      * @var EntityManager
      */

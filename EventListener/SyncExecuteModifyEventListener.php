@@ -27,11 +27,13 @@ class SyncExecuteModifyEventListener extends AbstractImportModifyEventListener
      */
     protected function modify(AbstractImportItem $eventItem)
     {
-        /** @var SyncExecuteItem $eventItem */
-        if ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_CREATE) {
-            $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
-        } elseif ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_UPDATE) {
-            $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+        if ($eventItem instanceof SyncExecuteItem) {
+            /** @var SyncExecuteItem $eventItem */
+            if ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_CREATE) {
+                $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+            } elseif ($eventItem->getSyncStorageData()['type'] == SyncStorageInterface::OPERATION_UPDATE) {
+                $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
 
 /**
- * DataSyncSourceEventListener adds provider to SourcePipelineEvent.
+ * DataSyncSourceEventListener - adds provider to SourcePipelineEvent.
  */
 class DataSyncSourceEventListener
 {

@@ -1,3 +1,4 @@
+-- make some manipulations with data to fill binlog
 -- insert more data
 INSERT INTO `test_products` (`id`, `title`, `description`, `price`, `location`)
 VALUES

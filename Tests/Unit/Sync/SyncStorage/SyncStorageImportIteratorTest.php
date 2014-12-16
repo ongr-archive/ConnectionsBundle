@@ -23,7 +23,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var EntityRepository
      */
-    private $entityRepo;
+    private $entityRepository;
 
     /**
      * @var EntityManager
@@ -33,7 +33,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Repository
      */
-    private $esRepo;
+    private $elasticsearchRepository;
 
     /**
      * @var SyncStorage
@@ -45,19 +45,19 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->entityRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+        $this->entityRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->setMethods(['find'])
             ->getMock();
-        $this->entityRepo->expects($this->once())->method('find')->willReturn(null);
+        $this->entityRepository->expects($this->once())->method('find')->willReturn(null);
 
         $this->entityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->setMethods(['getRepository'])
             ->getMock();
-        $this->entityManager->expects($this->once())->method('getRepository')->willReturn($this->entityRepo);
+        $this->entityManager->expects($this->once())->method('getRepository')->willReturn($this->entityRepository);
 
-        $this->esRepo = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Repository')
+        $this->elasticsearchRepository = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Repository')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -93,7 +93,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
                 'document_type' => 'product',
                 'document_id' => 777,
             ],
-            $this->esRepo,
+            $this->elasticsearchRepository,
             $this->entityManager,
             'Product'
         );
@@ -128,7 +128,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
                 'shop_id' => 1,
                 'document_type' => 'product',
             ],
-            $this->esRepo,
+            $this->elasticsearchRepository,
             $this->entityManager,
             'Product'
         );

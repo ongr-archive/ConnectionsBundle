@@ -36,11 +36,6 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     protected $syncStorage;
 
     /**
-     * @var array $syncStorageData
-     */
-    protected $syncStorageData;
-
-    /**
      * @param Manager     $manager
      * @param string      $documentType
      * @param SyncStorage $syncStorage
@@ -55,19 +50,17 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     /**
      * {@inheritdoc}
      */
-    protected function validateItem(ItemPipelineEvent $event)
+    protected function setItem(ItemPipelineEvent $event)
     {
-        if (!parent::validateItem($event)) {
+        if (!parent::setItem($event)) {
             return false;
         }
 
-        $this->syncStorageData = $event->getItem()->getSyncStorageData();
-        if (!isset($this->syncStorageData['type'])) {
+        if (!isset($this->importItem->getSyncStorageData()['type'])) {
             $this->log(
-                sprintf('No operation type defined for document id: %s', $this->document->getId()),
+                sprintf('No operation type defined for document id: %s', $this->importItem->getDocument()->getId()),
                 LogLevel::NOTICE
             );
-            $this->syncStorageData = [];
 
             return false;
         }
@@ -80,32 +73,31 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
      */
     protected function persistDocument()
     {
-        switch ($this->syncStorageData['type']) {
+        switch ($this->importItem->getSyncStorageData()['type']) {
             case SyncStorageInterface::OPERATION_CREATE:
-                $this->manager->persist($this->document);
+                $this->manager->persist($this->importItem->getDocument());
                 break;
             case SyncStorageInterface::OPERATION_UPDATE:
-                $this->manager->persist($this->document);
+                $this->manager->persist($this->importItem->getDocument());
                 break;
             case SyncStorageInterface::OPERATION_DELETE:
-                $this->manager->getRepository($this->documentType)->remove($this->document->getId());
+                $this->manager->getRepository($this->documentType)->remove($this->importItem->getDocument()->getId());
                 break;
             default:
                 $this->log(
                     sprintf(
-                        'Failed to update document of type  %s id: %s',
-                        get_class($this->document),
-                        $this->document->getId()
+                        'Failed to update document of type  %s id: %s: no valid operation type defined',
+                        get_class($this->importItem->getDocument()),
+                        $this->importItem->getDocument()->getId()
                     )
-                );
-                $this->log(
-                    sprintf('No valid operation type defined for document id: %s', $this->document->getId()),
-                    LogLevel::NOTICE
                 );
 
                 return false;
         }
-        $this->syncStorage->deleteItem($this->syncStorageData['id'], [$this->syncStorageData['shop_id']]);
+        $this->syncStorage->deleteItem(
+            $this->importItem->getSyncStorageData()['id'],
+            [$this->importItem->getSyncStorageData()['shop_id']]
+        );
 
         return true;
     }

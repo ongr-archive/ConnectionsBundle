@@ -88,7 +88,7 @@ class SyncStorageImportIterator implements \Iterator
     }
 
     /**
-     * {@inheritdoc}
+     * This iterator cannot rewind. Method rewind() just initializes iterator before usage in foreach cycle.
      */
     public function rewind()
     {

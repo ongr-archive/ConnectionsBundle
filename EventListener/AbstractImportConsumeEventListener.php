@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
@@ -31,14 +32,14 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
     protected $manager;
 
     /**
-     * @var string
+     * @var string $importItemClass Class of an item contained in ItemPipelineEvent.
      */
     protected $importItemClass;
 
     /**
-     * @var DocumentInterface
+     * @var AbstractImportItem
      */
-    protected $document;
+    protected $importItem;
 
     /**
      * @param Manager $manager
@@ -59,15 +60,15 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
      */
     public function onConsume(ItemPipelineEvent $event)
     {
-        if (!$this->validateItem($event)) {
+        if (!$this->setItem($event)) {
             return false;
         }
 
         $this->log(
             sprintf(
                 'Start update single document of type %s id: %s',
-                get_class($this->document),
-                $this->document->getId()
+                get_class($this->importItem->getDocument()),
+                $this->importItem->getDocument()->getId()
             )
         );
 
@@ -87,38 +88,35 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
      */
     protected function persistDocument()
     {
-        $this->manager->persist($this->document);
+        $this->manager->persist($this->importItem->getDocument());
 
         return true;
     }
 
     /**
-     * Validates data of event item and prepares gets document.
+     * Validates the class name of event item and prepares internal document for persistence operation.
      *
      * @param ItemPipelineEvent $event
      *
      * @return bool
      */
-    protected function validateItem(ItemPipelineEvent $event)
+    protected function setItem(ItemPipelineEvent $event)
     {
-        $item = $event->getItem();
+        /** @var AbstractImportItem $tempItem */
+        $tempItem = $event->getItem();
 
-        if (!$item instanceof $this->importItemClass) {
+        if (!$tempItem instanceof $this->importItemClass) {
             $this->log("Item provided is not an {$this->importItemClass}", LogLevel::NOTICE);
 
             return false;
         }
 
-        /** @var DocumentInterface $document */
-        $this->document = $event->getItem()->getDocument();
-
-        if ($this->document->getId() === null) {
+        if ($tempItem->getDocument()->getId() === null) {
             $this->log('No document id found. Update skipped.', LogLevel::NOTICE);
-
-            $this->document = null;
 
             return false;
         }
+        $this->importItem = $tempItem;
 
         return true;
     }
