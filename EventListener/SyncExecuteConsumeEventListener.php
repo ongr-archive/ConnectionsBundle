@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
@@ -61,6 +62,9 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
             return false;
         }
 
+        if (!$this->importItem instanceof SyncExecuteItem) {
+            return false;
+        }
         $tempSyncStorageData = $this->importItem->getSyncStorageData();
 
         if (!isset($tempSyncStorageData['type'])) {
