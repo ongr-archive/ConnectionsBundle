@@ -57,12 +57,12 @@ services:
            class: %ongr_connections.import.source.class%
            parent: ongr_connections.import.source
            arguments:
-             - @doctrine.orm.default_entity_manager
-             - Test:TestProduct
-             - @es.manager
-             - AcmeTestBundle:Product
+               - @doctrine.orm.default_entity_manager
+               - Test:TestProduct
+               - @es.manager
+               - AcmeTestBundle:Product
            tags:
-             - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
+               - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
 
     test.import.modifier:
         class: %ongr_connections.import.modifier.class%

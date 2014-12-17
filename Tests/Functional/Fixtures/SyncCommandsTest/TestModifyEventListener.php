@@ -23,9 +23,9 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
     /**
      * Assigns data in entity to relevant fields in document.
      *
-     * @param SyncExecuteItem $eventItem
+     * @param AbstractImportItem $eventItem
      */
-    protected function modify($eventItem)
+    protected function modify(AbstractImportItem $eventItem)
     {
         /** @var TestProduct $data */
         $data = $eventItem->getEntity();
