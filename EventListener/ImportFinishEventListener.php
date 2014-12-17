@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * ImportFinishEvent class.
+ * ImportFinishEventListener - commits document to elasticsearch.
  */
-class ImportFinishEvent
+class ImportFinishEventListener
 {
     /**
      * @var Manager
