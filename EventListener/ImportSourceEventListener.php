@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
+use ONGR\ConnectionsBundle\Import\DoctrineImportIterator;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
- * Class ImportSourceEvent - gets items from Doctrine, creates empty Elasticsearch documents.
+ * Class ImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
  */
-class ImportSourceEvent
+class ImportSourceEventListener extends AbstractImportSourceEventListener
 {
     /**
      * @var EntityManager
@@ -33,7 +34,7 @@ class ImportSourceEvent
     /**
      * @var Manager
      */
-    protected $elasticSearchManager;
+    protected $elasticsearchManager;
 
     /**
      * @var string Classname of Elasticsearch document. (e.g. Product).
@@ -50,22 +51,8 @@ class ImportSourceEvent
         return new DoctrineImportIterator(
             $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
             $this->entityManager,
-            $this->elasticSearchManager->getRepository($this->documentClass)
+            $this->elasticsearchManager->getRepository($this->documentClass)
         );
-    }
-
-    /**
-     * @param EntityManager $manager
-     * @param string        $entityClass
-     * @param Manager       $elasticSearchManager
-     * @param string        $documentClass
-     */
-    public function __construct(EntityManager $manager, $entityClass, Manager $elasticSearchManager, $documentClass)
-    {
-        $this->entityManager = $manager;
-        $this->entityClass = $entityClass;
-        $this->elasticSearchManager = $elasticSearchManager;
-        $this->documentClass = $documentClass;
     }
 
     /**

@@ -19,7 +19,7 @@ Binlog Diff Provider example:
 .. code-block:: yaml
 
      test.sync.data_sync.source:
-        class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
+        class: ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener
         arguments:
             - @ongr_connections.sync.diff_provider.binlog_diff_provider
         tags:

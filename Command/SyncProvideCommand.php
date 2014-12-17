@@ -11,30 +11,20 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Sync\DataSyncService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to start synchronization pipeline process.
  */
-class SyncProvideCommand extends ContainerAwareCommand
+class SyncProvideCommand extends AbstractStartServiceCommand
 {
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    public function __construct()
     {
-        $this
-            ->setName('ongr:sync:provide')
-            ->setDescription('Starts data synchronization pipeline')
-            ->addArgument(
-                'target',
-                InputArgument::OPTIONAL,
-                'Set a specific pipeline event name.'
-            );
+        parent::__construct('ongr:sync:provide', 'Starts data synchronization pipeline');
     }
 
     /**
@@ -42,14 +32,6 @@ class SyncProvideCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $benchmark = new CommandBenchmark($output);
-        $benchmark->start();
-
-        /** @var DataSyncService $service */
-        $service = $this->getContainer()->get('ongr_connections.sync.data_sync_service');
-        $service->startPipeline($input->getArgument('target'));
-
-        $output->writeln('<info>Success.</info>');
-        $benchmark->finish();
+        $this->start($input, $output, 'ongr_connections.sync.data_sync_service', 'data_sync.');
     }
 }

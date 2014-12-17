@@ -40,8 +40,6 @@ interface StorageManagerInterface
      * @param int      $documentId
      * @param DateTime $dateTime
      * @param array    $shopIds
-     *
-     * @return void
      */
     public function addRecord($operationType, $documentType, $documentId, DateTime $dateTime, array $shopIds = null);
 
@@ -50,8 +48,6 @@ interface StorageManagerInterface
      *
      * @param int   $syncStorageStorageRecordId
      * @param array $shopIds
-     *
-     * @return void
      */
     public function removeRecord($syncStorageStorageRecordId, array $shopIds = null);
 

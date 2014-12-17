@@ -30,7 +30,7 @@ Data source for extraction is set up using "source" event listener, like that:
 
     services:
         my.data_sync.source:
-            class: ONGR\ConnectionsBundle\Event\DataSyncSourceEvent
+            class: ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener
             arguments:
                 - @ongr_connections.sync.diff_provider.bin_log_diff_provider
             tags:
@@ -44,7 +44,7 @@ Consumer which extracts data received from diff provider is set up using "consum
 
     services:
         my.data_sync.consume:
-            class: ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
+            class: ONGR\ConnectionsBundle\EventListener\DataSyncConsumeEventListener
             arguments:
                 - @ongr_connections.sync.extractor.passthrough_extractor
             tags:
@@ -53,7 +53,7 @@ Consumer which extracts data received from diff provider is set up using "consum
 ..
 
 You should have at least one "source" and one "consume" event listener. You can implement your own "source" and "consume"
-event listeners using ONGR\ConnectionsBundle\Event\DataSyncSourceEvent and ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent
+event listeners using ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener and ONGR\ConnectionsBundle\EventListener\DataSyncConsumeEventListener
 implementations as examples.
 
 3. Storage initialization

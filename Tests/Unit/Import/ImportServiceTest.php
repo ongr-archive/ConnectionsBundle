@@ -12,13 +12,14 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Import;
 
 use ArrayObject;
-use ONGR\ConnectionsBundle\Event\ImportConsumeEvent;
-use ONGR\ConnectionsBundle\Event\ImportFinishEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
-use ONGR\ConnectionsBundle\Event\ImportModifyEvent;
-use ONGR\ConnectionsBundle\Event\ImportSourceEvent;
+use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
+use ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
+use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
 
@@ -68,7 +69,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected function getMockElasticsearchManager()
     {
-        $elasticSearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
+        $elasticsearchManager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()
             ->setMethods(['getRepository', 'persist', 'commit'])
             ->getMock();
@@ -80,19 +81,19 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $document = $this->getMockDocument();
 
-        $elasticSearchManager->expects($this->once())->method('getRepository')->will($this->returnValue($repository));
-        $elasticSearchManager->expects($this->once())->method('persist')->will($this->returnValue(true));
-        $elasticSearchManager->expects($this->once())->method('commit')->will($this->returnValue(true));
+        $elasticsearchManager->expects($this->once())->method('getRepository')->will($this->returnValue($repository));
+        $elasticsearchManager->expects($this->once())->method('persist')->will($this->returnValue(true));
+        $elasticsearchManager->expects($this->once())->method('commit')->will($this->returnValue(true));
         $repository->expects($this->exactly(2))->method('createDocument')->will($this->returnValue($document));
 
-        return $elasticSearchManager;
+        return $elasticsearchManager;
     }
 
     /**
-     * @param ImportFinishEvent  $finishListener
-     * @param ImportConsumeEvent $consumeListener
-     * @param ImportModifyEvent  $eventItem
-     * @param ImportModifyEvent  $modifyListener
+     * @param ImportFinishEventListener  $finishListener
+     * @param ImportConsumeEventListener $consumeListener
+     * @param ImportModifyEventListener  $eventItem
+     * @param ImportModifyEventListener  $modifyListener
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -127,11 +128,11 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     {
         $doctrineEntityManager = $this->getMockDoctrineEntityManager();
 
-        $elasticSearchManager = $this->getMockElasticsearchManager();
+        $elasticsearchManager = $this->getMockElasticsearchManager();
 
         $document = $this->getMockDocument();
 
-        $sourceListener = new ImportSourceEvent($doctrineEntityManager, 'Test', $elasticSearchManager, 'Test');
+        $sourceListener = new ImportSourceEventListener($doctrineEntityManager, 'Test', $elasticsearchManager, 'Test');
         $sourceEvent = new SourcePipelineEvent();
         $sourceListener->onSource($sourceEvent);
         $sources = $sourceEvent->getSources();
@@ -140,19 +141,19 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
                 unset($item);
             }
         }
-        $modifyListener = new ImportModifyEvent();
-        $consumeListener = new ImportConsumeEvent($elasticSearchManager);
-        $finishListener = new ImportFinishEvent($elasticSearchManager);
+        $modifyListener = new ImportModifyEventListener();
+        $consumeListener = new ImportConsumeEventListener($elasticsearchManager);
+        $finishListener = new ImportFinishEventListener($elasticsearchManager);
         $eventItem = new ItemPipelineEvent(new ImportItem(['Test'], $document));
 
         $dispatcher = $this->getMockDispatcher($finishListener, $consumeListener, $eventItem, $modifyListener);
 
-        $dataImportService = new \ONGR\ConnectionsBundle\Import\ImportService();
+        $dataImportService = new PipelineStarter();
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher($dispatcher);
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
-        $dataImportService->import();
+        $dataImportService->startPipeline('import.', null);
     }
 
     /**
@@ -170,7 +171,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $logger->expects($this->atLeastOnce())->method('notice', 'debug')->will($this->returnValue(null));
 
         $eventItem = new ItemPipelineEvent(null);
-        $event = new ImportModifyEvent();
+        $event = new ImportModifyEventListener();
         $event->setLogger($logger);
         $event->onModify($eventItem);
 
@@ -194,10 +195,17 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $event = new ImportConsumeEvent($manager);
+        $event = new ImportConsumeEventListener($manager);
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
 
-        $this->assertFalse($event->onConsume($eventItem));
+        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
+            ->setMethods(['log'])
+            ->getMockForAbstractClass();
+
+        $logger->expects($this->once())->method('log');
+
+        $event->setLogger($logger);
+        $event->onConsume($eventItem);
     }
 
     /**
@@ -206,10 +214,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     public function testLogger()
     {
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods(['notice', 'debug'])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        $logger->expects($this->atLeastOnce())->method('notice', 'debug')->will($this->returnValue(null));
+        $logger->expects($this->atLeastOnce())->method('log')->will($this->returnValue(null));
 
         $manager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()
@@ -218,7 +226,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document = new ProductModel();
         $data = [];
 
-        $event = new ImportConsumeEvent($manager);
+        $event = new ImportConsumeEventListener($manager);
         $event->setLogger($logger);
 
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
