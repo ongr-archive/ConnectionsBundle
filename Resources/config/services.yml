@@ -123,9 +123,6 @@ services:
     ongr_connections.sync.execute.source:
         class: %ongr_connections.sync.execute.source.class%
 
-    ongr_connections.sync.execute.modifier:
-        class: %ongr_connections.sync.execute.modifier.class%
-
     ongr_connections.sync.execute.consumer:
         class: %ongr_connections.sync.execute.consumer.class%
 

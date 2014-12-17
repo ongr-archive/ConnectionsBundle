@@ -1,6 +1,5 @@
 parameters:
     ongr_connections.import.source.class: ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener
-    ongr_connections.import.modifier.class: changeme
     ongr_connections.import.consumer.class: ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener
     ongr_connections.import.finish.class: ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener
     ongr_connections.import_data_directory.class: ONGR\ConnectionsBundle\Service\ImportDataDirectory
@@ -8,7 +7,6 @@ parameters:
 
     # sync import pipeline event parent classes
     ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener
-    ongr_connections.sync.execute.modifier.class: changeme
     ongr_connections.sync.execute.consumer.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener
 
 services:
@@ -19,9 +17,6 @@ services:
 
     ongr_connections.import.source:
         class: %ongr_connections.import.source.class%
-
-    ongr_connections.import.modifier:
-        class: %ongr_connections.import.modifier.class%
 
     ongr_connections.import.consumer:
         class: %ongr_connections.import.consumer.class%
