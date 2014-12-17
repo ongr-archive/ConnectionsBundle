@@ -44,7 +44,5 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
      *
      * @param AbstractImportItem $eventItem
      */
-    protected function modify(AbstractImportItem $eventItem)
-    {
-    }
+    abstract protected function modify(AbstractImportItem $eventItem);
 }
