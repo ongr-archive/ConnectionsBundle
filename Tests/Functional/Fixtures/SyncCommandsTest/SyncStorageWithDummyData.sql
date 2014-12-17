@@ -1,4 +1,4 @@
--- creates sync storage table for testing
+-- Creates sync storage table for testing.
 CREATE TABLE `ongr_sync_storage_1` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(1) COLLATE utf8_unicode_ci NOT NULL COMMENT 'C-CREATE(INSERT),U-UPDATE,D-DELETE',
@@ -10,7 +10,7 @@ CREATE TABLE `ongr_sync_storage_1` (
   KEY `IDX_EB160B2F7B00651C` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- adds dummy data to sync storage table
+-- Adds dummy data to sync storage table.
 INSERT INTO `ongr_sync_storage_1` (`id`, `type`, `document_type`, `document_id`, `timestamp`, `status`)
 VALUES
   (11, 'c', 'product', 3, '2014-12-09 09:00:00', 0),
