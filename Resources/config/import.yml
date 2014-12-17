@@ -8,7 +8,7 @@ parameters:
 
     # sync import pipeline event parent classes
     ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener
-    ongr_connections.sync.execute.modifier.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteModifyEventListener
+    ongr_connections.sync.execute.modifier.class: changeme
     ongr_connections.sync.execute.consumer.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener
 
 services:

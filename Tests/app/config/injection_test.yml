@@ -6,6 +6,8 @@ parameters:
         - OXTITLE
     # import modifier test class.
     ongr_connections.import.modifier.class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestModifyEventListener
+    # sync execute test class.
+    ongr_connections.sync.execute.modifier.class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\SyncCommandsTest\TestModifyEventListener
 
 services:
     ongr_project.sql_relations.category.delete:

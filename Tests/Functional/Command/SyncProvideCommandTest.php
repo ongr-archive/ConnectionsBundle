@@ -112,7 +112,7 @@ class SyncProvideCommandTest extends TestBase
         $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains('Success.', $output);
+        $this->assertContains('Job finished', $output);
     }
 
     /**
@@ -192,7 +192,7 @@ class SyncProvideCommandTest extends TestBase
         $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
-        $this->assertContains('Success.', $output);
+        $this->assertContains('Job finished', $output);
     }
 
     /**
@@ -255,10 +255,6 @@ class SyncProvideCommandTest extends TestBase
             }
         );
 
-        $this->assertEquals($expectedData, $syncStorageData);
-
-        $output = $commandTester->getDisplay();
-        $this->assertContains('Job finished', $output);
         return $storageData;
     }
 }

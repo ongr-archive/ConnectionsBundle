@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest;
+namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\SyncCommandsTest;
 
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 
 /**
@@ -23,12 +23,15 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
     /**
      * Assigns data in entity to relevant fields in document.
      *
-     * @param ImportItem $eventItem
+     * @param SyncExecuteItem $eventItem
      */
-    protected function modify(ImportItem $eventItem)
+    protected function modify(SyncExecuteItem $eventItem)
     {
         /** @var TestProduct $data */
         $data = $eventItem->getEntity();
+        if ($data === null) {
+            return;
+        }
         /** @var Product $document */
         $document = $eventItem->getDocument();
         $document->setId($data->id);

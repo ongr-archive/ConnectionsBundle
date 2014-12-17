@@ -11,13 +11,13 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import;
 
-use ONGR\ConnectionsBundle\Event\AbstractInitialSyncModifyEvent;
-use ONGR\ConnectionsBundle\Event\ImportItem;
+use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 
 /**
  * Implementation of InitialSyncModifyEventListener.
  */
-class TestModifyEventListener extends AbstractInitialSyncModifyEvent
+class TestModifyEventListener extends AbstractImportModifyEventListener
 {
     /**
      * Does nothing.
