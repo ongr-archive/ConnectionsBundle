@@ -9,36 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Import;
+namespace ONGR\ConnectionsBundle\Pipeline;
 
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 
 /**
- * ImportService class - creates pipeline for the import process and executes it.
+ * PipelineStarter - creates pipeline and starts it.
  */
-class ImportService
+class PipelineStarter
 {
     /**
      * @var PipelineFactory
      */
     private $pipelineFactory;
-
-    /**
-     * Runs import process.
-     *
-     * @param string $target
-     */
-    public function import($target = null)
-    {
-        if ($target === null) {
-            $target = 'default';
-        }
-        $pipeline = $this->getPipelineFactory()->create(
-            "import.$target"
-        );
-
-        $pipeline->start();
-    }
 
     /**
      * @return PipelineFactory
@@ -54,5 +37,20 @@ class ImportService
     public function setPipelineFactory($pipelineFactory)
     {
         $this->pipelineFactory = $pipelineFactory;
+    }
+
+    /**
+     * Prepares pipeline name and starts pipeline.
+     *
+     * @param string $prefix
+     * @param string $target
+     */
+    public function startPipeline($prefix, $target)
+    {
+        if ($target === null) {
+            $target = 'default';
+        }
+
+        $this->getPipelineFactory()->create($prefix . $target)->start();
     }
 }

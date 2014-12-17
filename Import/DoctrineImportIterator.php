@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Import;
 
 use Doctrine\ORM\EntityManagerInterface;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 use Traversable;
 

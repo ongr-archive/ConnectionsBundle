@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\SyncStorage;
 use DateTime;
 
 /**
- * Temp data storage. (codename: Panther).
+ * Temp data storage. (codename: SyncStorage).
  */
 interface SyncStorageInterface
 {
@@ -32,8 +32,6 @@ interface SyncStorageInterface
      * @param int      $documentId
      * @param DateTime $dateTime
      * @param array    $shopIds
-     *
-     * @return void
      */
     public function save($operationType, $documentType, $documentId, DateTime $dateTime, array $shopIds = null);
 
@@ -53,8 +51,6 @@ interface SyncStorageInterface
      *
      * @param int   $itemId
      * @param array $shopIds
-     *
-     * @return void
      */
     public function deleteItem($itemId, array $shopIds = null);
 }
