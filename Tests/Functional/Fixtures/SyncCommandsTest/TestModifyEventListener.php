@@ -25,7 +25,7 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
      *
      * @param SyncExecuteItem $eventItem
      */
-    protected function modify(SyncExecuteItem $eventItem)
+    protected function modify($eventItem)
     {
         /** @var TestProduct $data */
         $data = $eventItem->getEntity();
