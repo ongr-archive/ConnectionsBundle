@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import;
 
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 
 /**
  * Implementation of InitialSyncModifyEventListener.
@@ -22,9 +22,9 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
     /**
      * Does nothing.
      *
-     * @param ImportItem $eventItem
+     * @param AbstractImportItem $eventItem
      */
-    protected function modify(ImportItem $eventItem)
+    protected function modify(AbstractImportItem $eventItem)
     {
     }
 }

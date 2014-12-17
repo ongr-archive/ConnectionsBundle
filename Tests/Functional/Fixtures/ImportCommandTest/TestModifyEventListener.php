@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest;
 
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 
