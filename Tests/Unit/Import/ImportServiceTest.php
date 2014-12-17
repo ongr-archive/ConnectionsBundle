@@ -165,10 +165,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $data = ['id' => 1, 'title' => 'test', 'description' => 'test description'];
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->setMethods(['notice', 'debug'])
+            ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        $logger->expects($this->atLeastOnce())->method('notice', 'debug')->will($this->returnValue(null));
+        $logger->expects($this->atLeastOnce())->method('log')->will($this->returnValue(null));
 
         $eventItem = new ItemPipelineEvent(null);
         $event = new ImportModifyEventListener();
