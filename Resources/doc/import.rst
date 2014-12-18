@@ -24,58 +24,44 @@ Defining a source (data provider)
 
 To define your own source you need to create a source event listener.
 
-Take, for example, this predefined ImportSourceEvent:
+Take, for example, this predefined ImportSourceEventListener:
 
 .. code-block:: php
 
-    class ImportSourceEvent
+    class ImportSourceEventListener extends AbstractImportSourceEventListener
     {
         /**
-         * @var EntityManager
+         * @var EntityManager $entityManager
          */
         protected $entityManager;
 
         /**
-         * @var string Type of source.
+         * @var string $entityClass Type of source.
          */
         protected $entityClass;
 
         /**
-         * @var Manager
+         * @var Manager $elasticsearchManager
          */
-        protected $elasticSearchManager;
+        protected $elasticsearchManager;
 
         /**
-         * @var string Class name of Elasticsearch document. (e.g. Product)
+         * @var string Classname of Elasticsearch document. (e.g. Product).
          */
         protected $documentClass;
 
         /**
          * Gets all documents by given type.
          *
-         * @return MemoryEfficientEntitiesIterator
+         * @return DoctrineImportIterator
          */
         public function getAllDocuments()
         {
             return new DoctrineImportIterator(
-                $this->entityManager->createQuery('SELECT e FROM :table e', ['table' => $this->entityClass])->iterate(),
+                $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
                 $this->entityManager,
-                $this->elasticSearchManager->getRepository($this->documentClass)
+                $this->elasticsearchManager->getRepository($this->documentClass)
             );
-        }
-
-        /**
-         * @param EntityManager $manager
-         * @param string        $entityClass
-         * @param Manager       $elasticSearchManager
-         * @param string        $documentClass
-         */
-        public function __construct(EntityManager $manager, $entityClass, Manager $elasticSearchManager, $documentClass)
-        {
-            $this->entityManager = $manager;
-            $this->entityClass = $entityClass;
-            $this->elasticSearchManager = $elasticSearchManager;
-            $this->documentClass = $documentClass;
         }
 
         /**
@@ -123,35 +109,23 @@ Example:
 
 .. code-block:: php
 
-    class ImportModifyEvent extends AbstractInitialSyncModifyEvent
+    class ImportModifyEventListener extends AbstractImportModifyEventListener
     {
         /**
-         * Assigns raw data to given object.
+         * Assigns data in entity to relevant fields in document.
          *
-         * @param DocumentInterface $document
-         * @param mixed             $data
+         * @param AbstractImportItem $eventItem
          */
-        protected function assignDataToDocument(DocumentInterface $document, $data)
+        protected function modify(AbstractImportItem $eventItem)
         {
-            foreach ($data as $property => $value) {
-                if (property_exists(get_class($document), $property)) {
-                    $document->$property = $value;
-                }
-            }
-        }
-
-        /**
-         * Modifies EventItem.
-         *
-         * @param EventItem $eventItem
-         *
-         * @return EventItem
-         */
-        protected function modify(EventItem $eventItem)
-        {
-            $this->assignDataToDocument($eventItem->getElasticItem(), $eventItem->getDoctrineItem());
-
-            return $eventItem;
+            /** @var Product $data */
+            $data = $eventItem->getEntity();
+            /** @var Product $document */
+            $document = $eventItem->getDocument();
+            $document->setId($data->id);
+            $document->setTitle($data->title);
+            $document->setPrice($data->price);
+            $document->setDescription($data->description);
         }
     }
 
@@ -162,7 +136,6 @@ Example:
 
        my.import.modifier:
            class: %my.import.modifier.class%
-           parent: ongr_connections.import.modifier
            tags:
              - { name: kernel.event_listener, event: ongr.pipeline.import.default.modify, method: onModify }
 
@@ -183,58 +156,17 @@ Example:
 
 .. code-block:: php
 
-    class ImportConsumeEvent implements LoggerAwareInterface
+    /**
+     * ImportConsumeEventListener class, called after modify event. Puts document into Elasticsearch.
+     */
+    class ImportConsumeEventListener extends AbstractImportConsumeEventListener implements LoggerAwareInterface
     {
-        use LoggerAwareTrait;
-
         /**
-         * @var Manager $manager
-         */
-        protected $manager;
-
-        /**
-         * @param Manager $manager
+         * {@inheritdoc}
          */
         public function __construct(Manager $manager)
         {
-            $this->manager = $manager;
-        }
-
-        /**
-         * Consume event.
-         *
-         * @param ItemPipelineEvent $event
-         *
-         * @return bool
-         */
-        public function onConsume(ItemPipelineEvent $event)
-        {
-            /** @var DocumentInterface $document */
-            $document = $event->getItem()->getElasticItem();
-
-            if ($document->getId() === null) {
-                if ($this->logger) {
-                    $this->logger->notice('No document id found. Update skipped.');
-                }
-
-                return false;
-            }
-
-            if ($this->logger) {
-                $this->logger->debug(
-                    'Start update single document of type ' . get_class($document) . ' id: ' . $document->getId()
-                );
-            }
-
-            $this->manager->persist($document);
-
-            if ($this->logger) {
-                $this->logger->debug(
-                    'End an update of a single document.'
-                );
-            }
-
-            return true;
+            parent::__construct($manager, 'ONGR\ConnectionsBundle\Import\Item\ImportItem');
         }
     }
 ..
@@ -242,13 +174,13 @@ Example:
 
 .. code-block:: yaml
 
-       my.initial_sync_consumer:
-           class: %my.initial_sync_consumer.class%
-           parent: ongr_connections.initial_sync_consumer
+       my.import_consumer:
+           class: %my.import_consumer.class%
+           parent: ongr_connections.import_consumer
                arguments:
                  - @es.manager
                tags:
-                  - { name: kernel.event_listener, event: ongr.pipeline.initial_sync.default.consume, method: onConsume }
+                  - { name: kernel.event_listener, event: ongr.pipeline.import.default.consume, method: onConsume }
 ..
 
 
@@ -263,10 +195,10 @@ To listen on start event, use something similar to this in your config:
 
 .. code-block:: yaml
 
-       my.initial_sync_start:
-           class: %my.initial_sync_start.class%
+       my.import_start:
+           class: %my.import_start.class%
                tags:
-                  - { name: kernel.event_listener, event: ongr.pipeline.initial_sync.default.start, method: onStart }
+                  - { name: kernel.event_listener, event: ongr.pipeline.import.default.start, method: onStart }
 ..
 
 Defining finish event listener
@@ -278,7 +210,7 @@ Example:
 
 .. code-block:: php
 
-    class ImportFinishEvent
+    class ImportFinishEventListener
     {
         /**
          * @var Manager $manager
@@ -306,13 +238,13 @@ Example:
 
 .. code-block:: yaml
 
-       my.initial_sync_finish:
-           class: %my.initial_sync_finish.class%
-           parent: ongr_connections.initial_sync_finish
+       my.import_finish:
+           class: %my.import_finish.class%
+           parent: ongr_connections.import_finish
            arguments:
              - @es.manager
            tags:
-             - { name: kernel.event_listener, event: ongr.pipeline.initial_sync.default.finish, method: onFinish }
+             - { name: kernel.event_listener, event: ongr.pipeline.import.default.finish, method: onFinish }
 ..
 
 
@@ -321,19 +253,19 @@ Using different pipeline names
 
 You can use different event names in case you have situations when it is impossible to use a single pipeline, e.g. you have different data flows (mysql->elasticsearch and elasticsearch->mongo).
 
-Configure your event listeners to use event names in following pattern: ongr.pipeline.initial_sync.{$name}.(source | start | modify | consume | finish).
+Configure your event listeners to use event names in following pattern: ongr.pipeline.import.{$name}.(source | start | modify | consume | finish).
 
 e.g.:
 
 .. code-block:: yaml
 
-       my.initial_sync_finish:
-           class: %my.initial_sync_finish.class%
-           parent: ongr_connections.initial_sync_finish
+       my.import_finish:
+           class: %my.import_finish.class%
+           parent: ongr_connections.import_finish
            arguments:
              - @es.manager
            tags:
-             - { name: kernel.event_listener, event: ongr.pipeline.initial_sync.MySpecialEventName.finish, method: onFinish }
+             - { name: kernel.event_listener, event: ongr.pipeline.import.MySpecialEventName.finish, method: onFinish }
 ..
 
 And call *ongr:connections:import* command using *{$name}*, e.g. ongr:connections:import MySpecialEventName

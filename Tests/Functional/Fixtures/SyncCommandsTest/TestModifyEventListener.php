@@ -1,0 +1,42 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\SyncCommandsTest;
+
+use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
+use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
+
+/**
+ * Implementation of InitialSyncModifyEventListener.
+ */
+class TestModifyEventListener extends AbstractImportModifyEventListener
+{
+    /**
+     * Assigns data in entity to relevant fields in document.
+     *
+     * @param AbstractImportItem $eventItem
+     */
+    protected function modify(AbstractImportItem $eventItem)
+    {
+        /** @var TestProduct $data */
+        $data = $eventItem->getEntity();
+        if ($data === null) {
+            return;
+        }
+        /** @var Product $document */
+        $document = $eventItem->getDocument();
+        $document->setId($data->id);
+        $document->setTitle($data->title);
+        $document->setPrice($data->price);
+        $document->setDescription($data->description);
+    }
+}

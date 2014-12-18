@@ -11,30 +11,20 @@
 
 namespace ONGR\ConnectionsBundle\Command;
 
-use ONGR\ConnectionsBundle\Import\ImportService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command which handles data import.
  */
-class ImportFullCommand extends ContainerAwareCommand
+class ImportFullCommand extends AbstractStartServiceCommand
 {
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    public function __construct()
     {
-        $this
-            ->setName('ongr:import:full')
-            ->setDescription('Imports data from defined sources into relevant consumers.')
-            ->addArgument(
-                'target',
-                InputArgument::OPTIONAL,
-                'Set a specific pipeline event name.'
-            );
+        parent::__construct('ongr:import:full', 'Imports data from defined sources into consumers.');
     }
 
     /**
@@ -42,14 +32,6 @@ class ImportFullCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $benchmark = new CommandBenchmark($output);
-        $benchmark->start();
-
-        /** @var ImportService $service */
-        $service = $this->getContainer()->get('ongr_connections.import_service');
-
-        $service->import($input->getArgument('target'));
-
-        $benchmark->finish();
+        $this->start($input, $output, 'ongr_connections.import_service', 'import.');
     }
 }

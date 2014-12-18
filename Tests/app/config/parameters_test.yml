@@ -10,3 +10,9 @@ parameters:
 
     locale: en
     secret: 'superdupersecretkey#pleasedonttellitanyone'
+
+    test.sync.execute.shop_id: 1
+    test.sync.execute.chunk_size: 1
+    test.sync.execute.elastic_document_type: AcmeTestBundle:Product
+    test.sync.execute.doctrine_entity_type: Test:TestProduct
+    test.sync.execute.sync_storage_document_type: product

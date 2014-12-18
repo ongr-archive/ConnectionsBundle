@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
+namespace ONGR\ConnectionsBundle\Tests\Unit;
 
 use ONGR\ConnectionsBundle\Command\ImportFullCommand;
 use Symfony\Component\Console\Application;
@@ -23,10 +23,10 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommand()
     {
-        $import = $this->getMockBuilder('ONGR\ConnectionsBundle\Command\ImportCommand')
-            ->setMethods(['import'])
+        $import = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
+            ->setMethods(['startPipeline'])
             ->getMock();
-        $import->expects($this->once())->method('import')->will($this->returnValue(null));
+        $import->expects($this->once())->method('startPipeline')->will($this->returnValue(null));
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $import);
         $command = new ImportFullCommand();
@@ -47,10 +47,14 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommandWithTargetParameter()
     {
-        $initialSync = $this->getMockBuilder('ONGR\ConnectionsBundle\Command\ImportCommand')
-            ->setMethods(['import'])
+        $initialSync = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
+            ->setMethods(['startPipeline'])
             ->getMock();
-        $initialSync->expects($this->once())->method('import')->with(['test'])->will($this->returnValue(null));
+        $initialSync
+            ->expects($this->once())
+            ->method('startPipeline')
+            ->with('import.', ['test'])
+            ->will($this->returnValue(null));
 
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $initialSync);

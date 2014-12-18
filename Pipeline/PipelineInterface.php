@@ -26,7 +26,7 @@ interface PipelineInterface
     /**
      * Execute pipeline.
      */
-    public function execute();
+    public function start();
 
     /**
      * @return EventDispatcherInterface
@@ -35,8 +35,6 @@ interface PipelineInterface
 
     /**
      * @param EventDispatcherInterface $dispatcher
-     *
-     * @return void
      */
     public function setDispatcher($dispatcher);
 
@@ -47,8 +45,6 @@ interface PipelineInterface
 
     /**
      * @param string $name
-     *
-     * @return void
      */
     public function setName($name);
 
