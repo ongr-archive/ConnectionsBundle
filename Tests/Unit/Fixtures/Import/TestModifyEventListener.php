@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\EventListener;
+namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import;
 
+use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
 use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
 
 /**
- * ImportModifyEventListener class - assigns data from doctrine item to Elasticsearch document.
+ * Implementation of InitialSyncModifyEventListener.
  */
-class ImportModifyEventListener extends AbstractImportModifyEventListener
+class TestModifyEventListener extends AbstractImportModifyEventListener
 {
     /**
-     * Modifies EventItem.
+     * Does nothing.
      *
      * @param AbstractImportItem $eventItem
      */
     protected function modify(AbstractImportItem $eventItem)
     {
-        $this->assignDataToDocument($eventItem->getDocument(), $eventItem->getEntity());
     }
 }

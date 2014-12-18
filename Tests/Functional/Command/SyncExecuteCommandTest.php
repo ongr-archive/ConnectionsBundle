@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncExecuteCommand;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
-use ONGR\TestingBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -33,7 +33,7 @@ class SyncExecuteCommandTest extends ESDoctrineTestCase
         $this->importData('SyncCommandsTest/UpdateProductsData.sql');
 
         $manager = $this->getManager();
-        $repository = $manager->getRepository('ONGRTestingBundle:Product');
+        $repository = $manager->getRepository('AcmeTestBundle:Product');
 
         $application = new Application($kernel);
         $application->add(new SyncExecuteCommand());
@@ -70,10 +70,10 @@ class SyncExecuteCommandTest extends ESDoctrineTestCase
         foreach ($products as $product) {
             $productDocument = new Product();
             $productDocument->setId($product['id']);
-            $productDocument->title = $product['title'];
-            $productDocument->price = $product['price'];
-            $productDocument->description = $product['description'];
-            $productDocument->location = $product['location'];
+            $productDocument->setTitle($product['title']);
+            $productDocument->setPrice($product['price']);
+            $productDocument->setDescription($product['description']);
+            $productDocument->setLocation($product['location']);
             $productDocument->setScore($product['score']);
             $productDocuments[] = $productDocument;
         }
@@ -84,50 +84,50 @@ class SyncExecuteCommandTest extends ESDoctrineTestCase
     /**
      * Generates testing data.
      *
-     * @return \ONGR\TestingBundle\Document\Product[]
+     * @return \ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product[]
      */
     private function getTestingData()
     {
         $productsData = [
             [
-                'id' => 1,
+                'id' => '1',
                 'title' => 'test product title 1',
                 'description' => 'test product description 1',
                 'price' => '0.1',
-                'location' => '',
-                'score' => '1.0',
+                'location' => null,
+                'score' => 1.0,
             ],
             [
-                'id' => 3,
+                'id' => '3',
                 'title' => 'test_prod3',
                 'description' => 'test_desc3',
                 'price' => '0.3',
-                'location' => '',
-                'score' => '1.0',
+                'location' => null,
+                'score' => 1.0,
             ],
             [
-                'id' => 4,
+                'id' => '4',
                 'title' => 'test_prod4',
                 'description' => 'test_desc4',
                 'price' => '0.4',
-                'location' => '',
-                'score' => '1.0',
+                'location' => null,
+                'score' => 1.0,
             ],
             [
-                'id' => 5,
+                'id' => '5',
                 'title' => 'test_prod5',
                 'description' => 'test_desc5',
                 'price' => '0.5',
-                'location' => '',
-                'score' => '1.0',
+                'location' => null,
+                'score' => 1.0,
             ],
             [
-                'id' => 6,
+                'id' => '6',
                 'title' => 'test_prod6',
                 'description' => 'test_desc6',
                 'price' => '0.6',
-                'location' => '',
-                'score' => '1.0',
+                'location' => null,
+                'score' => 1.0,
             ],
         ];
 
