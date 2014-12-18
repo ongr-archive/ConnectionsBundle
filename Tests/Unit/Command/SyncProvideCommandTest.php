@@ -11,9 +11,13 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
+use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use ONGR\ConnectionsBundle\Sync\DataSyncService;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DiffItemFactory;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Application;
@@ -69,20 +73,17 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test DiffItem factory.
-     *
-     * @expectedException \InvalidArgumentException
+     * Test diff item factory.
      */
     public function testCreateDefaultCase()
     {
         $diffItemFactory = new DiffItemFactory();
 
-        $diffItemFactory->create(ActionTypes::CREATE);
+        $this->assertEquals(new CreateDiffItem(), $diffItemFactory->create(ActionTypes::CREATE));
+        $this->assertEquals(new UpdateDiffItem(), $diffItemFactory->create(ActionTypes::UPDATE));
+        $this->assertEquals(new DeleteDiffItem(), $diffItemFactory->create(ActionTypes::DELETE));
 
-        $diffItemFactory->create(ActionTypes::UPDATE);
-
-        $diffItemFactory->create(ActionTypes::DELETE);
-
+        $this->setExpectedException('InvalidArgumentException');
         $diffItemFactory->create(null);
     }
 }

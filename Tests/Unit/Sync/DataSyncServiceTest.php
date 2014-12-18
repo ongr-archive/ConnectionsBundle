@@ -100,7 +100,7 @@ class DataSyncServiceTest extends \PHPUnit_Framework_TestCase
     public function testPipelineFactoryException()
     {
         $pipelineFactory = new PipelineFactory();
-        $pipelineFactory->setClassName('ONGR\\ConnectionsBundle\\Pipeline\\Event\\SourcePipelineEvent');
+        $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent');
         $pipelineFactory->create(null);
     }
 
