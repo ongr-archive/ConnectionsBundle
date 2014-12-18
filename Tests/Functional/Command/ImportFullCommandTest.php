@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\ImportFullCommand;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
-use ONGR\TestingBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -31,7 +31,7 @@ class ImportFullCommandTest extends ESDoctrineTestCase
         $this->importData('ImportCommandTest/products.sql');
 
         $manager = $this->getManager();
-        $repository = $manager->getRepository('ONGRTestingBundle:Product');
+        $repository = $manager->getRepository('AcmeTestBundle:Product');
 
         $application = new Application($kernel);
         $application->add(new ImportFullCommand());
@@ -44,22 +44,25 @@ class ImportFullCommandTest extends ESDoctrineTestCase
         // Temporary workaround for ESB issue #34 (https://github.com/ongr-io/ElasticsearchBundle/issues/34).
         usleep(90000);
 
-        $actualDocuments = iterator_to_array($repository->execute($search));
+        foreach ($repository->execute($search) as $document) {
+            $actualDocuments[] = $document;
+        }
+
         $expectedDocument = new Product();
-        $expectedDocument->id = '1';
-        $expectedDocument->title = 'test_prod';
-        $expectedDocument->price = '0.99';
-        $expectedDocument->description = 'test_desc';
-        $expectedDocument->score = 1.0;
+        $expectedDocument->setId('1');
+        $expectedDocument->setTitle('test_prod');
+        $expectedDocument->setPrice('0.99');
+        $expectedDocument->setDescription('test_desc');
+        $expectedDocument->setScore(1.0);
 
         $expectedDocuments[] = $expectedDocument;
 
         $expectedDocument = new Product();
-        $expectedDocument->id = '2';
-        $expectedDocument->title = 'test_prod2';
-        $expectedDocument->price = '7.79';
-        $expectedDocument->description = 'test_desc2';
-        $expectedDocument->score = 1.0;
+        $expectedDocument->setId('2');
+        $expectedDocument->setTitle('test_prod2');
+        $expectedDocument->setPrice('7.79');
+        $expectedDocument->setDescription('test_desc2');
+        $expectedDocument->setScore(1.0);
 
         $expectedDocuments[] = $expectedDocument;
 

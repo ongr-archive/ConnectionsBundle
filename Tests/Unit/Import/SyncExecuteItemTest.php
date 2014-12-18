@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
-use ONGR\TestingBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 
 class SyncExecuteItemTest extends \PHPUnit_Framework_TestCase
 {

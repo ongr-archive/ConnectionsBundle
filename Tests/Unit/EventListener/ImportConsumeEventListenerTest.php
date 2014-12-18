@@ -15,7 +15,7 @@ use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
-use ONGR\TestingBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 use Psr\Log\LogLevel;
 
 class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase

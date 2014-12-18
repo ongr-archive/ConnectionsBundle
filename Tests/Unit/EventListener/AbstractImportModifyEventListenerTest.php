@@ -11,11 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
-use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
-use ONGR\TestingBundle\Document\Product;
 use Psr\Log\LogLevel;
 
 /**
@@ -35,11 +31,6 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnConsume($eventItem, $notice)
     {
-        $manager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
-            ->disableOriginalConstructor()
-            ->setMethods(['persist'])
-            ->getMock();
-
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
             ->setMethods(['log'])
             ->getMockForAbstractClass();
