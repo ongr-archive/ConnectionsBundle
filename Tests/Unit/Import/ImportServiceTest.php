@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Import;
 use ArrayObject;
 use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;

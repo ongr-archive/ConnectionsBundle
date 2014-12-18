@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
 use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;

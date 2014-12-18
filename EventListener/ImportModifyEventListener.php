@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 
 /**
  * ImportModifyEventListener class - assigns data from doctrine item to Elasticsearch document.

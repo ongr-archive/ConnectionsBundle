@@ -11,8 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**

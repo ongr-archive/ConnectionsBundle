@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\TestingBundle\Document\Product;
@@ -66,7 +66,7 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 new \stdClass,
-                'Item provided is not an ONGR\ConnectionsBundle\Import\Item\ImportItem',
+                'Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\ImportItem',
             ],
         ];
     }
