@@ -168,7 +168,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['log'])
             ->getMockForAbstractClass();
 
-        $logger->expects($this->atLeastOnce())->method('log')->will($this->returnValue(null));
+        $logger->expects($this->once())->method('log')->will($this->returnValue(null));
 
         $eventItem = new ItemPipelineEvent(null);
         $event = new ImportModifyEventListener();
@@ -235,9 +235,6 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $document->setId('test');
 
         $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
-        $event->onConsume($eventItem);
-
-        $eventItem = new ItemPipelineEvent($eventItem);
         $event->onConsume($eventItem);
     }
 }
