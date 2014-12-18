@@ -1,3 +1,6 @@
+/**
+ * Populates binlog with test data, introduces one second difference between insert and update statements.
+ */
 CREATE TABLE `oxcategories` (
    OXID VARCHAR(100),
    OXTITLE VARCHAR(100)
@@ -23,6 +26,8 @@ INSERT INTO `oxarticles` (OXID) VALUES ('art2');
 
 INSERT INTO `oxobject2category` (OXID, OXCATNID, OXOBJECTID) VALUES ('oc0', 'cat0', 'art0');
 INSERT INTO `oxobject2category` (OXID, OXCATNID, OXOBJECTID) VALUES ('oc1', 'cat0', 'art1');
+
+SELECT SLEEP(1); -- Ensure time difference in binlog.
 
 UPDATE `oxarticles` SET OXTITLE='Product 1' WHERE OXID='art0';
 UPDATE `oxarticles` SET OXTITLE='Product 2' WHERE OXID='art1';

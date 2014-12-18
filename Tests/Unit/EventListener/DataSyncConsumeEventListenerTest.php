@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
+namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
-use ONGR\ConnectionsBundle\Event\DataSyncConsumeEvent;
+use ONGR\ConnectionsBundle\EventListener\DataSyncConsumeEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\Extractor\ExtractorInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class DataSyncConsumeEventTest extends \PHPUnit_Framework_TestCase
+class DataSyncConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ItemPipelineEvent|MockObject
@@ -29,9 +29,9 @@ class DataSyncConsumeEventTest extends \PHPUnit_Framework_TestCase
     private $extractor;
 
     /**
-     * @var DataSyncConsumeEvent
+     * @var DataSyncConsumeEventListener
      */
-    private $event;
+    private $listener;
 
     /**
      * Setup services for tests.
@@ -42,7 +42,7 @@ class DataSyncConsumeEventTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->extractor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\ExtractorInterface');
-        $this->event = new DataSyncConsumeEvent($this->extractor);
+        $this->listener = new DataSyncConsumeEventListener($this->extractor);
     }
 
     /**
@@ -60,6 +60,6 @@ class DataSyncConsumeEventTest extends \PHPUnit_Framework_TestCase
             ->method('extract')
             ->with($item);
 
-        $this->event->onConsume($this->itemPipelineEvent);
+        $this->listener->onConsume($this->itemPipelineEvent);
     }
 }

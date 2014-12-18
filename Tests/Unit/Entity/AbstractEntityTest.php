@@ -95,10 +95,10 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
                 $stub->$removeMethod($childObject);
                 $this->assertEquals(0, count($stub->$getter()));
-            } else {
-                $stub->$setter($childObject);
-                $this->assertEquals($hash, spl_object_hash($stub->$getter()));
             }
+
+            $stub->$setter($childObject);
+            $this->assertEquals($hash, spl_object_hash($stub->$getter()));
         } else {
             throw new \Exception("Unknown field type '{$type}'.");
         }

@@ -9,33 +9,33 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Import\Item;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
- * Import event item carrying both Doctrine element and ES element.
+ * Import event item carrying both Doctrine entity and ES document.
  */
-class ImportItem
+abstract class AbstractImportItem
 {
     /**
-     * @var mixed
+     * @var mixed $entity
      */
     protected $entity;
 
     /**
-     * @var DocumentInterface
+     * @var DocumentInterface $document
      */
     protected $document;
 
     /**
-     * @param mixed             $doctrineItem
-     * @param DocumentInterface $elasticItem
+     * @param mixed             $entity
+     * @param DocumentInterface $document
      */
-    public function __construct($doctrineItem, DocumentInterface $elasticItem)
+    public function __construct($entity, DocumentInterface $document)
     {
-        $this->setEntity($doctrineItem);
-        $this->setDocument($elasticItem);
+        $this->setEntity($entity);
+        $this->setDocument($document);
     }
 
     /**
@@ -47,11 +47,11 @@ class ImportItem
     }
 
     /**
-     * @param mixed $doctrineItem
+     * @param mixed $entity
      */
-    public function setEntity($doctrineItem)
+    public function setEntity($entity)
     {
-        $this->entity = $doctrineItem;
+        $this->entity = $entity;
     }
 
     /**
@@ -63,10 +63,10 @@ class ImportItem
     }
 
     /**
-     * @param DocumentInterface $elasticItem
+     * @param DocumentInterface $document
      */
-    public function setDocument(DocumentInterface $elasticItem)
+    public function setDocument(DocumentInterface $document)
     {
-        $this->document = $elasticItem;
+        $this->document = $document;
     }
 }

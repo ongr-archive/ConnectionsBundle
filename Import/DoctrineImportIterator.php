@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Event;
+namespace ONGR\ConnectionsBundle\Import;
 
 use Doctrine\ORM\EntityManagerInterface;
+use ONGR\ConnectionsBundle\Import\Item\ImportItem;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 use Traversable;
 
@@ -21,12 +22,12 @@ use Traversable;
 class DoctrineImportIterator extends \IteratorIterator
 {
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface $manager
      */
     private $manager;
 
     /**
-     * @var Repository
+     * @var Repository $repository
      */
     private $repository;
 
