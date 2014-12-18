@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class to pass relations to compiler.
+ * Adds services tagged as sql relation to relations collection.
  */
 class SqlRelationPass extends AbstractMySqlPass implements CompilerPassInterface
 {
