@@ -12,11 +12,11 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Import;
 
 use ArrayObject;
+use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
 use ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener;
 use ONGR\ConnectionsBundle\Import\Item\ImportItem;
-use ONGR\ConnectionsBundle\EventListener\ImportModifyEventListener;
-use ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener;
+use ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import\TestModifyEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
@@ -92,8 +92,8 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @param ImportFinishEventListener  $finishListener
      * @param ImportConsumeEventListener $consumeListener
-     * @param ImportModifyEventListener  $eventItem
-     * @param ImportModifyEventListener  $modifyListener
+     * @param ImportItem                 $eventItem
+     * @param TestModifyEventListener    $modifyListener
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -141,7 +141,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
                 unset($item);
             }
         }
-        $modifyListener = new ImportModifyEventListener();
+        $modifyListener = new TestModifyEventListener();
         $consumeListener = new ImportConsumeEventListener($elasticsearchManager);
         $finishListener = new ImportFinishEventListener($elasticsearchManager);
         $eventItem = new ItemPipelineEvent(new ImportItem(['Test'], $document));
@@ -154,23 +154,6 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
         $dataImportService->setPipelineFactory($pipelineFactory);
         $dataImportService->startPipeline('import.', null);
-    }
-
-    /**
-     * Tests modify event assign data.
-     */
-    public function testModifyEventAssignData()
-    {
-        $document = new ProductModel();
-        $data = ['id' => 1, 'title' => 'test', 'description' => 'test description'];
-
-        $event = new ImportModifyEventListener();
-        $eventItem = new ItemPipelineEvent(new ImportItem($data, $document));
-
-        $event->onModify($eventItem);
-        $this->assertEquals($data['id'], $eventItem->getItem()->getDocument()->id);
-        $this->assertEquals($data['title'], $eventItem->getItem()->getDocument()->title);
-        $this->assertEquals($data['description'], $eventItem->getItem()->getDocument()->description);
     }
 
     /**
