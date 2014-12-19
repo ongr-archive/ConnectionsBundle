@@ -1,11 +1,14 @@
 parameters:
+    ongr_connections.import_service.class: ONGR\ConnectionsBundle\Pipeline\PipelineStarter
     ongr_connections.import.source.class: ONGR\ConnectionsBundle\EventListener\ImportSourceEventListener
     ongr_connections.import.consumer.class: ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener
     ongr_connections.import.finish.class: ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener
 
     # sync import pipeline event parent classes
+    ongr_connections.sync.execute_service.class: ONGR\ConnectionsBundle\Pipeline\PipelineStarter
     ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener
     ongr_connections.sync.execute.consumer.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener
+    ongr_connections.sync.execute.finish.class: ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener
 
 services:
     ongr_connections.import_service:
@@ -16,8 +19,25 @@ services:
     ongr_connections.import.source:
         class: %ongr_connections.import.source.class%
 
+    ongr_connections.import.modifier:
+        class: %ongr_connections.import.modifier.class%
+
     ongr_connections.import.consumer:
         class: %ongr_connections.import.consumer.class%
 
     ongr_connections.import.finish:
         class: %ongr_connections.import.finish.class%
+
+    ongr_connections.sync.execute_service:
+        class: %ongr_connections.sync.execute_service.class%
+        calls:
+            - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
+
+    ongr_connections.sync.execute.source:
+        class: %ongr_connections.sync.execute.source.class%
+
+    ongr_connections.sync.execute.consumer:
+        class: %ongr_connections.sync.execute.consumer.class%
+
+    ongr_connections.sync.execute.finish:
+        class: %ongr_connections.sync.execute.finish.class%
