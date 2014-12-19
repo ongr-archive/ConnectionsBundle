@@ -4,16 +4,10 @@ parameters:
     ongr_connections.mapping_listener.class: ONGR\ConnectionsBundle\EventListener\LoadClassMetadataListener
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
-    ongr_connections.sync.execute_service.class: ONGR\ConnectionsBundle\Pipeline\PipelineStarter
 
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
     ongr_connections.pipeline.abstract.class: ONGR\ConnectionsBundle\Pipeline\Pipeline
-
-    # sync import pipeline event parent classes
-    ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener
-    ongr_connections.sync.execute.consumer.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener
-    ongr_connections.sync.execute.finish.class: ONGR\ConnectionsBundle\EventListener\ImportFinishEventListener
 
 services:
     ongr_connections.jobs_cleanup_service:
@@ -51,17 +45,3 @@ services:
         calls:
             - [ setDispatcher, [ @event_dispatcher ] ]
             - [ setClassName, [ %ongr_connections.pipeline_factory.pipeline_class% ] ]
-
-    ongr_connections.sync.execute_service:
-        class: %ongr_connections.sync.execute_service.class%
-        calls:
-            - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
-
-    ongr_connections.sync.execute.source:
-        class: %ongr_connections.sync.execute.source.class%
-
-    ongr_connections.sync.execute.consumer:
-        class: %ongr_connections.sync.execute.consumer.class%
-
-    ongr_connections.sync.execute.finish:
-        class: %ongr_connections.sync.execute.finish.class%
