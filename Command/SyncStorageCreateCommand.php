@@ -58,9 +58,6 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
 
         switch ($storage) {
             case SyncStorage::STORAGE_MYSQL:
-                if (!$this->getContainer()->has('doctrine.dbal.default_connection')) {
-                    throw new InvalidArgumentException('DBAL connection was not found.');
-                }
                 /** @var Connection $connection */
                 $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
                 /** @var StorageManagerInterface $storageManager */

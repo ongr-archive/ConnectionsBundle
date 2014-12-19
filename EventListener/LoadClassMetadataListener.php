@@ -15,7 +15,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
- * Class LoadClassMetadataListener.
+ * Listens to mapping events and processes data replacements.
  */
 class LoadClassMetadataListener
 {
