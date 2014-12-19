@@ -179,7 +179,7 @@ class BinlogDiffProvider extends DiffProvider
     public function getFromDate()
     {
         if ($this->fromDate === null) {
-            $this->fromDate = $this->getPairStorage()->get('ongr_connections.last_sync_date');
+            $this->fromDate = $this->getPairStorage()->get('last_sync_date');
         }
 
         if ($this->fromDate == null) {
@@ -194,7 +194,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function setFromDate($fromDate)
     {
-        $this->getPairStorage()->set('ongr_connections.last_sync_date', $fromDate);
+        $this->getPairStorage()->set('last_sync_date', $fromDate);
         $this->fromDate = $fromDate;
     }
 
