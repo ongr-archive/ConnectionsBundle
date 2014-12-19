@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;

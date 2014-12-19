@@ -24,6 +24,6 @@ class ImportConsumeEventListener extends AbstractImportConsumeEventListener impl
      */
     public function __construct(Manager $manager)
     {
-        parent::__construct($manager, 'ONGR\ConnectionsBundle\Import\Item\ImportItem');
+        parent::__construct($manager, 'ONGR\ConnectionsBundle\Pipeline\Item\ImportItem');
     }
 }
