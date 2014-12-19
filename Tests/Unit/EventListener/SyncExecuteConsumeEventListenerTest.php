@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener;
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
@@ -211,7 +211,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                 'document_type' => 'product',
                 'event_item' => new \stdClass,
                 'logger_notice' => [
-                    ['Item provided is not an ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem', LogLevel::NOTICE],
+                    ['Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem', LogLevel::NOTICE],
                 ],
                 'managerMethod' => null,
             ],

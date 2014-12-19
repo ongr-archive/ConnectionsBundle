@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
@@ -50,7 +50,7 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     {
         $this->documentType = $documentType;
         $this->syncStorage = $syncStorage;
-        parent::__construct($manager, 'ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem');
+        parent::__construct($manager, 'ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem');
     }
 
     /**

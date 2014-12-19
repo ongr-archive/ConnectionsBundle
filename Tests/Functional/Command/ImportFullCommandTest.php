@@ -42,7 +42,7 @@ class ImportFullCommandTest extends ESDoctrineTestCase
         $search = $repository->createSearch();
 
         // Temporary workaround for ESB issue #34 (https://github.com/ongr-io/ElasticsearchBundle/issues/34).
-        usleep(50000);
+        usleep(90000);
 
         foreach ($repository->execute($search) as $document) {
             $actualDocuments[] = $document;
