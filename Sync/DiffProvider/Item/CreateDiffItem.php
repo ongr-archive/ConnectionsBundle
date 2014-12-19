@@ -18,6 +18,8 @@ class CreateDiffItem extends BaseDiffItem
 {
     /**
      * {@inheritdoc}
+     *
+     * @codeCoverageIgnore
      */
     public function setWhereParams($params)
     {

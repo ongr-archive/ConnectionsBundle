@@ -1,4 +1,3 @@
-
 services:
     project.downloader.dummy:
         class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Downloader\DummyDownloader
@@ -55,19 +54,18 @@ services:
               method: onSource
 
     test.import.source:
-        class: %ongr_connections.import.source.class%
-        parent: ongr_connections.import.source
-        arguments:
-            - @doctrine.orm.default_entity_manager
-            - Test:TestProduct
-            - @es.manager
-            - ONGRTestingBundle:Product
-        tags:
-            - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
+           class: %ongr_connections.import.source.class%
+           parent: ongr_connections.import.source
+           arguments:
+               - @doctrine.orm.default_entity_manager
+               - Test:TestProduct
+               - @es.manager
+               - AcmeTestBundle:Product
+           tags:
+               - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
 
     test.import.modifier:
         class: %ongr_connections.import.modifier.class%
-        parent: ongr_connections.import.modifier
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.import.default.modify, method: onModify }
 
@@ -119,7 +117,6 @@ services:
 
     test.sync.execute.modifier:
         class: %ongr_connections.sync.execute.modifier.class%
-        parent: ongr_connections.sync.execute.modifier
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.default.modify, method: onModify }
 

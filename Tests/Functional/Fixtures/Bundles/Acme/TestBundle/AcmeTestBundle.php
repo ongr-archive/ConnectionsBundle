@@ -9,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync;
+namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Stores job table fields as constants.
+ * AcmeTestBundle for testing.
  */
-class JobTableFields
+class AcmeTestBundle extends Bundle
 {
-    const TYPE = 'document_type';
-    const ID = 'document_id';
-    const TIMESTAMP = 'timestamp';
 }
