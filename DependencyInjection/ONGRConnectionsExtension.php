@@ -37,10 +37,10 @@ class ONGRConnectionsExtension extends Extension
         $loader->load('services.yml');
         $loader->load('url_invalidator.yml');
         $loader->load('import.yml');
+        $loader->load('pair_storage.yml');
         $loader->load('binlog.yml');
         $loader->load('extractor.yml');
         $loader->load('sync_storage.yml');
-        $loader->load('pair_storage.yml');
 
         $this->initShops($container, $config);
         $this->initJobs($container, $config);

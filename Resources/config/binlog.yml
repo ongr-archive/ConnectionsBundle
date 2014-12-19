@@ -6,7 +6,8 @@ parameters:
 services:
     ongr_connections.sync.diff_provider.binlog_diff_provider:
         class: %ongr_connections.diff_provider.binlog_diff_provider.class%
-        arguments:
-            - @database_connection
-            - %ongr_connections.sync.diff_provider.binlog_dir%
-            - %ongr_connections.sync.diff_provider.binlog_basename%
+        calls:
+            - [ setConnection, [ @database_connection ] ]
+            - [ setDir, [ %ongr_connections.sync.diff_provider.binlog_dir% ] ]
+            - [ setBaseName, [ %ongr_connections.sync.diff_provider.binlog_basename% ] ]
+            - [ setPairStorage, [ @ongr_connections.pair_storage ] ]
