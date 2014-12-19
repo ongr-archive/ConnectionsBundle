@@ -8,6 +8,7 @@ parameters:
 
     ongr_connections.pipeline_factory.class: ONGR\ConnectionsBundle\Pipeline\PipelineFactory
     ongr_connections.pipeline_factory.pipeline_class: ONGR\ConnectionsBundle\Pipeline\Pipeline
+    ongr_connections.pipeline.abstract.class: ONGR\ConnectionsBundle\Pipeline\Pipeline
 
     # sync import pipeline event parent classes
     ongr_connections.sync.execute.source.class: ONGR\ConnectionsBundle\EventListener\SyncExecuteSourceEventListener
@@ -35,7 +36,7 @@ services:
             - { name: doctrine.event_listener, event: loadClassMetadata }
 
     ongr_connections.pipeline.abstract:
-        class: ONGR\ConnectionsBundle\Pipeline\Pipeline
+        class: %ongr_connections.pipeline.abstract.class%
         abstract: true
         calls:
             - [ setDispatcher, [ @event_dispatcher ] ]
