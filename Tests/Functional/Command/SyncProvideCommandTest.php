@@ -19,6 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\DependencyInjection\Container;
+use ONGR\ConnectionsBundle\Service\PairStorage;
+use \DateTime;
 
 class SyncProvideCommandTest extends TestBase
 {
@@ -38,6 +41,8 @@ class SyncProvideCommandTest extends TestBase
     {
         $kernel = self::createClient()->getKernel();
         $container = $kernel->getContainer();
+
+        $this->setLastSyncDate($container, new DateTime('now'));
 
         /** @var MysqlStorageManager $managerMysql */
         $managerMysql = $this->getSyncStorageManager($container);
@@ -122,6 +127,8 @@ class SyncProvideCommandTest extends TestBase
     {
         $kernel = self::createClient()->getKernel();
         $container = $kernel->getContainer();
+
+        $this->setLastSyncDate($container, new DateTime('now'));
 
         $this->getSyncStorageManager($container);
         $this->importData('ExtractorTest/sample_db.sql');
@@ -256,5 +263,35 @@ class SyncProvideCommandTest extends TestBase
         );
 
         return $storageData;
+    }
+
+    /**
+     * Sets last_sync_date in bin log format.
+     *
+     * @param Container $container
+     * @param \DateTime $date
+     */
+    private function setLastSyncDate($container, $date)
+    {
+        /** @var PairStorage $pairStorage */
+        $pairStorage = $container->get('ongr_connections.pair_storage');
+
+        // Sometimes, mysql timezone and php and server time zone could differ, we need convert time seen by php
+        // to the same timezone as is used in mysqlbinlog. This is for test only, should not affect live website.
+        /** @var MysqlStorageManager $managerMysql */
+        $managerMysql = $this->getSyncStorageManager($container);
+
+        $result = $managerMysql->getConnection()->executeQuery('SELECT @@global.time_zone');
+        $time_zone = $result->fetchAll()[0]['@@global.time_zone'];
+
+        // If mysql timezone is the same as systems, string 'SYSTEM' is returned, which is not what we want.
+        if ($time_zone == 'SYSTEM') {
+            $result = $managerMysql->getConnection()->executeQuery('SELECT @@system_time_zone');
+            $time_zone = $result->fetchAll()[0]['@@system_time_zone'];
+        }
+
+        $date->setTimezone(new \DateTimeZone($time_zone));
+
+        $pairStorage->set('last_sync_date', $date->format('Y-m-d H:i:s'));
     }
 }

@@ -16,6 +16,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
 use ONGR\ConnectionsBundle\Service\PairStorage;
 use InvalidArgumentException;
+use \DateTime;
 
 /**
  * Sync data provider from MySQL binlog.
@@ -179,7 +180,7 @@ class BinlogDiffProvider extends DiffProvider
     public function getFromDate()
     {
         if ($this->fromDate === null) {
-            $this->fromDate = $this->getPairStorage()->get('last_sync_date');
+            $this->fromDate = new DateTime($this->getPairStorage()->get('last_sync_date'));
         }
 
         if ($this->fromDate == null) {
@@ -239,7 +240,7 @@ class BinlogDiffProvider extends DiffProvider
     public function next()
     {
         if ($this->valid() == true) {
-            $this->current()->getTimestamp();
+            $this->setFromDate($this->current()->getTimestamp());
         }
         $this->getBinlogDecorator()->next();
     }
