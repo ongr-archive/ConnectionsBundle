@@ -31,7 +31,7 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
     protected $manager;
 
     /**
-     * @var string $importItemClass Class of an item contained in ItemPipelineEvent.
+     * @var string Class of an item contained in ItemPipelineEvent.
      */
     protected $importItemClass;
 
