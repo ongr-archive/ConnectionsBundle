@@ -11,9 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
-use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
-use ONGR\ConnectionsBundle\Sync\DataSyncService;
+use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DiffItemFactory;
@@ -27,16 +26,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DataSyncService|MockObject
+     * @var PipelineStarter|MockObject
      */
-    private $dataSyncService;
+    private $pipelineStarter;
 
     /**
      * Setup services before tests.
      */
     protected function setUp()
     {
-        $this->dataSyncService = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
+        $this->pipelineStarter = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -48,12 +47,12 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
     {
         $targetName = 'some-target';
 
-        $this->dataSyncService->expects($this->once())
+        $this->pipelineStarter->expects($this->once())
             ->method('startPipeline')
             ->with('data_sync.', $targetName);
 
         $container = new ContainerBuilder();
-        $container->set('ongr_connections.sync.data_sync_service', $this->dataSyncService);
+        $container->set('ongr_connections.sync.data_sync_service', $this->pipelineStarter);
 
         $command = new SyncProvideCommand();
         $command->setContainer($container);
