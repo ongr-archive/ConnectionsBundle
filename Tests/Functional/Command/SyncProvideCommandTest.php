@@ -348,7 +348,8 @@ class SyncProvideCommandTest extends TestBase
         // Sometimes, mysql timezone and php and server time zone could differ, we need convert time seen by php
         // to the same timezone as is used in mysqlbinlog. This is for test only, should not affect live website.
         /** @var MysqlStorageManager $managerMysql */
-        $managerMysql = $this->getSyncStorageManager($container);
+        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
+        $managerMysql->createStorage();
 
         $result = $managerMysql->getConnection()->executeQuery('SELECT @@global.time_zone');
         $time_zone = $result->fetchAll()[0]['@@global.time_zone'];
