@@ -19,12 +19,12 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 abstract class AbstractImportItem
 {
     /**
-     * @var mixed Entity.
+     * @var mixed
      */
     protected $entity;
 
     /**
-     * @var DocumentInterface Document.
+     * @var DocumentInterface
      */
     protected $document;
 

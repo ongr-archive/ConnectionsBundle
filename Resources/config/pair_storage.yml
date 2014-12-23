@@ -1,0 +1,8 @@
+parameters:
+    ongr_connections.pair_storage.class: ONGR\ConnectionsBundle\Service\PairStorage
+
+services:
+    ongr_connections.pair_storage:
+        class: %ongr_connections.pair_storage.class%
+        arguments:
+            - @es.manager

@@ -11,8 +11,6 @@
 
 namespace ONGR\ConnectionsBundle\Pipeline;
 
-use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
-
 /**
  * PipelineStarter - creates pipeline and starts it.
  */
