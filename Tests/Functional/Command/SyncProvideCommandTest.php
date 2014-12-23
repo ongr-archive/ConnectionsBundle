@@ -345,8 +345,9 @@ class SyncProvideCommandTest extends TestBase
         /** @var PairStorage $pairStorage */
         $pairStorage = $container->get('ongr_connections.pair_storage');
 
-        // Sometimes, mysql timezone and php and server time zone could differ, we need convert time seen by php
-        // to the same timezone as is used in mysqlbinlog. This is for test only, should not affect live website.
+        // Sometimes, mysql, php and server timezone could differ, we need convert time seen by php
+        // to the same time in the same timezone as is used in mysqlbinlog.
+        // This issue is for tests only, should not affect live website.
         /** @var MysqlStorageManager $managerMysql */
         $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
         $managerMysql->createStorage();
