@@ -130,8 +130,90 @@ class SyncProvideCommandTest extends TestBase
 
         $this->setLastSyncDate($container, new DateTime('now'));
 
-        $this->getSyncStorageManager($container);
         $this->importData('ExtractorTest/sample_db.sql');
+
+        $expectedData = [
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'category',
+                'document_id' => 'cat0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art2',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art2',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::DELETE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+        ];
+
+        $commandTester = $this->executeCommand($kernel);
+
+        $storageData = $this->getSyncData($container, count($expectedData));
+
+        $this->assertEquals($expectedData, $storageData);
+
+        $output = $commandTester->getDisplay();
+        $this->assertContains('Job finished', $output);
+    }
+
+    /**
+     * Check if command works. Suppose some data is skipped, by using last sync date.
+     */
+    public function testExecuteSkipDataByLastSyncDate()
+    {
+        $kernel = self::createClient()->getKernel();
+        $container = $kernel->getContainer();
+
+        $this->importData('ExtractorTest/sample_db_to_skip.sql');
+
+        $this->setLastSyncDate($container, new DateTime('now'));
+
+        $this->importData('ExtractorTest/sample_db_to_use.sql');
 
         $expectedData = [
             [
