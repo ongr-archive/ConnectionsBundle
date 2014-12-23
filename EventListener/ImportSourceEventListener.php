@@ -22,17 +22,17 @@ use ONGR\ElasticsearchBundle\ORM\Manager;
 class ImportSourceEventListener extends AbstractImportSourceEventListener
 {
     /**
-     * @var EntityManager $entityManager
+     * @var EntityManager Entity manager.
      */
     protected $entityManager;
 
     /**
-     * @var string $entityClass Type of source.
+     * @var string Entity class type of source.
      */
     protected $entityClass;
 
     /**
-     * @var Manager $elasticsearchManager
+     * @var Manager Elasticsearch manager.
      */
     protected $elasticsearchManager;
 
