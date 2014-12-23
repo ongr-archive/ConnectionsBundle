@@ -29,31 +29,24 @@ class SyncParametersCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
+            ->setName('ongr:sync:provide:parameter')
             ->setDescription('Sets or gets parameter value for sync.')
             ->addArgument(
                 'parameter',
                 InputArgument::REQUIRED,
                 'Parameter name'
             )
-            ->addArgument(
-                'value',
-                InputArgument::OPTIONAL,
-                'Parameter value'
-            )
             ->addOption(
                 'set',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Specify set to set parameter value'
+            )
+            ->addArgument(
+                'value',
+                InputArgument::OPTIONAL,
+                'Parameter value'
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct()
-    {
-        parent::__construct('ongr:sync:provide:parameter');
     }
 
     /**
