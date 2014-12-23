@@ -19,7 +19,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 class SyncExecuteItem extends AbstractImportItem
 {
     /**
-     * @var array
+     * @var array Sync storage data.
      */
     protected $syncStorageData;
 
