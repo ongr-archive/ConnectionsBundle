@@ -222,7 +222,6 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function onSource(SourcePipelineEvent $event)
     {
-        $this->context = $event->getContext();
         $event->addSource($this);
     }
 

@@ -15,6 +15,7 @@ use ONGR\ElasticsearchBundle\ORM\Repository;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use ONGR\ConnectionsBundle\Document\Pair;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 
 /**
  * Responsible for managing pairs actions.
@@ -65,7 +66,7 @@ class PairStorage
      * @param string $key
      * @param mixed  $value
      *
-     * @return Pair
+     * @return DocumentInterface
      */
     public function set($key, $value)
     {
