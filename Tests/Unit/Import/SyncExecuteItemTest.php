@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Event;
 
-use ONGR\ConnectionsBundle\Import\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
