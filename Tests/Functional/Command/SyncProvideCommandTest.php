@@ -45,7 +45,9 @@ class SyncProvideCommandTest extends TestBase
         $this->setLastSyncDate($container, new DateTime('now'));
 
         /** @var MysqlStorageManager $managerMysql */
-        $managerMysql = $this->getSyncStorageManager($container);
+        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
+        $managerMysql->createStorage();
+
         $this->importData('ExtractorTest/sample_db_nodelay.sql');
 
         $expectedData = [
@@ -305,21 +307,6 @@ class SyncProvideCommandTest extends TestBase
         );
 
         return $commandTester;
-    }
-
-    /**
-     * Sets up Sync storage, returns MysqlStorageManager.
-     *
-     * @param ContainerInterface $container
-     *
-     * @return MysqlStorageManager
-     */
-    private function getSyncStorageManager($container)
-    {
-        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
-        $managerMysql->createStorage();
-
-        return $managerMysql;
     }
 
     /**
