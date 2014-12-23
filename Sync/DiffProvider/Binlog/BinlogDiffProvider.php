@@ -23,6 +23,8 @@ use \DateTime;
  */
 class BinlogDiffProvider extends DiffProvider
 {
+    const LAST_SYNC_DATE_PARAM = 'last_sync_date';
+
     /**
      * @var BinlogDecorator
      */
@@ -180,7 +182,7 @@ class BinlogDiffProvider extends DiffProvider
     public function getFromDate()
     {
         if ($this->fromDate === null) {
-            $this->fromDate = new DateTime($this->getPairStorage()->get('last_sync_date'));
+            $this->fromDate = new DateTime($this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM));
         }
 
         if ($this->fromDate == null) {
@@ -195,7 +197,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function setFromDate($fromDate)
     {
-        $this->getPairStorage()->set('last_sync_date', $fromDate);
+        $this->getPairStorage()->set(self::LAST_SYNC_DATE_PARAM, $fromDate);
         $this->fromDate = $fromDate;
     }
 

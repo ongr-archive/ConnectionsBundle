@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\DependencyInjection\Container;
 use ONGR\ConnectionsBundle\Service\PairStorage;
 use \DateTime;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
 
 class SyncProvideCommandTest extends TestBase
 {
@@ -363,6 +364,6 @@ class SyncProvideCommandTest extends TestBase
 
         $date->setTimezone(new \DateTimeZone($time_zone));
 
-        $pairStorage->set('last_sync_date', $date->format('Y-m-d H:i:s'));
+        $pairStorage->set(BinlogDiffProvider::LAST_SYNC_DATE_PARAM, $date->format('Y-m-d H:i:s'));
     }
 }
