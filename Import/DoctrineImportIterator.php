@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Import;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ONGR\ConnectionsBundle\Import\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 use Traversable;
 

@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Interface DocumentUrlCollectorInterface.
+ * Interface for document url collectors.
  */
 interface DocumentUrlCollectorInterface
 {

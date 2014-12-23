@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\SyncCommandsTest;
 
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
-use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 
 /**

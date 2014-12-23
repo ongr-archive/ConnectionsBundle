@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync;
 
 /**
- * JobTableFields class.
+ * Stores job table fields as constants.
  */
 class JobTableFields
 {

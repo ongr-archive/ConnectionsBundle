@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import;
 
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
-use ONGR\ConnectionsBundle\Import\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 
 /**
  * Implementation of InitialSyncModifyEventListener.
