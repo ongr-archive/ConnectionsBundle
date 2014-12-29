@@ -182,11 +182,13 @@ class BinlogDiffProvider extends DiffProvider
     public function getFromDate()
     {
         if ($this->fromDate === null) {
-            $this->fromDate = new DateTime($this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM));
-        }
+            $temp_date = $this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM);
 
-        if ($this->fromDate === null) {
-            throw new \InvalidArgumentException('Last sync date is not set!');
+            if ($temp_date === null) {
+                throw new \InvalidArgumentException('Last sync date is not set!');
+            } else {
+                $this->fromDate = new DateTime($temp_date);
+            }
         }
 
         return $this->fromDate;
