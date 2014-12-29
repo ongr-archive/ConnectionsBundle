@@ -66,7 +66,7 @@ class SyncParametersCommand extends ContainerAwareCommand
 
             $output->writeln(
                 "Parameter `$parameter`: " .
-                ($set_value == null ? 'has no value.' : var_export($set_value, true))
+                ($set_value === null ? 'has no value.' : var_export($set_value, true))
             );
 
             if ($set & isset($value)) {
