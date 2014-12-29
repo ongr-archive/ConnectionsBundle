@@ -242,7 +242,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function next()
     {
-        if ($this->valid() !== null) {
+        if ($this->valid() !== false) {
             $this->setFromDate($this->current()->getTimestamp());
         }
         $this->getBinlogDecorator()->next();
