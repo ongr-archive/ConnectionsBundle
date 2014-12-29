@@ -185,7 +185,7 @@ class BinlogDiffProvider extends DiffProvider
             $this->fromDate = new DateTime($this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM));
         }
 
-        if ($this->fromDate == null) {
+        if ($this->fromDate === null) {
             throw new \InvalidArgumentException('Last sync date is not set!');
         }
 
@@ -240,7 +240,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function next()
     {
-        if ($this->valid() == true) {
+        if ($this->valid() !== null) {
             $this->setFromDate($this->current()->getTimestamp());
         }
         $this->getBinlogDecorator()->next();
