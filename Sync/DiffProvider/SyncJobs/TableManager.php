@@ -46,7 +46,7 @@ class TableManager
      */
     public function __construct($connection, $tableName = 'ongr_sync_jobs', array $shops = [])
     {
-        if ($connection == null) {
+        if ($connection === null) {
             throw new \LogicException('DBAL connection was not injected. Doctrine is missing?');
         }
 
