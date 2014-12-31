@@ -29,13 +29,13 @@ Set Binlog Parameters in YAML configuration
 
 .. code-block:: yaml
 
-    # binlog parameters
+    # binlog default parameters
     ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
     ongr_connections.sync.diff_provider.binlog_basename: mysql-bin
     ongr_connections.sync.diff_provider.binlog_start_type: 1
 ..
 
-Possible values for `binlog_start_type` are:
+Possible values for :code:`ongr_connections.sync.diff_provider.binlog_start_type` are:
 
 - 0 - all bin log will be parsed all the time.
 - 1 - :code:`last_sync_date` will be used when reading binlog.
