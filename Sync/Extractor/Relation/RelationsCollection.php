@@ -19,7 +19,7 @@ class RelationsCollection
     /**
      * @var SqlRelationInterface[]
      */
-    private $relations;
+    private $relations = [];
 
     /**
      * @param SqlRelationInterface $relation

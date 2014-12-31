@@ -35,6 +35,8 @@ class ImportSourceEventListener extends AbstractImportSourceEventListener
 
     /**
      * @var Manager
+     * 
+     * Elasticsearch manager.
      */
     protected $elasticsearchManager;
 

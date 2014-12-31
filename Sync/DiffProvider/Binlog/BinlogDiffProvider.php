@@ -14,12 +14,17 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog;
 use Doctrine\DBAL\Connection;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
+use ONGR\ConnectionsBundle\Service\PairStorage;
+use InvalidArgumentException;
+use \DateTime;
 
 /**
  * Sync data provider from MySQL binlog.
  */
 class BinlogDiffProvider extends DiffProvider
 {
+    const LAST_SYNC_DATE_PARAM = 'last_sync_date';
+
     /**
      * @var BinlogDecorator
      */
@@ -31,25 +36,159 @@ class BinlogDiffProvider extends DiffProvider
     private $fromDate;
 
     /**
-     * @param Connection $connection
-     * @param string     $dir
-     * @param string     $baseName
-     * @param string     $connectionName
+     * @var PairStorage
      */
-    public function __construct($connection, $dir, $baseName, $connectionName = 'default')
+    private $pairStorage;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dir;
+
+    /**
+     * @var string
+     */
+    private $baseName;
+
+    /**
+     * @var string
+     */
+    private $connectionName = 'default';
+
+    /**
+     * @return string
+     *
+     * @throws \LogicException
+     */
+    public function getBaseName()
     {
-        $from = $this->getFromDate();
-        $this->binlogDecorator = new BinlogDecorator($connection, $dir, $baseName, $from, $connectionName);
+        if ($this->baseName === null) {
+            throw new \LogicException('setBaseName must be called before getBaseName.');
+        }
+
+        return $this->baseName;
+    }
+
+    /**
+     * @param string $baseName
+     */
+    public function setBaseName($baseName)
+    {
+        $this->baseName = $baseName;
+    }
+
+    /**
+     * @return Connection
+     *
+     * @throws \LogicException
+     */
+    public function getConnection()
+    {
+        if ($this->connection === null) {
+            throw new \LogicException('setConnection must be called before getConnection.');
+        }
+
+        return $this->connection;
+    }
+
+    /**
+     * @param Connection $connection
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \LogicException
+     */
+    public function getConnectionName()
+    {
+        if ($this->connectionName === null) {
+            throw new \LogicException('setConnectionName must be called before getConnectionName.');
+        }
+
+        return $this->connectionName;
+    }
+
+    /**
+     * @param string $connectionName
+     */
+    public function setConnectionName($connectionName)
+    {
+        $this->connectionName = $connectionName;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \LogicException
+     */
+    public function getDir()
+    {
+        if ($this->connectionName === null) {
+            throw new \LogicException('setDir must be called before getDir.');
+        }
+
+        return $this->dir;
+    }
+
+    /**
+     * @param string $dir
+     */
+    public function setDir($dir)
+    {
+        $this->dir = $dir;
+    }
+
+    /**
+     * Gets pair storage.
+     *
+     * @return PairStorage
+     *
+     * @throws \LogicException
+     */
+    public function getPairStorage()
+    {
+        if ($this->pairStorage === null) {
+            throw new \LogicException('setPairStorage must be called before getPairStorage.');
+        }
+
+        return $this->pairStorage;
+    }
+
+    /**
+     * Sets pair storage.
+     *
+     * @param PairStorage $pairStorage
+     */
+    public function setPairStorage(PairStorage $pairStorage)
+    {
+        $this->pairStorage = $pairStorage;
     }
 
     /**
      * @return \DateTime
+     *
+     * @throws \InvalidArgumentException
      */
     public function getFromDate()
     {
-        if (empty($this->fromDate)) {
-            // Temporary BinLog parser hack (solution is being developed - issue #2).
-            return new \DateTime('now -1 day');
+        if ($this->fromDate === null) {
+            $temp_date = $this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM);
+
+            if ($temp_date === null) {
+                throw new \InvalidArgumentException('Last sync date is not set!');
+            } else {
+                $this->fromDate = new DateTime($temp_date);
+            }
         }
 
         return $this->fromDate;
@@ -60,7 +199,26 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function setFromDate($fromDate)
     {
+        $this->getPairStorage()->set(self::LAST_SYNC_DATE_PARAM, $fromDate);
         $this->fromDate = $fromDate;
+    }
+
+    /**
+     * @return BinlogDecorator
+     */
+    public function getBinlogDecorator()
+    {
+        if ($this->binlogDecorator === null) {
+            $this->binlogDecorator = new BinlogDecorator(
+                $this->getConnection(),
+                $this->getDir(),
+                $this->getBaseName(),
+                $this->getFromDate(),
+                $this->getConnectionName()
+            );
+        }
+
+        return $this->binlogDecorator;
     }
 
     /**
@@ -76,7 +234,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function current()
     {
-        return $this->binlogDecorator->current();
+        return $this->getBinlogDecorator()->current();
     }
 
     /**
@@ -84,7 +242,10 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function next()
     {
-        $this->binlogDecorator->next();
+        if ($this->valid() !== false) {
+            $this->setFromDate($this->current()->getTimestamp());
+        }
+        $this->getBinlogDecorator()->next();
     }
 
     /**
@@ -92,7 +253,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function key()
     {
-        return $this->binlogDecorator->key();
+        return $this->getBinlogDecorator()->key();
     }
 
     /**
@@ -100,7 +261,7 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function valid()
     {
-        return $this->binlogDecorator->valid();
+        return $this->getBinlogDecorator()->valid();
     }
 
     /**
@@ -108,6 +269,6 @@ class BinlogDiffProvider extends DiffProvider
      */
     public function rewind()
     {
-        $this->binlogDecorator->rewind();
+        $this->getBinlogDecorator()->rewind();
     }
 }

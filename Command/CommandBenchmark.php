@@ -53,7 +53,7 @@ class CommandBenchmark
      */
     public function finish($outputStat = true)
     {
-        if ($outputStat == true) {
+        if ($outputStat === true) {
             $this->output->writeln('');
             $this->output->writeln(sprintf('<info>Job finished in %.2f s</info>', microtime(true) - $this->start));
             $this->output->writeln(sprintf('<info>Memory usage: %.2f MB</info>', memory_get_peak_usage() >> 20));

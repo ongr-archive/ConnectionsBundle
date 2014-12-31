@@ -20,6 +20,8 @@ class SyncExecuteItem extends AbstractImportItem
 {
     /**
      * @var array
+     * 
+     * Sync storage data.
      */
     protected $syncStorageData;
 
