@@ -151,6 +151,7 @@ class BinlogDecorator implements \Iterator
 
         $diffItem = DiffItemFactory::create($type);
         $diffItem->setTimestamp($buffer[BinlogParser::PARAM_DATE]);
+        $diffItem->setDiffId($buffer[BinlogParser::PARAM_POSITION]);
         $diffItem->setCategory($buffer[BinlogParser::PARAM_QUERY]['table']);
         $mapping = $this->getTableMapping($diffItem->getCategory());
 
