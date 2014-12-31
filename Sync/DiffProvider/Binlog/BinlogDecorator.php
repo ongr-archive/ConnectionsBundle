@@ -62,7 +62,7 @@ class BinlogDecorator implements \Iterator
         $this->connectionName = $connectionName;
         $this->directory = $dir;
         $this->baseName = $baseName;
-        $this->binlogParser = new BinlogParser($this->directory, $this->baseName, $from);
+        $this->binlogParser = new BinlogParser($this->directory, $this->baseName, $from, BinlogParser::START_TYPE_DATE);
     }
 
     /**

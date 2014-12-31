@@ -45,6 +45,11 @@ class BinlogParser implements \Iterator
     const STATEMENT_TYPE_WHERE = 'WHERE';
     const STATEMENT_TYPE_SET = 'SET';
 
+    // Bin log start type.
+    const START_TYPE_NONE = 0;
+    const START_TYPE_DATE = 1;
+    const START_TYPE_POSITION = 2;
+
     /**
      * @var string Directory with log-dir files.
      */
@@ -56,9 +61,14 @@ class BinlogParser implements \Iterator
     private $baseName;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|int
      */
     private $from;
+
+    /**
+     * @var int
+     */
+    private $startType;
 
     /**
      * @var resource Pipe read from.
@@ -101,15 +111,17 @@ class BinlogParser implements \Iterator
     private $status = self::STATE_CLEAN;
 
     /**
-     * @param string    $logDir   Directory with binary log files.
-     * @param string    $baseName Base name of bin log files.
-     * @param \DateTime $from     Date from which logs will be parsed.
+     * @param string        $logDir    Directory with binary log files.
+     * @param string        $baseName  Base name of bin log files.
+     * @param \DateTime|int $from      Date or last position from which logs will be parsed.
+     * @param int           $startType Specifies whether parse logs from date or last position.
      */
-    public function __construct($logDir, $baseName, \DateTime $from = null)
+    public function __construct($logDir, $baseName, $from = null, $startType = self::START_TYPE_NONE)
     {
         $this->logDir = $logDir;
         $this->baseName = $baseName;
         $this->from = $from;
+        $this->startType = $startType;
     }
 
     /**
@@ -384,8 +396,21 @@ class BinlogParser implements \Iterator
     {
         $cmd = 'mysqlbinlog ' . escapeshellarg($this->logDir . '/' . $this->baseName) . '.[0-9]*';
 
-        if ($this->from !== null) {
-            $cmd .= ' --start-datetime=' . escapeshellarg($this->from->format('Y-m-d H:i:s'));
+        switch ($this->startType) {
+            case self::START_TYPE_DATE:
+                if ($this->from !== null) {
+                    $cmd .= ' --start-datetime=' . escapeshellarg($this->from->format('Y-m-d H:i:s'));
+                }
+                break;
+            case self::START_TYPE_POSITION:
+                if ($this->from !== null) {
+                    $cmd .= ' --start-position=' . escapeshellarg($this->from);
+                }
+                break;
+            case self::START_TYPE_NONE:
+            default:
+                // Do nothing.
+                break;
         }
 
         $cmd .= " --base64-output=DECODE-ROWS -v 2>&1 | grep -E '###|#[0-9]|Errcode|ERROR'";

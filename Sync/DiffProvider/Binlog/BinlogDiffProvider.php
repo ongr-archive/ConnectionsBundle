@@ -24,6 +24,7 @@ use \DateTime;
 class BinlogDiffProvider extends DiffProvider
 {
     const LAST_SYNC_DATE_PARAM = 'last_sync_date';
+    const LAST_SYNC_POSITION_PARAM = 'last_sync_position';
 
     /**
      * @var BinlogDecorator
