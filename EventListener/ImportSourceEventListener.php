@@ -27,16 +27,12 @@ class ImportSourceEventListener extends AbstractImportSourceEventListener
     protected $entityManager;
 
     /**
-     * @var string
-     *
-     * Type of source.
+     * @var string Type of source.
      */
     protected $entityClass;
 
     /**
-     * @var Manager
-     * 
-     * Elasticsearch manager.
+     * @var Manager Elasticsearch manager.
      */
     protected $elasticsearchManager;
 

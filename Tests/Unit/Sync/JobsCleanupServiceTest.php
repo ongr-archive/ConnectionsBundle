@@ -93,16 +93,35 @@ class JobsCleanupServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests invalid table name.
      *
+     * @param string $tableName
+     *
      * @expectedException InvalidArgumentException
+     *
+     * @dataProvider getTableNameData()
      */
-    public function testInvalidTableName()
+    public function testInvalidTableName($tableName)
     {
-        $connection = $this->getConnectionMock();
         $service = new JobsCleanupService(
             $this->getConnectionMock(),
-            '`test_table`',
+            $tableName,
             ['']
         );
         $service->doCleanup();
+    }
+
+    /**
+     * Data provider for testInvalidTableName().
+     *
+     * @return array
+     */
+    public function getTableNameData()
+    {
+        // Case #0 incorrect table name.
+        $out[] = ['`test_table`'];
+
+        // Case #1 .
+        $out[] = ['SELECT FROM test_table WHERE 1'];
+
+        return $out;
     }
 }

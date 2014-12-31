@@ -28,9 +28,7 @@ class SyncStorageImportIterator implements \Iterator
     private $syncStorage;
 
     /**
-     * @var Repository
-     *
-     * Elasticsearch repository.
+     * @var Repository Elasticsearch repository.
      */
     private $repository;
 

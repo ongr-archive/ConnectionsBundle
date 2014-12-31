@@ -75,7 +75,7 @@ class JobsCleanupService
      */
     protected function getTableName()
     {
-        if (!preg_match('|^[a-zA-Z_0-9]+$|i', $this->tableName)) {
+        if (!preg_match('|^[a-z_0-9]+$|i', $this->tableName)) {
             throw new InvalidArgumentException("Invalid table name specified: \"$this->tableName\"");
         }
 
