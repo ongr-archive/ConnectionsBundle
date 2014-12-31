@@ -32,9 +32,14 @@ class BinlogDiffProvider extends DiffProvider
     private $binlogDecorator;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|int
      */
-    private $fromDate;
+    private $from;
+
+    /**
+     * @var int
+     */
+    private $startType;
 
     /**
      * @var PairStorage
@@ -176,32 +181,75 @@ class BinlogDiffProvider extends DiffProvider
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|int
      *
      * @throws \InvalidArgumentException
      */
-    public function getFromDate()
+    public function getFrom()
     {
-        if ($this->fromDate === null) {
-            $temp_date = $this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM);
+        if ($this->from === null) {
+            if ($this->getStartType() == BinlogParser::START_TYPE_DATE) {
+                $temp_date = $this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM);
 
-            if ($temp_date === null) {
-                throw new \InvalidArgumentException('Last sync date is not set!');
-            } else {
-                $this->fromDate = new DateTime($temp_date);
+                if ($temp_date === null) {
+                    throw new \InvalidArgumentException(
+                        'Last sync date is not set! ' .
+                        'To set it, use command: ' .
+                        'ongr:sync:provide:parameter ' . self::LAST_SYNC_DATE_PARAM . ' set [value]'
+                    );
+                } else {
+                    $this->from = new DateTime($temp_date);
+                }
+            } elseif ($this->getStartType() == BinlogParser::START_TYPE_POSITION) {
+                $this->from = $this->getPairStorage()->get(self::LAST_SYNC_POSITION_PARAM);
+
+                if ($this->from === null) {
+                    throw new \InvalidArgumentException(
+                        'Last sync position is not set! ' .
+                        'To set it, use command: ' .
+                        'ongr:sync:provide:parameter ' . self::LAST_SYNC_POSITION_PARAM . ' set [value]'
+                    );
+                }
             }
         }
 
-        return $this->fromDate;
+        return $this->from;
     }
 
     /**
-     * @param \DateTime $fromDate
+     * @param \DateTime|int $from
      */
-    public function setFromDate($fromDate)
+    public function setFrom($from)
     {
-        $this->getPairStorage()->set(self::LAST_SYNC_DATE_PARAM, $fromDate);
-        $this->fromDate = $fromDate;
+        if ($this->getStartType() == BinlogParser::START_TYPE_DATE) {
+            $this->getPairStorage()->set(self::LAST_SYNC_DATE_PARAM, $from);
+        } elseif ($this->getStartType() == BinlogParser::START_TYPE_POSITION) {
+            $this->getPairStorage()->set(self::LAST_SYNC_POSITION_PARAM, $from);
+        }
+
+        $this->from = $from;
+    }
+
+    /**
+     * @return int
+     *
+     * @throws \LogicException
+     */
+    public function getStartType()
+    {
+        if ($this->startType === null) {
+            throw new \LogicException('setStartType must be called before getStartType.');
+        }
+
+        return $this->startType;
+    }
+
+    /**
+     * @param int $startType
+     */
+    public function setStartType($startType)
+    {
+        $this->startType = $startType;
     }
 
     /**
@@ -214,8 +262,8 @@ class BinlogDiffProvider extends DiffProvider
                 $this->getConnection(),
                 $this->getDir(),
                 $this->getBaseName(),
-                $this->getFromDate(),
-                BinlogParser::START_TYPE_DATE,
+                $this->getFrom(),
+                $this->getStartType(),
                 $this->getConnectionName()
             );
         }
@@ -245,7 +293,11 @@ class BinlogDiffProvider extends DiffProvider
     public function next()
     {
         if ($this->valid() !== false) {
-            $this->setFromDate($this->current()->getTimestamp());
+            if ($this->getStartType() == BinlogParser::START_TYPE_DATE) {
+                $this->setFrom($this->current()->getTimestamp());
+            } elseif ($this->getStartType() == BinlogParser::START_TYPE_POSITION) {
+                $this->setFrom($this->current()->getDiffId());
+            }
         }
         $this->getBinlogDecorator()->next();
     }
