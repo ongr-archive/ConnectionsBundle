@@ -70,8 +70,8 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(method_exists($stub, $getter), "Method ${getter}() not found!");
             $this->assertTrue(method_exists($stub, $removeMethod), "Method ${removeMethod}() not found!");
         } else {
-            $this->assertTrue(method_exists($stub, $setter), "Method ${getter}() not found!");
-            $this->assertTrue(method_exists($stub, $getter), "Method ${setter}() not found!");
+            $this->assertTrue(method_exists($stub, $setter), "Method ${setter}() not found!");
+            $this->assertTrue(method_exists($stub, $getter), "Method ${getter}() not found!");
         }
 
         if ($type === null || $type == 'boolean') {
