@@ -22,12 +22,12 @@ use Traversable;
 class DoctrineImportIterator extends \IteratorIterator
 {
     /**
-     * @var EntityManagerInterface $manager
+     * @var EntityManagerInterface
      */
     private $manager;
 
     /**
-     * @var Repository $repository
+     * @var Repository
      */
     private $repository;
 

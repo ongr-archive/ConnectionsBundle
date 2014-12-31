@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs;
 
 use Doctrine\DBAL\Connection;
+use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Entity\SyncJob;
 use Psr\Log\LoggerAwareTrait;
 
@@ -66,13 +67,29 @@ class JobsCleanupService
     }
 
     /**
+     * Get table name.
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return string
+     */
+    protected function getTableName()
+    {
+        if (!preg_match('|^[a-zA-Z_0-9]+$|i', $this->tableName)) {
+            throw new InvalidArgumentException("Invalid table name specified: \"$this->tableName\"");
+        }
+
+        return $this->tableName;
+    }
+
+    /**
      * Generates a query.
      *
      * @return string
      */
     protected function generateCleanupQuery()
     {
-        $query = 'DELETE FROM ' . $this->tableName . ' WHERE';
+        $query = 'DELETE FROM ' . $this->getTableName() . ' WHERE';
 
         if (empty($this->shops)) {
             return $query . ' `status` = ' . SyncJob::STATUS_DONE;
