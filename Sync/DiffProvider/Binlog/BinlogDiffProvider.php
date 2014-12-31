@@ -215,6 +215,7 @@ class BinlogDiffProvider extends DiffProvider
                 $this->getDir(),
                 $this->getBaseName(),
                 $this->getFromDate(),
+                BinlogParser::START_TYPE_DATE,
                 $this->getConnectionName()
             );
         }
