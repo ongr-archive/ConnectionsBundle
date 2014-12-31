@@ -36,14 +36,13 @@ Set Binlog Parameters in YAML configuration
 ..
 
 Possible values for `binlog_start_type` are:
+ - 0 - all bin log will be parsed all the time.
+ - 1 - :code:`last_sync_date` will be used when reading binlog.
+ - 2 - :code:`last_sync_position` will be used when reading binlog.
 
-    0 - all bin log will be parsed all the time.
-    1 - `last_sync_date` will be used when reading binlog.
-    2 - `last_sync_position` will be used when reading binlog. Position is integer and must be existing value from bin log, defined by: end_log_pos
-
-To set `last_sync_date` or `last_sync_position` parameters use command `ongr:sync:provide:parameter`.
-Parameter `last_sync_date` must be set to date that is in 'Y-m-d H:i:s' format, and same TimeZone as mysql.
-Parameter `last_sync_position` must be set to integer value, which is existing value from binlog, defined in binlog by `end_log_pos`.
+To set :code:`last_sync_date` or :code:`last_sync_position` parameters use command :code:`ongr:sync:provide:parameter`.
+ - Parameter :code:`last_sync_date` must be set to date that is in :code:`'Y-m-d H:i:s'` format, and same TimeZone as mysql server, which binlog is read.
+ - Parameter :code:`last_sync_position` must be set to integer value, which is existing value from binlog, defined in binlog by :code:`end_log_pos`.
 
 Register your source settings into YAML configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
