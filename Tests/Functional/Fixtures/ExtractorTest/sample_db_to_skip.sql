@@ -33,4 +33,4 @@ UPDATE `oxarticles` SET OXTITLE='Product 12' WHERE OXID='art12';
 
 DELETE FROM `oxarticles` WHERE OXID='art11';
 
-SELECT SLEEP(5); -- Ensure time difference in binlog.
+SELECT SLEEP(2); -- Ensure time difference in binlog.
