@@ -53,7 +53,7 @@ class TableManager
         }
 
         $this->connection = $connection;
-        $this->tableName = SqlValidator::validateTableName($tableName);
+        $this->setTableName($tableName);
         $this->shops = $shops;
     }
 
@@ -130,6 +130,16 @@ class TableManager
     public function getTableName()
     {
         return $this->tableName;
+    }
+
+    /**
+     * Set table name.
+     *
+     * @param string $tableName
+     */
+    public function setTableName($tableName)
+    {
+        $this->tableName = SqlValidator::validateTableName($tableName);
     }
 
     /**

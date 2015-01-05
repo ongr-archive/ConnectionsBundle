@@ -49,7 +49,7 @@ class JobsCleanupService
     public function __construct($connection, $tableName = 'ongr_sync_jobs', array $shops = [])
     {
         $this->connection = $connection;
-        $this->tableName = SqlValidator::validateTableName($tableName);
+        $this->setTableName($tableName);
         $this->shops = $shops;
     }
 
@@ -74,7 +74,7 @@ class JobsCleanupService
      */
     protected function generateCleanupQuery()
     {
-        $query = 'DELETE FROM ' . $this->tableName . ' WHERE';
+        $query = 'DELETE FROM ' . $this->getTableName() . ' WHERE';
 
         if (empty($this->shops)) {
             return $query . ' `status` = ' . SyncJob::STATUS_DONE;
@@ -86,5 +86,25 @@ class JobsCleanupService
         }
 
         return $query . implode(' AND', $conditions);
+    }
+
+    /**
+     * Get table name.
+     *
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * Set table name.
+     *
+     * @param string $tableName
+     */
+    protected function setTableName($tableName)
+    {
+        $this->tableName = SqlValidator::validateTableName($tableName);
     }
 }
