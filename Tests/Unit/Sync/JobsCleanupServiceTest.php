@@ -106,6 +106,7 @@ class JobsCleanupServiceTest extends \PHPUnit_Framework_TestCase
             $tableName,
             ['']
         );
+
         $service->doCleanup();
     }
 
@@ -116,11 +117,14 @@ class JobsCleanupServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getTableNameData()
     {
-        // Case #0 incorrect table name.
+        // Case #0 .
         $out[] = ['`test_table`'];
 
         // Case #1 .
         $out[] = ['SELECT FROM test_table WHERE 1'];
+
+        // Case #2 .
+        $out[] = ['; DELETE FROM test_table WHERE 1'];
 
         return $out;
     }

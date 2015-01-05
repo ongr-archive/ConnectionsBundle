@@ -14,6 +14,8 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Table;
+use InvalidArgumentException;
+use ONGR\ConnectionsBundle\Sync\SqlValidator;
 
 /**
  * The service to create/update database table for synchronization jobs.
@@ -51,7 +53,7 @@ class TableManager
         }
 
         $this->connection = $connection;
-        $this->tableName = $tableName;
+        $this->tableName = SqlValidator::validateTableName($tableName);
         $this->shops = $shops;
     }
 

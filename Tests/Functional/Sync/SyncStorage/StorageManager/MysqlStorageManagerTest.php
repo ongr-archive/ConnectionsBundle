@@ -41,8 +41,8 @@ class MysqlStorageManagerTest extends TestBase
     {
         $tableName = ';SQL injection here';
 
-        $service = new MysqlStorageManager($this->getConnection(), $tableName);
         $this->setExpectedException('\InvalidArgumentException', "Invalid table name specified: \"$tableName\"");
+        $service = new MysqlStorageManager($this->getConnection(), $tableName);
         $service->getTableName();
     }
 
