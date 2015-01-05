@@ -32,7 +32,7 @@ Data source for extraction is set up using "source" event listener, like that:
         my.data_sync.source:
             class: ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener
             arguments:
-                - @ongr_connections.sync.diff_provider.bin_log_diff_provider
+                - @ongr_connections.sync.diff_provider.binlog_diff_provider
             tags:
                 - { name: kernel.event_listener, event: ongr.pipeline.data_sync.<pipeline_name>.source, method: onSource }
 
