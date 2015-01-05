@@ -396,21 +396,12 @@ class BinlogParser implements \Iterator
     {
         $cmd = 'mysqlbinlog ' . escapeshellarg($this->logDir . '/' . $this->baseName) . '.[0-9]*';
 
-        switch ($this->startType) {
-            case self::START_TYPE_DATE:
-                if ($this->from !== null) {
-                    $cmd .= ' --start-datetime=' . escapeshellarg($this->from->format('Y-m-d H:i:s'));
-                }
-                break;
-            case self::START_TYPE_POSITION:
-                if ($this->from !== null) {
-                    $cmd .= ' --start-position=' . escapeshellarg($this->from);
-                }
-                break;
-            case self::START_TYPE_NONE:
-            default:
-                // Do nothing.
-                break;
+        if ($this->from !== null) {
+            if ($this->startType == self::START_TYPE_DATE) {
+                $cmd .= ' --start-datetime=' . escapeshellarg($this->from->format('Y-m-d H:i:s'));
+            } elseif ($this->startType == self::START_TYPE_POSITION) {
+                $cmd .= ' --start-position=' . escapeshellarg($this->from);
+            }
         }
 
         $cmd .= " --base64-output=DECODE-ROWS -v 2>&1 | grep -E '###|#[0-9]|Errcode|ERROR'";
