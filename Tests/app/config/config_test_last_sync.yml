@@ -1,0 +1,5 @@
+imports:
+    - { resource: config_test.yml }
+
+parameters:
+    ongr_connections.sync.diff_provider.binlog_start_type: 2

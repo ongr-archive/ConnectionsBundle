@@ -1,0 +1,2 @@
+imports:
+    - { resource: injection_test.yml }
