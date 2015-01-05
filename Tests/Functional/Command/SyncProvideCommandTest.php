@@ -19,7 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\DependencyInjection\Container;
 use ONGR\ConnectionsBundle\Service\PairStorage;
 use \DateTime;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
@@ -53,7 +52,7 @@ class SyncProvideCommandTest extends TestBase
     public function testExecuteWithoutTimeDifference()
     {
         // Set last sync date, to now.
-        $this->setLastSync($this->getServiceContainer(), new DateTime('now'), BinlogParser::START_TYPE_DATE);
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
         $this->importData('ExtractorTest/sample_db_nodelay.sql');
 
@@ -124,7 +123,7 @@ class SyncProvideCommandTest extends TestBase
             ->getConnection()
             ->executeQuery("update {$this->managerMysql->getTableName()} set timestamp=NOW()");
 
-        $storageData = $this->getSyncData($this->getServiceContainer(), count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -138,7 +137,7 @@ class SyncProvideCommandTest extends TestBase
     public function testExecuteWithTimeDifference()
     {
         // Set last sync date, to now.
-        $this->setLastSync($this->getServiceContainer(), new DateTime('now'), BinlogParser::START_TYPE_DATE);
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
         $this->importData('ExtractorTest/sample_db.sql');
 
@@ -203,7 +202,7 @@ class SyncProvideCommandTest extends TestBase
 
         $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData($this->getServiceContainer(), count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -220,7 +219,7 @@ class SyncProvideCommandTest extends TestBase
         $this->importData('ExtractorTest/sample_db_to_skip.sql');
 
         // Set last sync date, to now.
-        $this->setLastSync($this->getServiceContainer(), new DateTime('now'), BinlogParser::START_TYPE_DATE);
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
         // Transactions which should be in changes log.
         $this->importData('ExtractorTest/sample_db_to_use.sql');
@@ -286,7 +285,7 @@ class SyncProvideCommandTest extends TestBase
 
         $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData($this->getServiceContainer(), count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -310,7 +309,7 @@ class SyncProvideCommandTest extends TestBase
             ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
             ->setStartType(BinlogParser::START_TYPE_POSITION);
         // Set last sync position. Unfortunatelly, there is no way to know position, so we must harde-code it.
-        $this->setLastSync($this->getServiceContainer(), 3826, BinlogParser::START_TYPE_POSITION);
+        $this->setLastSync(3826, BinlogParser::START_TYPE_POSITION);
 
         $expectedData = [
             [
@@ -373,7 +372,7 @@ class SyncProvideCommandTest extends TestBase
 
         $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData($this->getServiceContainer(), count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -407,14 +406,13 @@ class SyncProvideCommandTest extends TestBase
     /**
      * Gets data from Sync storage.
      *
-     * @param ContainerInterface $container
-     * @param int                $count
+     * @param int $count
      *
      * @return array
      */
-    private function getSyncData($container, $count)
+    private function getSyncData($count)
     {
-        $syncStorage = $container->get('ongr_connections.sync.sync_storage');
+        $syncStorage = $this->getServiceContainer()->get('ongr_connections.sync.sync_storage');
         $storageData = $syncStorage->getChunk($count);
 
         // Remove `id` and `timestamp` from result array.
@@ -432,14 +430,13 @@ class SyncProvideCommandTest extends TestBase
     /**
      * Sets last_sync_date in bin log format.
      *
-     * @param ContainerInterface $container
-     * @param \DateTime|int      $from
-     * @param int                $startType
+     * @param \DateTime|int $from
+     * @param int           $startType
      */
-    private function setLastSync($container, $from, $startType)
+    private function setLastSync($from, $startType)
     {
         /** @var PairStorage $pairStorage */
-        $pairStorage = $container->get('ongr_connections.pair_storage');
+        $pairStorage = $this->getServiceContainer()->get('ongr_connections.pair_storage');
 
         if ($startType == BinlogParser::START_TYPE_DATE) {
             // Sometimes, mysql, php and server timezone could differ, we need convert time seen by php
