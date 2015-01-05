@@ -206,13 +206,19 @@ class DoctrineExtractor implements ExtractorInterface
     /**
      * Checks whether any of tracked fields has been modified.
      *
-     * @param UpdateDiffItem      $item
+     * @param BaseDiffItem        $item
      * @param ComposedSqlRelation $relation
      *
      * @return bool
+     *
+     * @throws \InvalidArgumentException
      */
-    private function isTrackedFieldModified(UpdateDiffItem $item, ComposedSqlRelation $relation)
+    private function isTrackedFieldModified(BaseDiffItem $item, ComposedSqlRelation $relation)
     {
+        if (!$item instanceof UpdateDiffItem) {
+            throw new \InvalidArgumentException('Wrong diff item type. Got: ' . get_class($item));
+        }
+
         $trackedFields = $relation->getUpdateFields();
         if (empty($trackedFields)) {
             return true;

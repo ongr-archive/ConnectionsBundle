@@ -27,7 +27,7 @@ class ImportSourceEventListener extends AbstractImportSourceEventListener
     protected $entityManager;
 
     /**
-     * @var string Entity class type of source.
+     * @var string Type of source.
      */
     protected $entityClass;
 

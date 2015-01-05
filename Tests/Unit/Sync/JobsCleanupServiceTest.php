@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Service;
 
 use Doctrine\DBAL\Connection;
+use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Entity\SyncJob;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobsCleanupService;
 
@@ -87,5 +88,40 @@ class JobsCleanupServiceTest extends \PHPUnit_Framework_TestCase
             $service = new JobsCleanupService($connection, $tableName, $shops);
         }
         $service->doCleanup();
+    }
+
+    /**
+     * Tests invalid table name.
+     *
+     * @param string $tableName
+     *
+     * @expectedException InvalidArgumentException
+     *
+     * @dataProvider getTableNameData()
+     */
+    public function testInvalidTableName($tableName)
+    {
+        $service = new JobsCleanupService(
+            $this->getConnectionMock(),
+            $tableName,
+            ['']
+        );
+        $service->doCleanup();
+    }
+
+    /**
+     * Data provider for testInvalidTableName().
+     *
+     * @return array
+     */
+    public function getTableNameData()
+    {
+        // Case #0 incorrect table name.
+        $out[] = ['`test_table`'];
+
+        // Case #1 .
+        $out[] = ['SELECT FROM test_table WHERE 1'];
+
+        return $out;
     }
 }
