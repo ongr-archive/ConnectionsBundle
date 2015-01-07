@@ -17,7 +17,6 @@ use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use ONGR\ConnectionsBundle\Service\PairStorage;
 use \DateTime;
@@ -37,6 +36,13 @@ class SyncProvideCommandTest extends TestBase
     public function setUp()
     {
         parent::setUp();
+
+        $this
+            ->getServiceContainer()
+            ->get('es.manager')
+            ->getConnection()
+            ->dropAndCreateIndex();
+
         $this->getConnection()->executeQuery('RESET MASTER');
 
         /** @var MysqlStorageManager $managerMysql */
@@ -298,18 +304,57 @@ class SyncProvideCommandTest extends TestBase
      */
     public function testExecuteSkipDataByLastSyncPosition()
     {
-        // Creating db and some transactions which should not be in final changes log.
-        $this->importData('ExtractorTest/sample_db_to_skip.sql');
-        // Transactions which should be in changes log.
-        $this->importData('ExtractorTest/sample_db_to_use.sql');
-
+        // Set initial start position, if not sure, 0 always returns results.
+        $this->setLastSync(0, BinlogParser::START_TYPE_POSITION);
         // Set service so, that it would use last sync position.
         $this
             ->getServiceContainer()
             ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
             ->setStartType(BinlogParser::START_TYPE_POSITION);
-        // Set last sync position. Unfortunatelly, there is no way to know position, so we must harde-code it.
-        $this->setLastSync(3826, BinlogParser::START_TYPE_POSITION);
+
+        // Creating db and execute some transactions which should not be in final changes log.
+        $this->importData('ExtractorTest/sample_db_to_skip.sql');
+
+        $this->executeCommand(static::$kernel);
+
+        $last_sync_position_1 = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.pair_storage')
+            ->get(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM);
+        $this->assertGreaterThan(0, $last_sync_position_1);
+
+        // Delete data from sync storage, to test if only data from last sync position is processed.
+        $storageData = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.sync_storage')
+            ->getChunk(8);
+        foreach($storageData as $storageDataItem) {
+            $this
+                ->getServiceContainer()
+                ->get('ongr_connections.sync.sync_storage')
+                ->deleteItem($storageDataItem['id']);
+        }
+
+        // Execute transactions which should be in changes log.
+        $this->importData('ExtractorTest/sample_db_to_use.sql');
+
+        // There is some kind of an undocumented feature/bug, in which if kernel is not rebooted,
+        // when executing Command second time from same process, after inserting new data
+        // it can't add new data to sync storage table, but only if Command was executed earlier.
+        static::bootKernel();
+        static::$kernel
+            ->getContainer()
+            ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
+            ->setStartType(BinlogParser::START_TYPE_POSITION);
+
+        $commandTester = $this->executeCommand(static::$kernel);
+
+        $last_sync_position_2 = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.pair_storage')
+            ->get(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM);
+
+        $this->assertGreaterThan($last_sync_position_1, $last_sync_position_2);
 
         $expectedData = [
             [
@@ -370,13 +415,12 @@ class SyncProvideCommandTest extends TestBase
             ],
         ];
 
-        $commandTester = $this->executeCommand(static::$kernel);
-
         $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
+
         $this->assertContains('Job finished', $output);
     }
 
@@ -407,12 +451,14 @@ class SyncProvideCommandTest extends TestBase
      * Gets data from Sync storage.
      *
      * @param int $count
+     * @param int $skip
      *
      * @return array
      */
-    private function getSyncData($count)
+    private function getSyncData($count, $skip = 0)
     {
         $syncStorage = $this->getServiceContainer()->get('ongr_connections.sync.sync_storage');
+        $syncStorage->getChunk($skip);
         $storageData = $syncStorage->getChunk($count);
 
         // Remove `id` and `timestamp` from result array.
@@ -428,7 +474,7 @@ class SyncProvideCommandTest extends TestBase
     }
 
     /**
-     * Sets last_sync_date in bin log format.
+     * Sets last_sync_date in bin log format or sets last_sync_position.
      *
      * @param \DateTime|int $from
      * @param int           $startType
