@@ -66,7 +66,7 @@ class MysqlStorageManagerTest extends TestBase
     {
         $expected = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 123,
                 'dateTime' => new DateTime('NOW -5 minutes'),
@@ -106,7 +106,7 @@ class MysqlStorageManagerTest extends TestBase
 
         $records = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 123,
                 'dateTime' => new DateTime('NOW -30 minutes'),
@@ -114,21 +114,21 @@ class MysqlStorageManagerTest extends TestBase
             ],
             // Following record should be the remaining one, because it is the newest one.
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 123,
                 'dateTime' => new DateTime('NOW -10 minutes'),
                 'shopIds' => $shopIds,
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 123,
                 'dateTime' => new DateTime('NOW -20 minutes'),
                 'shopIds' => $shopIds,
             ],
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'product',
                 'documentId' => 123,
                 'dateTime' => new DateTime('NOW -5 minutes'),
@@ -149,7 +149,7 @@ class MysqlStorageManagerTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
                 [
-                    'operationType' => 'c',
+                    'operationType' => 'C',
                     'documentType' => 'product',
                     'documentId' => 123,
                     'status' => 0,
@@ -170,28 +170,28 @@ class MysqlStorageManagerTest extends TestBase
 
         $records = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 111,
                 'dateTime' => new DateTime('NOW -30 minutes'),
                 'shopIds' => $shopIds,
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 112,
                 'dateTime' => new DateTime('NOW -10 minutes'),
                 'shopIds' => $shopIds,
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 113,
                 'dateTime' => new DateTime('NOW -20 minutes'),
                 'shopIds' => $shopIds,
             ],
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'product',
                 'documentId' => 114,
                 'dateTime' => new DateTime('NOW -5 minutes'),
@@ -233,19 +233,19 @@ class MysqlStorageManagerTest extends TestBase
 
         $processedRecords = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 1234,
                 'dateTime' => new DateTime('-1 year'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 1235,
                 'dateTime' => new DateTime('-1 year'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 1236,
                 'dateTime' => new DateTime('-1 year'),
@@ -263,32 +263,32 @@ class MysqlStorageManagerTest extends TestBase
 
         $unprocessedRecords = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 2221,
                 'dateTime' => new DateTime('-6 months 11:00'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 2222,
                 'dateTime' => new DateTime('-6 months 10:00'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 2223,
                 'dateTime' => new DateTime('-6 months 09:00'),
             ],
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'product',
                 'documentId' => 2224,
                 'dateTime' => new DateTime('-6 months 13:00'),
             ],
             // Previous item gets overwritten by following one.
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'product',
                 'documentId' => 2224,
                 'dateTime' => new DateTime('-6 months 14:00'),
@@ -313,31 +313,31 @@ class MysqlStorageManagerTest extends TestBase
 
         $unprocessedRecords = [
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 2225,
                 'dateTime' => new DateTime('-6 months 11:00'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'product',
                 'documentId' => 2226,
                 'dateTime' => new DateTime('-6 months 10:00'),
             ],
             (object)[
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => 'category',
                 'documentId' => 311,
                 'dateTime' => new DateTime('-6 months 09:00'),
             ],
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'category',
                 'documentId' => 312,
                 'dateTime' => new DateTime('-6 months 13:00'),
             ],
             (object)[
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => 'category',
                 'documentId' => 313,
                 'dateTime' => new DateTime('-6 months 14:00'),

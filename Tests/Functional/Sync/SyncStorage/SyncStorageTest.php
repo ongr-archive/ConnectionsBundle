@@ -55,11 +55,11 @@ class SyncStorageTest extends TestBase
 
         $values = [
             // Create action.
-            ['c', 'product', 14, new DateTime('now -1 hour'), $shopIds],
+            ['C', 'product', 14, new DateTime('now -1 hour'), $shopIds],
             // Update action.
-            ['u', 'product', 14, new DateTime('now -1 hour +1 minute'), $shopIds],
+            ['U', 'product', 14, new DateTime('now -1 hour +1 minute'), $shopIds],
             // Delete action.
-            ['d', 'product', 14, new DateTime('now -1 hour +2 minutes'), $shopIds],
+            ['D', 'product', 14, new DateTime('now -1 hour +2 minutes'), $shopIds],
         ];
 
         $this->storageManager->expects($this->exactly(3))

@@ -80,7 +80,7 @@ class SyncStorage implements SyncStorageInterface
      */
     private function isValidOperation($operationType)
     {
-        $operationType = strtolower($operationType);
+        $operationType = strtoupper($operationType);
 
         return in_array(
             $operationType,

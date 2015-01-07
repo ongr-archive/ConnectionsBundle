@@ -58,7 +58,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('c', $category, $id, $timestamp);
+            ->with('C', $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }
@@ -79,7 +79,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('u', $category, $id, $timestamp);
+            ->with('U', $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }
@@ -100,7 +100,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('d', $category, $id, $timestamp);
+            ->with('D', $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }

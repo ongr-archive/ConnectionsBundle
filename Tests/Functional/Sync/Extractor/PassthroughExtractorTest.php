@@ -77,14 +77,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'c',
+                'operationType' => 'C',
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('c', $actual->type);
+        $this->assertEquals('C', $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));
@@ -115,14 +115,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'u',
+                'operationType' => 'U',
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('u', $actual->type);
+        $this->assertEquals('U', $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));
@@ -153,14 +153,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'd',
+                'operationType' => 'D',
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('d', $actual->type);
+        $this->assertEquals('D', $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));
