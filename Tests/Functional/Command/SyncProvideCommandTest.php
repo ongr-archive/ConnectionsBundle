@@ -328,7 +328,7 @@ class SyncProvideCommandTest extends TestBase
             ->getServiceContainer()
             ->get('ongr_connections.sync.sync_storage')
             ->getChunk(8);
-        foreach($storageData as $storageDataItem) {
+        foreach ($storageData as $storageDataItem) {
             $this
                 ->getServiceContainer()
                 ->get('ongr_connections.sync.sync_storage')
