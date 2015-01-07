@@ -192,11 +192,7 @@ class BinlogDiffProvider extends DiffProvider
                 $temp_date = $this->getPairStorage()->get(self::LAST_SYNC_DATE_PARAM);
 
                 if ($temp_date === null) {
-                    throw new \InvalidArgumentException(
-                        'Last sync date is not set! ' .
-                        'To set it, use command: ' .
-                        'ongr:sync:provide:parameter ' . self::LAST_SYNC_DATE_PARAM . ' set [value]'
-                    );
+                    $this->generateLastSyncNotSetError(self::LAST_SYNC_DATE_PARAM);
                 } else {
                     $this->from = new DateTime($temp_date);
                 }
@@ -204,11 +200,7 @@ class BinlogDiffProvider extends DiffProvider
                 $this->from = $this->getPairStorage()->get(self::LAST_SYNC_POSITION_PARAM);
 
                 if ($this->from === null) {
-                    throw new \InvalidArgumentException(
-                        'Last sync position is not set! ' .
-                        'To set it, use command: ' .
-                        'ongr:sync:provide:parameter ' . self::LAST_SYNC_POSITION_PARAM . ' set [value]'
-                    );
+                    $this->generateLastSyncNotSetError(self::LAST_SYNC_POSITION_PARAM);
                 }
             }
         }
@@ -324,5 +316,23 @@ class BinlogDiffProvider extends DiffProvider
     public function rewind()
     {
         $this->getBinlogDecorator()->rewind();
+    }
+
+    /**
+     * Generates user friendly error message.
+     *
+     * @param $parameter
+     *
+     * @codeCoverageIgnore
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function generateLastSyncNotSetError($parameter)
+    {
+        throw new \InvalidArgumentException(
+            'Last sync parameter is not set! ' .
+            'To set it, use command: ' .
+            'ongr:sync:provide:parameter ' . $parameter . ' set [value]'
+        );
     }
 }
