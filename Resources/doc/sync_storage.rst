@@ -34,7 +34,7 @@ Data source for extraction is set up using "source" event listener, like that:
             arguments:
                 - @ongr_connections.sync.diff_provider.binlog_diff_provider
             tags:
-                - { name: kernel.event_listener, event: ongr.pipeline.data_sync.<pipeline_name>.source, method: onSource }
+                - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.<pipeline_name>.source, method: onSource }
 
 ..
 
@@ -48,7 +48,7 @@ Consumer which extracts data received from diff provider is set up using "consum
             arguments:
                 - @ongr_connections.sync.extractor.passthrough_extractor
             tags:
-                - { name: kernel.event_listener, event: ongr.pipeline.data_sync.<pipeline_name>.consume, method: onConsume }
+                - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.<pipeline_name>.consume, method: onConsume }
 
 ..
 
