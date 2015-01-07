@@ -321,7 +321,7 @@ class BinlogDiffProvider extends DiffProvider
     /**
      * Generates user friendly error message.
      *
-     * @param $parameter
+     * @param string $parameter
      *
      * @codeCoverageIgnore
      *
