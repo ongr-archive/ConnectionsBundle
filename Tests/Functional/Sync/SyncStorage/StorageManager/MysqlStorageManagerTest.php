@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage\StorageManager;
 
 use DateTime;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 

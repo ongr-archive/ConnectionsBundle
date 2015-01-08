@@ -11,8 +11,8 @@
 
 namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
 
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\SyncTrait;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 
 /**

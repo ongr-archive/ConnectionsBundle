@@ -12,10 +12,10 @@
 namespace ConnectionsBundle\Tests\Functional\Sync\Extractor;
 
 use DateTime;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;

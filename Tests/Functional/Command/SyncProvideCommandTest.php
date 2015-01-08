@@ -11,18 +11,18 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
+use DateTime;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
+use ONGR\ConnectionsBundle\Service\PairStorage;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\DependencyInjection\Container;
-use ONGR\ConnectionsBundle\Service\PairStorage;
-use \DateTime;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
 
 class SyncProvideCommandTest extends TestBase
 {

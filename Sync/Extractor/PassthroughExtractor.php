@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Sync\Extractor;
 
 use InvalidArgumentException;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
@@ -40,7 +41,7 @@ class PassthroughExtractor implements ExtractorInterface
 
         if ($item instanceof CreateDiffItem) {
             $this->storage->save(
-                SyncStorageInterface::OPERATION_CREATE,
+                ActionTypes::CREATE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()
@@ -48,7 +49,7 @@ class PassthroughExtractor implements ExtractorInterface
         }
         if ($item instanceof UpdateDiffItem) {
             $this->storage->save(
-                SyncStorageInterface::OPERATION_UPDATE,
+                ActionTypes::UPDATE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()
@@ -56,7 +57,7 @@ class PassthroughExtractor implements ExtractorInterface
         }
         if ($item instanceof DeleteDiffItem) {
             $this->storage->save(
-                SyncStorageInterface::OPERATION_DELETE,
+                ActionTypes::DELETE,
                 $item->getCategory(),
                 $itemId,
                 $item->getTimestamp()

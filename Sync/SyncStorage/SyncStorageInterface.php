@@ -20,10 +20,6 @@ interface SyncStorageInterface
 {
     const STORAGE_MYSQL = 'mysql';
 
-    const OPERATION_CREATE = 'C';
-    const OPERATION_UPDATE = 'U';
-    const OPERATION_DELETE = 'D';
-
     /**
      * Save data to temp storage.
      *

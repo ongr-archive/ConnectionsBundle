@@ -14,6 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\Extractor;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\AbstractQuery;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
@@ -55,7 +56,9 @@ class DoctrineExtractor implements ExtractorInterface
         foreach ($relations as $relation) {
             $table = $relation->getTable();
             if ($table === $item->getCategory() && $action === $relation->getTriggerTypeAlias()) {
-                if ($action === ActionTypes::UPDATE && !$this->isTrackedFieldModified($item, $relation)) {
+                if ($action === ActionTypes::UPDATE
+                    && !$this->isTrackedFieldModified($item, $relation)
+                ) {
                     continue;
                 }
                 $insertList = $relation->getSqlInsertList();

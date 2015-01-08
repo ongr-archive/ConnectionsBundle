@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use ONGR\ConnectionsBundle\Entity\SyncJob;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobManager;
 use Psr\Log\NullLogger;
 
@@ -125,61 +126,61 @@ class JobManagerTest extends \PHPUnit_Framework_TestCase
 
         // Case 1: two same update jobs.
         $given1 = [
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected1 = [
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given1, $expected1];
 
         // Case 2: delete job exists.
         $given2 = [
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product1', 'type' => 'D', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::DELETE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected2 = [
-            ['documentId' => 'product1', 'type' => 'D', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::DELETE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given2, $expected2];
 
         // Case 3: delete job exists before update.
         $given3 = [
-            ['documentId' => 'product1', 'type' => 'D', 'documentType' => 'product'],
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::DELETE, 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected3 = [
-            ['documentId' => 'product1', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given3, $expected3];
 
         // Case 4: unrecognized document type.
         $given4 = [
-            ['documentId' => 'product1', 'type' => 'D', 'documentType' => null],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product3', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product1', 'type' => ActionTypes::DELETE, 'documentType' => null],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product3', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected4 = [
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product3', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product3', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given4, $expected4];
 
         // Case 5: object ID is NULL.
         $given5 = [
-            ['documentId' => null, 'type' => 'D', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product3', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => null, 'type' => ActionTypes::DELETE, 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product3', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected5 = [
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
-            ['documentId' => 'product3', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
+            ['documentId' => 'product3', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given5, $expected5];
 
@@ -187,26 +188,26 @@ class JobManagerTest extends \PHPUnit_Framework_TestCase
         $given6 = [
             [
                 'documentId' => 'product2',
-                'type' => 'U',
+                'type' => ActionTypes::UPDATE,
                 'documentType' => 'product',
                 'updateType' => SyncJob::UPDATE_TYPE_PARTIAL,
             ],
             [
                 'documentId' => 'product2',
-                'type' => 'U',
+                'type' => ActionTypes::UPDATE,
                 'documentType' => 'product',
                 'updateType' => SyncJob::UPDATE_TYPE_FULL,
             ],
         ];
         $expected6 = [
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $cases[] = [$given6, $expected6];
 
         // Case 7: non existent job type, added just to make sure nothing happens after no if cases are matched.
         $given7 = [
             ['documentId' => 'product2', 'type' => 'Z', 'documentType' => 'product'],
-            ['documentId' => 'product2', 'type' => 'U', 'documentType' => 'product'],
+            ['documentId' => 'product2', 'type' => ActionTypes::UPDATE, 'documentType' => 'product'],
         ];
         $expected7 = [
             ['documentId' => 'product2', 'type' => 'Z', 'documentType' => 'product'],
