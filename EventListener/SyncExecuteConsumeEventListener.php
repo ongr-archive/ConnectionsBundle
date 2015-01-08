@@ -11,10 +11,10 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
@@ -86,13 +86,13 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     protected function persistDocument()
     {
         switch ($this->syncStorageData['type']) {
-            case SyncStorageInterface::OPERATION_CREATE:
+            case ActionTypes::CREATE:
                 $this->manager->persist($this->importItem->getDocument());
                 break;
-            case SyncStorageInterface::OPERATION_UPDATE:
+            case ActionTypes::UPDATE:
                 $this->manager->persist($this->importItem->getDocument());
                 break;
-            case SyncStorageInterface::OPERATION_DELETE:
+            case ActionTypes::DELETE:
                 $this->manager->getRepository($this->documentType)->remove($this->importItem->getDocument()->getId());
                 break;
             default:

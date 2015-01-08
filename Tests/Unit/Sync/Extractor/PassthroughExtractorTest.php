@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Sync\Extractor;
 
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
@@ -58,7 +59,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('c', $category, $id, $timestamp);
+            ->with(ActionTypes::CREATE, $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }
@@ -79,7 +80,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('u', $category, $id, $timestamp);
+            ->with(ActionTypes::UPDATE, $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }
@@ -100,7 +101,7 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->storage->expects($this->once())
             ->method('save')
-            ->with('d', $category, $id, $timestamp);
+            ->with(ActionTypes::DELETE, $category, $id, $timestamp);
 
         $this->service->extract($diffItem);
     }

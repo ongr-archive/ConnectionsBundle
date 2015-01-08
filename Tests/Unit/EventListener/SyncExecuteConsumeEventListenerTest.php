@@ -12,11 +12,11 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use ONGR\ConnectionsBundle\EventListener\SyncExecuteConsumeEventListener;
-use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
-use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use Psr\Log\LogLevel;
 
 class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
@@ -97,7 +97,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => SyncStorageInterface::OPERATION_DELETE,
+                        'type' => ActionTypes::DELETE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]
@@ -124,7 +124,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => SyncStorageInterface::OPERATION_UPDATE,
+                        'type' => ActionTypes::UPDATE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]
@@ -151,7 +151,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                     new TestProduct(),
                     $product,
                     [
-                        'type' => SyncStorageInterface::OPERATION_CREATE,
+                        'type' => ActionTypes::CREATE,
                         'id' => 1,
                         'shop_id' => 1,
                     ]

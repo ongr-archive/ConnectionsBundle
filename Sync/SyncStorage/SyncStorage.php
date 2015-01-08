@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Sync\SyncStorage;
 
 use DateTime;
 use InvalidArgumentException;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 
 /**
@@ -80,14 +81,14 @@ class SyncStorage implements SyncStorageInterface
      */
     private function isValidOperation($operationType)
     {
-        $operationType = strtolower($operationType);
+        $operationType = strtoupper($operationType);
 
         return in_array(
             $operationType,
             [
-                self::OPERATION_CREATE,
-                self::OPERATION_UPDATE,
-                self::OPERATION_DELETE,
+                ActionTypes::CREATE,
+                ActionTypes::UPDATE,
+                ActionTypes::DELETE,
             ]
         );
     }
