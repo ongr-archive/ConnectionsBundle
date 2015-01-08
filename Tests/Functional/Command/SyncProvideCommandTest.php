@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
