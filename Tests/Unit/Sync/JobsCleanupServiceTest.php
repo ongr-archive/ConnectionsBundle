@@ -117,14 +117,14 @@ class JobsCleanupServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getTableNameData()
     {
-        // Case #0 .
+        // Case #0 incorrect symbol `. Expect InvalidArgumentException.
         $out[] = ['`test_table`'];
 
-        // Case #1 .
+        // Case #1 try add select query. Expect InvalidArgumentException.
         $out[] = ['SELECT FROM test_table WHERE 1'];
 
-        // Case #2 .
-        $out[] = ['; DELETE FROM test_table WHERE 1'];
+        // Case #2 try add delete query. Expect InvalidArgumentException.
+        $out[] = ['test_table WHERE 1 ; DELETE FROM test_table WHERE 1; SELECT FROM test_table'];
 
         return $out;
     }
