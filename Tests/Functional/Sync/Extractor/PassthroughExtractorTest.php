@@ -12,12 +12,13 @@
 namespace ConnectionsBundle\Tests\Functional\Sync\Extractor;
 
 use DateTime;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 
 class PassthroughExtractorTest extends TestBase
@@ -77,14 +78,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'c',
+                'operationType' => ActionTypes::CREATE,
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('c', $actual->type);
+        $this->assertEquals(ActionTypes::CREATE, $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));
@@ -115,14 +116,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'u',
+                'operationType' => ActionTypes::UPDATE,
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('u', $actual->type);
+        $this->assertEquals(ActionTypes::UPDATE, $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));
@@ -153,14 +154,14 @@ class PassthroughExtractorTest extends TestBase
                 AND `document_id` = :documentId
                 AND `status` = :status',
             [
-                'operationType' => 'd',
+                'operationType' => ActionTypes::DELETE,
                 'documentType' => $category,
                 'documentId' => $id,
                 'status' => 0,
             ]
         );
         $this->assertTrue(!empty($actual->id));
-        $this->assertEquals('d', $actual->type);
+        $this->assertEquals(ActionTypes::DELETE, $actual->type);
         $this->assertEquals($category, $actual->document_type);
         $this->assertEquals($id, $actual->document_id);
         $this->assertEquals($timestamp, new DateTime($actual->timestamp));

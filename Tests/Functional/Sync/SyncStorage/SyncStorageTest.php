@@ -12,8 +12,9 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage;
 
 use DateTime;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
@@ -55,11 +56,11 @@ class SyncStorageTest extends TestBase
 
         $values = [
             // Create action.
-            ['c', 'product', 14, new DateTime('now -1 hour'), $shopIds],
+            [ActionTypes::CREATE, 'product', 14, new DateTime('now -1 hour'), $shopIds],
             // Update action.
-            ['u', 'product', 14, new DateTime('now -1 hour +1 minute'), $shopIds],
+            [ActionTypes::UPDATE, 'product', 14, new DateTime('now -1 hour +1 minute'), $shopIds],
             // Delete action.
-            ['d', 'product', 14, new DateTime('now -1 hour +2 minutes'), $shopIds],
+            [ActionTypes::DELETE, 'product', 14, new DateTime('now -1 hour +2 minutes'), $shopIds],
         ];
 
         $this->storageManager->expects($this->exactly(3))

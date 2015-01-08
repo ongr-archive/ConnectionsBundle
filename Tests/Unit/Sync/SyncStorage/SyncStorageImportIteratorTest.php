@@ -13,8 +13,8 @@ namespace ONGR\ConnectionsBundle\Tests\Unit;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ConnectionsBundle\Sync\SyncStorageImportIterator;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 
@@ -80,7 +80,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
                     [
                         0 => [
                             'document_id' => 1,
-                            'type' => SyncStorageInterface::OPERATION_UPDATE,
+                            'type' => ActionTypes::UPDATE,
                         ],
                     ]
                 )
@@ -116,7 +116,7 @@ class SyncStorageImportIteratorTest extends \PHPUnit_Framework_TestCase
                     [
                         0 => [
                             'document_id' => 11,
-                            'type' => SyncStorageInterface::OPERATION_DELETE,
+                            'type' => ActionTypes::DELETE,
                         ],
                     ]
                 )

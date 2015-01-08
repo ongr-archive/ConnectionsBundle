@@ -14,7 +14,6 @@ namespace ONGR\ConnectionsBundle\Sync;
 use Doctrine\ORM\EntityManagerInterface;
 use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\ORM\Repository;
 
 /**
@@ -124,7 +123,7 @@ class SyncStorageImportIterator implements \Iterator
             ->entityManager
             ->getRepository($this->entityClass)->find($this->currentChunk[0]['document_id']);
 
-        if (!empty($this->currentEntity) || $this->currentChunk[0]['type'] == SyncStorageInterface::OPERATION_DELETE) {
+        if (!empty($this->currentEntity) || $this->currentChunk[0]['type'] == ActionTypes::DELETE) {
             $this->valid = true;
 
             return;

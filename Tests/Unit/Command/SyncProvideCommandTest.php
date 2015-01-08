@@ -13,11 +13,11 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
 use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DiffItemFactory;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
-use ONGR\ConnectionsBundle\Sync\Extractor\ActionTypes;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
