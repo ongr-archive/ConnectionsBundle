@@ -11,28 +11,45 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
-use DateTime;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
-use ONGR\ConnectionsBundle\Service\PairStorage;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use ONGR\ConnectionsBundle\Service\PairStorage;
+use \DateTime;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
 
 class SyncProvideCommandTest extends TestBase
 {
+    /**
+     * @var MysqlStorageManager
+     */
+    private $managerMysql;
+
     /**
      * Clear logs before each test.
      */
     public function setUp()
     {
         parent::setUp();
+
+        $this
+            ->getServiceContainer()
+            ->get('es.manager')
+            ->getConnection()
+            ->dropAndCreateIndex();
+
         $this->getConnection()->executeQuery('RESET MASTER');
+
+        /** @var MysqlStorageManager $managerMysql */
+        $this->managerMysql = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
+        $this->managerMysql->createStorage();
     }
 
     /**
@@ -40,14 +57,8 @@ class SyncProvideCommandTest extends TestBase
      */
     public function testExecuteWithoutTimeDifference()
     {
-        $kernel = self::createClient()->getKernel();
-        $container = $kernel->getContainer();
-
-        $this->setLastSyncDate($container, new DateTime('now'));
-
-        /** @var MysqlStorageManager $managerMysql */
-        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
-        $managerMysql->createStorage();
+        // Set last sync date, to now.
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
         $this->importData('ExtractorTest/sample_db_nodelay.sql');
 
@@ -110,12 +121,15 @@ class SyncProvideCommandTest extends TestBase
             ],
         ];
 
-        $commandTester = $this->executeCommand($kernel);
+        $commandTester = $this->executeCommand(static::$kernel);
 
         // Ensure that there is no time difference between records (even though there might be).
-        $managerMysql->getConnection()->executeQuery("update {$managerMysql->getTableName()} set timestamp=NOW()");
+        $this
+            ->managerMysql
+            ->getConnection()
+            ->executeQuery("update {$this->managerMysql->getTableName()} set timestamp=NOW()");
 
-        $storageData = $this->getSyncData($container, count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -128,10 +142,8 @@ class SyncProvideCommandTest extends TestBase
      */
     public function testExecuteWithTimeDifference()
     {
-        $kernel = self::createClient()->getKernel();
-        $container = $kernel->getContainer();
-
-        $this->setLastSyncDate($container, new DateTime('now'));
+        // Set last sync date, to now.
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
         $this->importData('ExtractorTest/sample_db.sql');
 
@@ -194,9 +206,9 @@ class SyncProvideCommandTest extends TestBase
             ],
         ];
 
-        $commandTester = $this->executeCommand($kernel);
+        $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData($container, count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
@@ -209,13 +221,13 @@ class SyncProvideCommandTest extends TestBase
      */
     public function testExecuteSkipDataByLastSyncDate()
     {
-        $kernel = self::createClient()->getKernel();
-        $container = $kernel->getContainer();
-
+        // Creating db and some transactions which should not be in final changes log.
         $this->importData('ExtractorTest/sample_db_to_skip.sql');
 
-        $this->setLastSyncDate($container, new DateTime('now'));
+        // Set last sync date, to now.
+        $this->setLastSync(new DateTime('now'), BinlogParser::START_TYPE_DATE);
 
+        // Transactions which should be in changes log.
         $this->importData('ExtractorTest/sample_db_to_use.sql');
 
         $expectedData = [
@@ -277,14 +289,169 @@ class SyncProvideCommandTest extends TestBase
             ],
         ];
 
-        $commandTester = $this->executeCommand($kernel);
+        $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData($container, count($expectedData));
+        $storageData = $this->getSyncData(count($expectedData));
 
         $this->assertEquals($expectedData, $storageData);
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Job finished', $output);
+    }
+
+    /**
+     * Check if command works. Suppose some data is skipped, by using last sync position.
+     */
+    public function testExecuteSkipDataByLastSyncPosition()
+    {
+        // Set initial start position, if not sure, 0 always returns results.
+        $this->setLastSync(0, BinlogParser::START_TYPE_POSITION);
+        // Set service so, that it would use last sync position.
+        $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
+            ->setStartType(BinlogParser::START_TYPE_POSITION);
+
+        // Creating db and execute some transactions which should not be in final changes log.
+        $this->importData('ExtractorTest/sample_db_to_skip.sql');
+
+        $this->executeCommand(static::$kernel);
+
+        $last_sync_position_1 = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.pair_storage')
+            ->get(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM);
+        $this->assertGreaterThan(0, $last_sync_position_1);
+
+        // Delete data from sync storage, to test if only data from last sync position is processed.
+        $storageData = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.sync_storage')
+            ->getChunk(8);
+        foreach ($storageData as $storageDataItem) {
+            $this
+                ->getServiceContainer()
+                ->get('ongr_connections.sync.sync_storage')
+                ->deleteItem($storageDataItem['id']);
+        }
+
+        // Execute transactions which should be in changes log.
+        $this->importData('ExtractorTest/sample_db_to_use.sql');
+
+        // There is some kind of an undocumented feature/bug, in which if kernel is not rebooted,
+        // when executing Command second time from same process, after inserting new data
+        // it can't add new data to sync storage table, but only if Command was executed earlier.
+        static::bootKernel();
+        static::$kernel
+            ->getContainer()
+            ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
+            ->setStartType(BinlogParser::START_TYPE_POSITION);
+
+        $commandTester = $this->executeCommand(static::$kernel);
+
+        $last_sync_position_2 = $this
+            ->getServiceContainer()
+            ->get('ongr_connections.pair_storage')
+            ->get(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM);
+
+        $this->assertGreaterThan($last_sync_position_1, $last_sync_position_2);
+
+        $expectedData = [
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'category',
+                'document_id' => 'cat0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::CREATE,
+                'document_type' => 'product',
+                'document_id' => 'art2',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art0',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::UPDATE,
+                'document_type' => 'product',
+                'document_id' => 'art2',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+            [
+                'type' => ActionTypes::DELETE,
+                'document_type' => 'product',
+                'document_id' => 'art1',
+                'status' => '0',
+                'shop_id' => null,
+            ],
+        ];
+
+        $storageData = $this->getSyncData(count($expectedData));
+
+        $this->assertEquals($expectedData, $storageData);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertContains('Job finished', $output);
+    }
+
+    /**
+     * Check if command shows errors when configured not correctly.
+     */
+    public function testExecuteNoDateSet()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Last sync parameter is not set! To set it,' .
+            ' use command: ongr:sync:provide:parameter last_sync_date set [value]'
+        );
+        $this->executeCommand(static::$kernel);
+    }
+
+    /**
+     * Check if command shows errors when configured not correctly.
+     */
+    public function testExecuteNoPositionSet()
+    {
+        $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
+            ->setStartType(BinlogParser::START_TYPE_POSITION);
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Last sync parameter is not set! To set it,' .
+            ' use command: ongr:sync:provide:parameter last_sync_position set [value]'
+        );
+        $this->executeCommand(static::$kernel);
     }
 
     /**
@@ -313,14 +480,15 @@ class SyncProvideCommandTest extends TestBase
     /**
      * Gets data from Sync storage.
      *
-     * @param ContainerInterface $container
-     * @param int                $count
+     * @param int $count
+     * @param int $skip
      *
      * @return array
      */
-    private function getSyncData($container, $count)
+    private function getSyncData($count, $skip = 0)
     {
-        $syncStorage = $container->get('ongr_connections.sync.sync_storage');
+        $syncStorage = $this->getServiceContainer()->get('ongr_connections.sync.sync_storage');
+        $syncStorage->getChunk($skip);
         $storageData = $syncStorage->getChunk($count);
 
         // Remove `id` and `timestamp` from result array.
@@ -336,34 +504,35 @@ class SyncProvideCommandTest extends TestBase
     }
 
     /**
-     * Sets last_sync_date in bin log format.
+     * Sets last_sync_date in bin log format or sets last_sync_position.
      *
-     * @param Container $container
-     * @param \DateTime $date
+     * @param \DateTime|int $from
+     * @param int           $startType
      */
-    private function setLastSyncDate($container, $date)
+    private function setLastSync($from, $startType)
     {
         /** @var PairStorage $pairStorage */
-        $pairStorage = $container->get('ongr_connections.pair_storage');
+        $pairStorage = $this->getServiceContainer()->get('ongr_connections.pair_storage');
 
-        // Sometimes, mysql, php and server timezone could differ, we need convert time seen by php
-        // to the same time in the same timezone as is used in mysqlbinlog.
-        // This issue is for tests only, should not affect live website.
-        /** @var MysqlStorageManager $managerMysql */
-        $managerMysql = $container->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
-        $managerMysql->createStorage();
+        if ($startType == BinlogParser::START_TYPE_DATE) {
+            // Sometimes, mysql, php and server timezone could differ, we need convert time seen by php
+            // to the same time in the same timezone as is used in mysqlbinlog.
+            // This issue is for tests only, should not affect live website.
 
-        $result = $managerMysql->getConnection()->executeQuery('SELECT @@global.time_zone');
-        $time_zone = $result->fetchAll()[0]['@@global.time_zone'];
+            $result = $this->managerMysql->getConnection()->executeQuery('SELECT @@global.time_zone');
+            $time_zone = $result->fetchAll()[0]['@@global.time_zone'];
 
-        // If mysql timezone is the same as systems, string 'SYSTEM' is returned, which is not what we want.
-        if ($time_zone == 'SYSTEM') {
-            $result = $managerMysql->getConnection()->executeQuery('SELECT @@system_time_zone');
-            $time_zone = $result->fetchAll()[0]['@@system_time_zone'];
+            // If mysql timezone is the same as systems, string 'SYSTEM' is returned, which is not what we want.
+            if ($time_zone == 'SYSTEM') {
+                $result = $this->managerMysql->getConnection()->executeQuery('SELECT @@system_time_zone');
+                $time_zone = $result->fetchAll()[0]['@@system_time_zone'];
+            }
+
+            $from->setTimezone(new \DateTimeZone($time_zone));
+
+            $pairStorage->set(BinlogDiffProvider::LAST_SYNC_DATE_PARAM, $from->format('Y-m-d H:i:s'));
+        } elseif ($startType == BinlogParser::START_TYPE_POSITION) {
+            $pairStorage->set(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM, $from);
         }
-
-        $date->setTimezone(new \DateTimeZone($time_zone));
-
-        $pairStorage->set(BinlogDiffProvider::LAST_SYNC_DATE_PARAM, $date->format('Y-m-d H:i:s'));
     }
 }

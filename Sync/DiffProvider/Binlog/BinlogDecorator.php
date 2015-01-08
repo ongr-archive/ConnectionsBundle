@@ -50,19 +50,20 @@ class BinlogDecorator implements \Iterator
     private $binlogParser;
 
     /**
-     * @param Connection $connection
-     * @param string     $dir
-     * @param string     $baseName
-     * @param \DateTime  $from
-     * @param string     $connectionName
+     * @param Connection    $connection
+     * @param string        $dir
+     * @param string        $baseName
+     * @param \DateTime|int $from
+     * @param int           $startType
+     * @param string        $connectionName
      */
-    public function __construct(Connection $connection, $dir, $baseName, \DateTime $from, $connectionName = 'default')
+    public function __construct(Connection $connection, $dir, $baseName, $from, $startType, $connectionName = 'default')
     {
         $this->connection = $connection;
         $this->connectionName = $connectionName;
         $this->directory = $dir;
         $this->baseName = $baseName;
-        $this->binlogParser = new BinlogParser($this->directory, $this->baseName, $from);
+        $this->binlogParser = new BinlogParser($this->directory, $this->baseName, $from, $startType);
     }
 
     /**
@@ -151,6 +152,7 @@ class BinlogDecorator implements \Iterator
 
         $diffItem = DiffItemFactory::create($type);
         $diffItem->setTimestamp($buffer[BinlogParser::PARAM_DATE]);
+        $diffItem->setDiffId($buffer[BinlogParser::PARAM_POSITION]);
         $diffItem->setCategory($buffer[BinlogParser::PARAM_QUERY]['table']);
         $mapping = $this->getTableMapping($diffItem->getCategory());
 

@@ -37,6 +37,11 @@ abstract class BaseDiffItem
     private $itemId;
 
     /**
+     * @var int|null
+     */
+    private $diffId;
+
+    /**
      * @return string
      */
     public function getCategory()
@@ -100,6 +105,22 @@ abstract class BaseDiffItem
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDiffId()
+    {
+        return $this->diffId;
+    }
+
+    /**
+     * @param int|null $diffId
+     */
+    public function setDiffId($diffId)
+    {
+        $this->diffId = $diffId;
     }
 
     /**

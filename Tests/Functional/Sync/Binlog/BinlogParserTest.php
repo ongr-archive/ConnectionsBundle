@@ -41,6 +41,7 @@ class BinlogParserTest extends TestBase
         $expectedItems = [
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:32:58'),
+                BinlogParser::PARAM_POSITION => 522,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_CREATE,
                     'table' => 'test',
@@ -52,6 +53,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:34:06'),
+                BinlogParser::PARAM_POSITION => 710,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_CREATE,
                     'table' => 'test',
@@ -63,6 +65,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:34:39'),
+                BinlogParser::PARAM_POSITION => 923,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_UPDATE,
                     'table' => 'test',
@@ -78,6 +81,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:22'),
+                BinlogParser::PARAM_POSITION => 1190,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_UPDATE,
                     'table' => 'test',
@@ -93,6 +97,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:22'),
+                BinlogParser::PARAM_POSITION => 1190,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_UPDATE,
                     'table' => 'test',
@@ -108,6 +113,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:46'),
+                BinlogParser::PARAM_POSITION => 1387,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_DELETE,
                     'table' => 'test',
@@ -119,6 +125,7 @@ class BinlogParserTest extends TestBase
             ],
             [
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:52'),
+                BinlogParser::PARAM_POSITION => 1584,
                 BinlogParser::PARAM_QUERY => [
                     'type' => SyncJob::TYPE_DELETE,
                     'table' => 'test',
@@ -150,7 +157,12 @@ class BinlogParserTest extends TestBase
      */
     public function testParse($expectedItems, $date)
     {
-        $parser = new BinlogParser(__DIR__ . '/../../Fixtures/BinlogTest', 'test', $date);
+        $parser = new BinlogParser(
+            __DIR__ . '/../../Fixtures/BinlogTest',
+            'test',
+            $date,
+            BinlogParser::START_TYPE_DATE
+        );
 
         $this->assertEquals($expectedItems, iterator_to_array($parser));
         // Go two times to check if rewind works as expected.

@@ -29,10 +29,23 @@ Set Binlog Parameters in YAML configuration
 
 .. code-block:: yaml
 
-    # binlog parameters
+    # binlog default parameters
     ongr_connections.sync.diff_provider.binlog_dir: /var/lib/mysql
     ongr_connections.sync.diff_provider.binlog_basename: mysql-bin
+    ongr_connections.sync.diff_provider.binlog_start_type: 1
 ..
+
+Possible values for :code:`ongr_connections.sync.diff_provider.binlog_start_type` are:
+
+- 0 - all bin log will be parsed all the time.
+- 1 - :code:`last_sync_date` will be used when reading binlog.
+- 2 - :code:`last_sync_position` will be used when reading binlog.
+
+To set :code:`last_sync_date` or :code:`last_sync_position` parameters use command :code:`ongr:sync:provide:parameter`.
+These parameters must be set for the first run, after that, they should be updated automatically after each sync run.
+
+- Parameter :code:`last_sync_date` must be set to date that is in :code:`'Y-m-d H:i:s'` format and in the same TimeZone as mysql server, which binlog is read.
+- Parameter :code:`last_sync_position` must be set to integer value, which is existing value from binlog, defined in binlog by :code:`end_log_pos`.
 
 Register your source settings into YAML configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
