@@ -323,8 +323,6 @@ class BinlogDiffProvider extends DiffProvider
      *
      * @param string $parameter
      *
-     * @codeCoverageIgnore
-     *
      * @throws \InvalidArgumentException
      */
     private function generateLastSyncNotSetError($parameter)

@@ -425,6 +425,36 @@ class SyncProvideCommandTest extends TestBase
     }
 
     /**
+     * Check if command shows errors when configured not correctly.
+     */
+    public function testExecuteNoDateSet()
+    {
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Last sync parameter is not set! To set it,' .
+            ' use command: ongr:sync:provide:parameter last_sync_date set [value]'
+        );
+        $this->executeCommand(static::$kernel);
+    }
+
+    /**
+     * Check if command shows errors when configured not correctly.
+     */
+    public function testExecuteNoPositionSet()
+    {
+        $this
+            ->getServiceContainer()
+            ->get('ongr_connections.sync.diff_provider.binlog_diff_provider')
+            ->setStartType(BinlogParser::START_TYPE_POSITION);
+        $this->setExpectedException(
+            'InvalidArgumentException',
+            'Last sync parameter is not set! To set it,' .
+            ' use command: ongr:sync:provide:parameter last_sync_position set [value]'
+        );
+        $this->executeCommand(static::$kernel);
+    }
+
+    /**
      * Executes ongr:sync:provide command.
      *
      * @param KernelInterface $kernel
