@@ -14,6 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs;
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Entity\SyncJob;
+use ONGR\ConnectionsBundle\Sync\SqlValidator;
 use Psr\Log\LoggerAwareTrait;
 
 /**
@@ -48,7 +49,7 @@ class JobsCleanupService
     public function __construct($connection, $tableName = 'ongr_sync_jobs', array $shops = [])
     {
         $this->connection = $connection;
-        $this->tableName = $tableName;
+        $this->setTableName($tableName);
         $this->shops = $shops;
     }
 
@@ -64,22 +65,6 @@ class JobsCleanupService
         if ($this->logger) {
             $this->logger->info('Number of rows deleted: ' . $result->rowCount());
         }
-    }
-
-    /**
-     * Get table name.
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return string
-     */
-    protected function getTableName()
-    {
-        if (!preg_match('|^[a-z_0-9]+$|i', $this->tableName)) {
-            throw new InvalidArgumentException("Invalid table name specified: \"$this->tableName\"");
-        }
-
-        return $this->tableName;
     }
 
     /**
@@ -101,5 +86,25 @@ class JobsCleanupService
         }
 
         return $query . implode(' AND', $conditions);
+    }
+
+    /**
+     * Get table name.
+     *
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * Set table name.
+     *
+     * @param string $tableName
+     */
+    protected function setTableName($tableName)
+    {
+        $this->tableName = SqlValidator::validateTableName($tableName);
     }
 }

@@ -84,9 +84,6 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     public function getTableName($shopId = null)
     {
         $tableName = parent::getTableName();
-        if (!preg_match('|^[a-z_0-9]+$|i', $tableName)) {
-            throw new InvalidArgumentException("Invalid table name specified: \"$tableName\"");
-        }
 
         $suffix = null;
         if ($shopId !== null) {
