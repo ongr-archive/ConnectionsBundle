@@ -1,0 +1,6 @@
+parameters:
+    # Sql relations classes
+    ongr_connections.sql_relations.simple_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\SimpleSqlRelation
+    ongr_connections.sql_relations.composed_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation
+    ongr_connections.sql_relations.table_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\JoinStatement
+
