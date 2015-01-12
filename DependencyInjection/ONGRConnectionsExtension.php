@@ -41,6 +41,7 @@ class ONGRConnectionsExtension extends Extension
         $loader->load('binlog.yml');
         $loader->load('extractor.yml');
         $loader->load('sync_storage.yml');
+        $loader->load('extractor_relations.yml');
 
         $this->initShops($container, $config);
         $this->initJobs($container, $config);
