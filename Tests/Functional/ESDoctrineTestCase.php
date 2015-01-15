@@ -58,9 +58,14 @@ abstract class ESDoctrineTestCase extends ElasticsearchTestCase
     {
         parent::setUp();
 
+        $baseDir = dirname(dirname(__DIR__));
+        if (basename(dirname(dirname($baseDir))) == 'vendor') {
+            $baseDir = dirname(dirname(dirname($baseDir)));
+        }
+
         AnnotationRegistry::registerFile(
-            __DIR__ . '/../../' .
-            'vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+            $baseDir .
+            '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
         );
 
         /** @var EntityManager $entityManager */
