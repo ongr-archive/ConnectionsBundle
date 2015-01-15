@@ -44,11 +44,11 @@ class DummyItemInvalidator extends AbstractItemUrlInvalidator
     /**
      * {@inheritdoc}
      */
-    public function onConsume(ItemPipelineEvent $event)
+    public function consume(ItemPipelineEvent $event)
     {
         $this->consumeCalled++;
 
-        return parent::onConsume($event);
+        return parent::consume($event);
     }
 
     /**

@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Pipeline\Event;
 
+use ONGR\ConnectionsBundle\Pipeline\ItemSkipException;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -29,6 +30,11 @@ class ItemPipelineEvent extends Event
      * @var mixed
      */
     private $output;
+
+    /**
+     * @var ItemSkipException
+     */
+    private $itemSkipException;
 
     /**
      * @param mixed $item
@@ -68,5 +74,25 @@ class ItemPipelineEvent extends Event
     public function setOutput($output)
     {
         $this->output = $output;
+    }
+
+    /**
+     * @return ItemSkipException
+     */
+    public function getItemSkipException()
+    {
+        return $this->itemSkipException;
+    }
+
+    /**
+     * @param ItemSkipException $itemSkipException
+     *
+     * @return $this
+     */
+    public function setItemSkipException(ItemSkipException $itemSkipException)
+    {
+        $this->itemSkipException = $itemSkipException;
+
+        return $this;
     }
 }
