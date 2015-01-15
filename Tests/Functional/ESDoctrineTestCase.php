@@ -59,8 +59,8 @@ abstract class ESDoctrineTestCase extends ElasticsearchTestCase
         parent::setUp();
 
         AnnotationRegistry::registerFile(
-            __DIR__ . '/../../' .
-            'vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+            $this->getVendorDirectory() .
+            '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
         );
 
         /** @var EntityManager $entityManager */
@@ -164,5 +164,23 @@ abstract class ESDoctrineTestCase extends ElasticsearchTestCase
         }
 
         $this->assertEquals($expectedRecords, $actualRecords);
+    }
+
+    /**
+     * Returns path to vendors.
+     *
+     * @return string
+     */
+    private function getVendorDirectory()
+    {
+        // Going up 2 levels from current dir will give bundle root directory.
+        $baseDir = dirname(dirname(__DIR__));
+        if (basename(dirname(dirname($baseDir))) == 'vendor') {
+            // If bundle is in vendors we need to remove ongr/connections-bundle.
+            return basename(dirname(dirname($baseDir)));
+        } else {
+            // Otherwise vendors should be in bundle root directory.
+            return $baseDir . DIRECTORY_SEPARATOR . 'vendor';
+        }
     }
 }
