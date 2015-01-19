@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 
 /**
- * Handles basic item skipping when there is nothing to do on skip.
+ * Provides functionality for skipping pipeline items.
  */
 abstract class AbstractConsumeEventListener
 {

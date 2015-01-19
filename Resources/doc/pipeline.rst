@@ -10,9 +10,10 @@ Pipeline is used to process data with 5 events:
  - finish
 
 Pipeline starts with source event which provides all data which should be processed.
-Then start event is fired to indicate that items are about to come
-after that pipeline iterates through all items from all sources by calling modify and consume events
-with each item. After the iteration finish event is fired to notify that no more items will follow.
+Then start event is fired to indicate that items are about to come,
+after that pipeline iterates through all items from all sources, calling modify and consume events
+with each item inside ``ItemPipelineEvent``. After the iterations are finished, finish event is fired
+to notify that no more items will follow.
 
 Pipeline can have any number of listeners for each event but for functioning pipeline
 at least one source and consume listener should be provided.
@@ -30,11 +31,11 @@ Example:
 
 Item skipping
 -------------
-If item for some reason should not be consumed without stopping pipeline ItemSkipException can be used.
+If item for some reason should be skipped without stopping pipeline, ItemSkipException can be used.
 
-When modifier throws `ItemSkipException` pipeline catches it and sets skipException in `ItemPipelineEvent`.
-If `AbstractConsumeEventListener` is used `skip` method will called if skipException exception set otherwise `consume`
-method is called.
+When ``ItemSkipException`` is thrown by the modifier, pipeline catches it and sets skipException
+value in ``ItemPipelineEvent``.
 
-
-
+When modifier throws ``ItemSkipException`` pipeline catches it and sets skipException in ``ItemPipelineEvent``.
+If ``AbstractConsumeEventListener`` is used and ``skipException`` exception is set, ``skip`` method will be called.
+Otherwise ``consume`` will be invoked.
