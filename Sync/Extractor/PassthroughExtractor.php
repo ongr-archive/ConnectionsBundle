@@ -34,37 +34,18 @@ class PassthroughExtractor extends AbstractExtractor implements ExtractorInterfa
      */
     public function extract(BaseDiffItem $item)
     {
-        $itemId = $item->getItemId();
-        if (!is_numeric($itemId)) {
+        if (!is_numeric($item->getItemId())) {
             throw new InvalidArgumentException('No valid item ID provided.');
         }
 
         if ($item instanceof CreateDiffItem) {
-            $this->storage->save(
-                ActionTypes::CREATE,
-                $item->getCategory(),
-                $itemId,
-                $item->getTimestamp(),
-                $this->getShopIds()
-            );
+            $this->saveResult($item, ActionTypes::CREATE);
         }
         if ($item instanceof UpdateDiffItem) {
-            $this->storage->save(
-                ActionTypes::UPDATE,
-                $item->getCategory(),
-                $itemId,
-                $item->getTimestamp(),
-                $this->getShopIds()
-            );
+            $this->saveResult($item, ActionTypes::UPDATE);
         }
         if ($item instanceof DeleteDiffItem) {
-            $this->storage->save(
-                ActionTypes::DELETE,
-                $item->getCategory(),
-                $itemId,
-                $item->getTimestamp(),
-                $this->getShopIds()
-            );
+            $this->saveResult($item, ActionTypes::DELETE);
         }
     }
 
@@ -82,5 +63,22 @@ class PassthroughExtractor extends AbstractExtractor implements ExtractorInterfa
     public function getStorageFacility()
     {
         return $this->storage;
+    }
+
+    /**
+     * Save results to storage.
+     *
+     * @param BaseDiffItem $item
+     * @param string       $action
+     */
+    private function saveResult(BaseDiffItem $item, $action)
+    {
+        $this->storage->save(
+            $action,
+            $item->getCategory(),
+            $item->getItemId(),
+            $item->getTimestamp(),
+            $this->getShopIds()
+        );
     }
 }

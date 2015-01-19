@@ -108,7 +108,7 @@ class PassthroughExtractorTest extends TestBase
     /**
      * Test if extract is able to add data to the storage for item update action.
      */
-    public function ttestExtractForUpdateItem()
+    public function testExtractForUpdateItem()
     {
         $category = 'product';
         $id = 123;
@@ -147,7 +147,7 @@ class PassthroughExtractorTest extends TestBase
     /**
      * Test if extract is able to add data to the storage for item delete action.
      */
-    public function ttestExtractForDeleteItem()
+    public function testExtractForDeleteItem()
     {
         $category = 'product';
         $id = 123;
