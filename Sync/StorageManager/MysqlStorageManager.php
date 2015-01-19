@@ -30,12 +30,13 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     {
         $connection = $connection ? : $this->getConnection();
         $schemaManager = $connection->getSchemaManager();
+        $tableName = $this->getTableName($shopId);
 
-        if ($schemaManager->tablesExist([$this->getTableName($shopId)])) {
+        if ($schemaManager->tablesExist([$tableName])) {
             return true;
         }
 
-        $table = new Table($this->getTableName($shopId));
+        $table = new Table($tableName);
         $this->buildTable($table);
         $schemaManager->createTable($table);
 
@@ -85,12 +86,11 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     {
         $tableName = parent::getTableName();
 
-        $suffix = null;
         if ($shopId !== null) {
-            $suffix = '_' . $shopId;
+            $tableName .= '_' . $shopId;
         }
 
-        return $tableName . $suffix;
+        return $tableName;
     }
 
     /**
@@ -101,6 +101,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
         if (empty($shopIds)) {
             $shopIds = [null];
         }
+
         $connection = $this->getConnection();
 
         foreach ($shopIds as $shopId) {

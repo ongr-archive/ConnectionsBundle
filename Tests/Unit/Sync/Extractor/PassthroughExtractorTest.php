@@ -18,6 +18,7 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +40,11 @@ class PassthroughExtractorTest extends \PHPUnit_Framework_TestCase
         $this->storage = $this->getMockBuilder('ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $container = new ContainerBuilder();
+
         $this->service = new PassthroughExtractor();
+        $this->service->setContainer($container);
         $this->service->setStorageFacility($this->storage);
     }
 
