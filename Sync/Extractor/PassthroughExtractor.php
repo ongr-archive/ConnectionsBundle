@@ -22,7 +22,7 @@ use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 /**
  * Very simple data extractor for data synchronization.
  */
-class PassthroughExtractor implements ExtractorInterface
+class PassthroughExtractor extends AbstractExtractor implements ExtractorInterface
 {
     /**
      * @var SyncStorageInterface
@@ -44,7 +44,8 @@ class PassthroughExtractor implements ExtractorInterface
                 ActionTypes::CREATE,
                 $item->getCategory(),
                 $itemId,
-                $item->getTimestamp()
+                $item->getTimestamp(),
+                $this->getShopIds()
             );
         }
         if ($item instanceof UpdateDiffItem) {
@@ -52,7 +53,8 @@ class PassthroughExtractor implements ExtractorInterface
                 ActionTypes::UPDATE,
                 $item->getCategory(),
                 $itemId,
-                $item->getTimestamp()
+                $item->getTimestamp(),
+                $this->getShopIds()
             );
         }
         if ($item instanceof DeleteDiffItem) {
@@ -60,7 +62,8 @@ class PassthroughExtractor implements ExtractorInterface
                 ActionTypes::DELETE,
                 $item->getCategory(),
                 $itemId,
-                $item->getTimestamp()
+                $item->getTimestamp(),
+                $this->getShopIds()
             );
         }
     }

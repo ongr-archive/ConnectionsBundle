@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 /**
  * Common actions required for all extractors.
  */
-class AbstractExtractor
+abstract class AbstractExtractor
 {
     /**
      * @var ContainerInterface
@@ -27,7 +27,7 @@ class AbstractExtractor
     /**
      * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -40,19 +40,11 @@ class AbstractExtractor
     protected function getShopIds()
     {
         try {
-            $shops = $this->getContainer()->getParameter('shop_ids');
+            $shops = $this->container->getParameter('shop_ids');
         } catch (InvalidArgumentException $e) {
             $shops = [];
         }
 
         return $shops;
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    private function getContainer()
-    {
-        return $this->container;
     }
 }

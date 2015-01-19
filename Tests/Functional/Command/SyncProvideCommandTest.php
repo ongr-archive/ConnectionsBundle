@@ -55,7 +55,7 @@ class SyncProvideCommandTest extends TestBase
             ->getServiceContainer()
             ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
 
-        $this->shopIds = static::$kernel->getContainer()->getParameter('shop_ids');
+        $this->shopIds = $this->getServiceContainer()->getParameter('shop_ids');
 
         foreach ($this->shopIds as $shopId) {
             $this->managerMysql->createStorage($shopId);
