@@ -17,11 +17,30 @@ use ONGR\ConnectionsBundle\Pipeline\ItemSkipException;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-/**
- * PipelineTest class.
- */
 class PipelineTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Pipeline data provider.
+     *
+     * @return array
+     */
+    public function pipelineData()
+    {
+        // Modifier skips items which are string 'skip', anything else gets consumed.
+        return [
+            // Case #0: No data so then should be 0 consumed and skipped items.
+            [[], 0, 0],
+            // Case #1: All data should be consumed so 1 consume and 0 skips.
+            [['consume'], 1, 0],
+            // Case #2: All data should be skipped so 0 consumes and 1 skip.
+            [['skip'], 0, 1],
+            // Case #3: Data with consume and skips. 1 consume and 2 skips.
+            [['skip', 'consume', 'skip'], 1, 2],
+            // Case #3: Data with consumes and skip. 2 consumes and 1 skip.
+            [['consume', 'skip', 'consume'], 2, 1],
+        ];
+    }
+
     /**
      * Tests pipeline.
      *
@@ -69,21 +88,5 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         if ($event->getItem() == 'skip') {
             throw new ItemSkipException();
         }
-    }
-
-    /**
-     * Pipeline data provider.
-     *
-     * @return array
-     */
-    public function pipelineData()
-    {
-        return [
-            [[], 0, 0],
-            [['consume'], 1, 0],
-            [['skip'], 0, 1],
-            [['skip', 'consume', 'skip'], 1, 2],
-            [['consume', 'skip', 'consume'], 2, 1],
-        ];
     }
 }

@@ -75,7 +75,7 @@ class Pipeline implements PipelineInterface
                         $itemEvent
                     );
                 } catch (ItemSkipException $itemSkipException) {
-                    $itemEvent->setItemSkipException($itemSkipException);
+                    $itemEvent->setSkipException($itemSkipException);
                 }
 
                 $dispatcher->dispatch(
