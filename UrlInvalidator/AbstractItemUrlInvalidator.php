@@ -11,13 +11,14 @@
 
 namespace ONGR\ConnectionsBundle\UrlInvalidator;
 
+use ONGR\ConnectionsBundle\EventListener\AbstractConsumeEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\FinishPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 
 /**
  * Base class for url invalidation for pipeline items.
  */
-abstract class AbstractItemUrlInvalidator
+abstract class AbstractItemUrlInvalidator extends AbstractConsumeEventListener
 {
     /**
      * @var UrlInvalidatorService
@@ -49,7 +50,7 @@ abstract class AbstractItemUrlInvalidator
      *
      * @param ItemPipelineEvent $event
      */
-    public function onConsume(ItemPipelineEvent $event)
+    public function consume(ItemPipelineEvent $event)
     {
         $this->invalidateItem($event->getItem(), $event->getContext());
     }

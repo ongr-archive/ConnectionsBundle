@@ -11,9 +11,9 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
@@ -21,7 +21,7 @@ use Psr\Log\LogLevel;
 /**
  * AbstractImportConsumeEventListener -  called after modify event. Puts document into Elasticsearch.
  */
-abstract class AbstractImportConsumeEventListener implements LoggerAwareInterface
+abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventListener implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 
@@ -55,7 +55,7 @@ abstract class AbstractImportConsumeEventListener implements LoggerAwareInterfac
      *
      * @param ItemPipelineEvent $event
      */
-    public function onConsume(ItemPipelineEvent $event)
+    public function consume(ItemPipelineEvent $event)
     {
         if (!$this->setItem($event)) {
             return;

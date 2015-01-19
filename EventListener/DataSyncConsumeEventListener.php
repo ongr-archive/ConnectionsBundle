@@ -19,7 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * DataSyncConsumeEventListener - extracts item onConsume event.
  */
-class DataSyncConsumeEventListener implements LoggerAwareInterface
+class DataSyncConsumeEventListener extends AbstractConsumeEventListener implements LoggerAwareInterface
 {
     use EventLoggerAwareTrait;
 
@@ -43,7 +43,7 @@ class DataSyncConsumeEventListener implements LoggerAwareInterface
      *
      * @param ItemPipelineEvent $event
      */
-    public function onConsume(ItemPipelineEvent $event)
+    public function consume(ItemPipelineEvent $event)
     {
         $this->extractor->extract($event->getItem());
     }
