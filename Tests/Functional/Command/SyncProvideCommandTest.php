@@ -31,6 +31,11 @@ class SyncProvideCommandTest extends TestBase
     private $managerMysql;
 
     /**
+     * @var array
+     */
+    private $shopIds;
+
+    /**
      * Clear logs before each test.
      */
     public function setUp()
@@ -49,7 +54,12 @@ class SyncProvideCommandTest extends TestBase
         $this->managerMysql = $this
             ->getServiceContainer()
             ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
-        $this->managerMysql->createStorage();
+
+        $this->shopIds = static::$kernel->getContainer()->getParameter('shop_ids');
+
+        foreach ($this->shopIds as $shopId) {
+            $this->managerMysql->createStorage($shopId);
+        }
     }
 
     /**
@@ -62,76 +72,78 @@ class SyncProvideCommandTest extends TestBase
 
         $this->importData('ExtractorTest/sample_db_nodelay.sql');
 
-        $expectedData = [
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'category',
-                'document_id' => 'cat0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::DELETE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-        ];
-
         $commandTester = $this->executeCommand(static::$kernel);
 
-        // Ensure that there is no time difference between records (even though there might be).
-        $this
-            ->managerMysql
-            ->getConnection()
-            ->executeQuery("update {$this->managerMysql->getTableName()} set timestamp=NOW()");
+        foreach ($this->shopIds as $shopId) {
+            $expectedData = [
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'category',
+                    'document_id' => 'cat0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::DELETE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+            ];
 
-        $storageData = $this->getSyncData(count($expectedData));
+            // Ensure that there is no time difference between records (even though there might be).
+            $this
+                ->managerMysql
+                ->getConnection()
+                ->executeQuery("update {$this->managerMysql->getTableName($shopId)} set timestamp=NOW()");
 
-        $this->assertEquals($expectedData, $storageData);
+            $storageData = $this->getSyncData(count($expectedData), 0, $shopId);
+
+            $this->assertEquals($expectedData, $storageData);
+        }
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Job finished', $output);
@@ -147,70 +159,72 @@ class SyncProvideCommandTest extends TestBase
 
         $this->importData('ExtractorTest/sample_db.sql');
 
-        $expectedData = [
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'category',
-                'document_id' => 'cat0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::DELETE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-        ];
-
         $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData(count($expectedData));
+        foreach ($this->shopIds as $shopId) {
+            $expectedData = [
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'category',
+                    'document_id' => 'cat0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::DELETE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+            ];
 
-        $this->assertEquals($expectedData, $storageData);
+            $storageData = $this->getSyncData(count($expectedData), 0, $shopId);
+
+            $this->assertEquals($expectedData, $storageData);
+        }
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Job finished', $output);
@@ -230,70 +244,72 @@ class SyncProvideCommandTest extends TestBase
         // Transactions which should be in changes log.
         $this->importData('ExtractorTest/sample_db_to_use.sql');
 
-        $expectedData = [
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'category',
-                'document_id' => 'cat0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::DELETE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-        ];
-
         $commandTester = $this->executeCommand(static::$kernel);
 
-        $storageData = $this->getSyncData(count($expectedData));
+        foreach ($this->shopIds as $shopId) {
+            $expectedData = [
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'category',
+                    'document_id' => 'cat0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::DELETE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+            ];
 
-        $this->assertEquals($expectedData, $storageData);
+            $storageData = $this->getSyncData(count($expectedData), 0, $shopId);
+
+            $this->assertEquals($expectedData, $storageData);
+        }
 
         $output = $commandTester->getDisplay();
         $this->assertContains('Job finished', $output);
@@ -323,16 +339,19 @@ class SyncProvideCommandTest extends TestBase
             ->get(BinlogDiffProvider::LAST_SYNC_POSITION_PARAM);
         $this->assertGreaterThan(0, $last_sync_position_1);
 
-        // Delete data from sync storage, to test if only data from last sync position is processed.
-        $storageData = $this
-            ->getServiceContainer()
-            ->get('ongr_connections.sync.sync_storage')
-            ->getChunk(8);
-        foreach ($storageData as $storageDataItem) {
-            $this
+        foreach ($this->shopIds as $shopId) {
+            // Delete data from sync storage, to test if only data from last sync position is processed.
+            $storageData = $this
                 ->getServiceContainer()
                 ->get('ongr_connections.sync.sync_storage')
-                ->deleteItem($storageDataItem['id']);
+                ->getChunk(8, null, $shopId);
+
+            foreach ($storageData as $storageDataItem) {
+                $this
+                    ->getServiceContainer()
+                    ->get('ongr_connections.sync.sync_storage')
+                    ->deleteItem($storageDataItem['id']);
+            }
         }
 
         // Execute transactions which should be in changes log.
@@ -356,68 +375,70 @@ class SyncProvideCommandTest extends TestBase
 
         $this->assertGreaterThan($last_sync_position_1, $last_sync_position_2);
 
-        $expectedData = [
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'category',
-                'document_id' => 'cat0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::CREATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art0',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::UPDATE,
-                'document_type' => 'product',
-                'document_id' => 'art2',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-            [
-                'type' => ActionTypes::DELETE,
-                'document_type' => 'product',
-                'document_id' => 'art1',
-                'status' => '0',
-                'shop_id' => null,
-            ],
-        ];
+        foreach ($this->shopIds as $shopId) {
+            $expectedData = [
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'category',
+                    'document_id' => 'cat0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::CREATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art0',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::UPDATE,
+                    'document_type' => 'product',
+                    'document_id' => 'art2',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+                [
+                    'type' => ActionTypes::DELETE,
+                    'document_type' => 'product',
+                    'document_id' => 'art1',
+                    'status' => '0',
+                    'shop_id' => $shopId,
+                ],
+            ];
 
-        $storageData = $this->getSyncData(count($expectedData));
+            $storageData = $this->getSyncData(count($expectedData), 0, $shopId);
 
-        $this->assertEquals($expectedData, $storageData);
+            $this->assertEquals($expectedData, $storageData);
+        }
 
         $output = $commandTester->getDisplay();
 
@@ -480,16 +501,17 @@ class SyncProvideCommandTest extends TestBase
     /**
      * Gets data from Sync storage.
      *
-     * @param int $count
-     * @param int $skip
+     * @param int      $count
+     * @param int      $skip
+     * @param int|null $shopId
      *
      * @return array
      */
-    private function getSyncData($count, $skip = 0)
+    private function getSyncData($count, $skip = 0, $shopId = null)
     {
         $syncStorage = $this->getServiceContainer()->get('ongr_connections.sync.sync_storage');
-        $syncStorage->getChunk($skip);
-        $storageData = $syncStorage->getChunk($count);
+        $syncStorage->getChunk($skip, null, $shopId);
+        $storageData = $syncStorage->getChunk($count, null, $shopId);
 
         // Remove `id` and `timestamp` from result array.
         array_filter(

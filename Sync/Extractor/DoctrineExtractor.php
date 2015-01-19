@@ -27,7 +27,7 @@ use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 /**
  * Extractor that joins entities for insertion to SyncStorage.
  */
-class DoctrineExtractor implements ExtractorInterface
+class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
 {
     /**
      * @var SyncStorageInterface
@@ -69,7 +69,13 @@ class DoctrineExtractor implements ExtractorInterface
                 $itemId = $itemRow[$idFieldName];
 
                 $storage = $this->getStorageFacility();
-                $storage->save($action, $insertList[JobTableFields::TYPE]['value'], $itemId, $item->getTimestamp());
+                $storage->save(
+                    $action,
+                    $insertList[JobTableFields::TYPE]['value'],
+                    $itemId,
+                    $item->getTimestamp(),
+                    $this->getShopIds()
+                );
 
                 $statements = $relation->getStatements();
                 foreach ($statements as $statement) {
@@ -201,7 +207,8 @@ class DoctrineExtractor implements ExtractorInterface
                 $action,
                 $row[JobTableFields::TYPE],
                 $row[JobTableFields::ID],
-                $item->getTimestamp()
+                $item->getTimestamp(),
+                $this->getShopIds()
             );
         }
     }
