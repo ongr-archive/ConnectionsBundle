@@ -34,7 +34,7 @@ class ItemPipelineEvent extends Event
     /**
      * @var ItemSkipException
      */
-    private $itemSkipException;
+    private $skipException;
 
     /**
      * @param mixed $item
@@ -79,19 +79,19 @@ class ItemPipelineEvent extends Event
     /**
      * @return ItemSkipException
      */
-    public function getItemSkipException()
+    public function getSkipException()
     {
-        return $this->itemSkipException;
+        return $this->skipException;
     }
 
     /**
-     * @param ItemSkipException $itemSkipException
+     * @param ItemSkipException $skipException
      *
      * @return $this
      */
-    public function setItemSkipException(ItemSkipException $itemSkipException)
+    public function setSkipException(ItemSkipException $skipException)
     {
-        $this->itemSkipException = $itemSkipException;
+        $this->skipException = $skipException;
 
         return $this;
     }

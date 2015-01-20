@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 
 /**
- * AbstractConsumeEventListener class.
+ * Provides functionality for skipping pipeline items.
  */
 abstract class AbstractConsumeEventListener
 {
@@ -25,7 +25,7 @@ abstract class AbstractConsumeEventListener
      */
     public function onConsume(ItemPipelineEvent $event)
     {
-        if ($event->getItemSkipException()) {
+        if ($event->getSkipException()) {
             $this->skip($event);
         } else {
             $this->consume($event);

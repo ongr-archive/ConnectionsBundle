@@ -12,7 +12,12 @@
 namespace ONGR\ConnectionsBundle\Pipeline;
 
 /**
- * Skip Item Exception.
+ * Exception for skipping items.
+ *
+ * This exception (or exception derived from this)
+ * should be thrown inside pipeline modifier
+ * to indicate that this item should be skipped.
+ * Thrown exception will be available for consumers.
  */
 class ItemSkipException extends \Exception
 {

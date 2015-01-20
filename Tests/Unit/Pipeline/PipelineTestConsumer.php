@@ -34,7 +34,7 @@ class PipelineTestConsumer extends AbstractConsumeEventListener
      */
     public function consume(ItemPipelineEvent $event)
     {
-        ++$this->consumeCalled;
+        $this->consumeCalled++;
     }
 
     /**
@@ -42,7 +42,7 @@ class PipelineTestConsumer extends AbstractConsumeEventListener
      */
     public function skip(ItemPipelineEvent $event)
     {
-        ++$this->skipCalled;
+        $this->skipCalled++;
     }
 
     /**
