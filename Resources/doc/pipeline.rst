@@ -33,9 +33,6 @@ Item skipping
 -------------
 If item for some reason should be skipped without stopping pipeline, ItemSkipException can be used.
 
-When ``ItemSkipException`` is thrown by the modifier, pipeline catches it and sets skipException
-value in ``ItemPipelineEvent``.
-
 When modifier throws ``ItemSkipException`` pipeline catches it and sets skipException in ``ItemPipelineEvent``.
 If ``AbstractConsumeEventListener`` is used and ``skipException`` exception is set, ``skip`` method will be called.
 Otherwise ``consume`` will be invoked.
