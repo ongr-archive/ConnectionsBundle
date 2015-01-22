@@ -10,10 +10,11 @@ By default sync storage storage is set up for MySQL like this:
 .. code-block:: yaml
 
     ongr_connections:
-        sync_storage:
-            mysql:
-                connection: default
-                table_name: ongr_sync_storage
+        sync:
+            sync_storage:
+                mysql:
+                    connection: default
+                    table_name: ongr_sync_storage
 ..
 
 By default MySQL storage engine and @doctrine.dbal.default connection will be
@@ -61,14 +62,20 @@ implementations as examples.
 
 You must initialize storage before using it. Use the following console command to do so:
 
+.. code-block:: none
+
     ongr:sync:storage:create <storage_engine> [--shop-id=<shop_ID>]
 
 where <storage_engine> can only be "mysql" at the moment, shop-id is optional. If you have one shop, you can omit shop-id
 option:
 
+.. code-block:: none
+
     $ php app/console ongr:sync:storage:create mysql
 
 If you have multiple shops, you should call this command multiple times:
+
+.. code-block:: none
 
     $ php app/console ongr:sync:storage:create mysql --shop-id=1
     $ php app/console ongr:sync:storage:create mysql --shop-id=2
@@ -79,6 +86,8 @@ If you have multiple shops, you should call this command multiple times:
 -------------------------------
 
 Use the following console command to start pipeline for data import into SyncStorage storage:
+
+.. code-block:: none
 
     ongr:sync:execute [<pipeline_name>]
 
