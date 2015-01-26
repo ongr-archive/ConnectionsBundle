@@ -72,25 +72,18 @@ class SyncParametersCommandTest extends WebTestCase
             ]
         );
         $this->assertContains('Parameter `test1`: has no value.', $this->commandTester->getDisplay());
-
-        // Lets try to give new value for parameter without --set option.
-        $this->commandTester->execute(
-            [
-                'command' => $this->command->getName(),
-                'parameter' => 'test1',
-                'value' => false,
-            ]
+        $this->assertContains(
+            'If you want to write new value, use --set="<new value>" option.',
+            $this->commandTester->getDisplay()
         );
-        $this->assertContains('If you want to write new value, use --set option.', $this->commandTester->getDisplay());
 
-        // Finally, set some value, and test if it was set and returned.
+        // Set some value, and test if it was set and returned.
         $value = '2014-01-01 01:01:01';
         $this->commandTester->execute(
             [
                 'command' => $this->command->getName(),
                 'parameter' => 'test1',
-                'value' => $value,
-                '--set' => true,
+                '--set' => $value,
             ]
         );
         $this->assertContains('New value written:', $this->commandTester->getDisplay());
