@@ -36,7 +36,7 @@ Documentation
 ~~~~~~~~~~~~~
 
 Documentation for ONGRConnectionsBundle can be found in 
-`here <http://ongr.readthedocs.org/en/latest/sources/ConnectionsBundle.git/Resources/doc/index.html>`_.
+`here <http://ongr.readthedocs.org/en/latest/>`_.
 
 License
 ~~~~~~~
