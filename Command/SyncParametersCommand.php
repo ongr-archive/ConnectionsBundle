@@ -52,19 +52,19 @@ class SyncParametersCommand extends ContainerAwareCommand
         $parameter = $input->getArgument('parameter');
         $set = $input->getOption('set');
 
-        /** @var PairStorage $pair_storage */
-        $pair_storage = $this->getContainer()->get('ongr_connections.pair_storage');
+        /** @var PairStorage $pairStorage */
+        $pairStorage = $this->getContainer()->get('ongr_connections.pair_storage');
 
         if (isset($parameter) & !empty($parameter)) {
-            $set_value = $pair_storage->get($parameter);
+            $setValue = $pairStorage->get($parameter);
 
             $output->writeln(
                 "Parameter `$parameter`: " .
-                ($set_value === null ? 'has no value.' : var_export($set_value, true))
+                ($setValue === null ? 'has no value.' : var_export($setValue, true))
             );
 
             if ($set) {
-                $pair_storage->set($parameter, $set);
+                $pairStorage->set($parameter, $set);
                 $output->writeln('New value written: ' . var_export($set, true));
             } else {
                 $output->writeln('If you want to write new value, use --set="<new value>" option.');
