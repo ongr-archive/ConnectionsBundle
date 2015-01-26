@@ -39,13 +39,8 @@ class SyncParametersCommand extends ContainerAwareCommand
             ->addOption(
                 'set',
                 null,
-                InputOption::VALUE_OPTIONAL,
-                'Specify set to set parameter value'
-            )
-            ->addArgument(
-                'value',
-                InputArgument::OPTIONAL,
-                'Parameter value'
+                InputOption::VALUE_REQUIRED,
+                'Use --set="<new value>" to set new parameter value'
             );
     }
 
@@ -55,25 +50,24 @@ class SyncParametersCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $parameter = $input->getArgument('parameter');
-        $value = $input->getArgument('value');
         $set = $input->getOption('set');
 
-        /** @var PairStorage $pair_storage */
-        $pair_storage = $this->getContainer()->get('ongr_connections.pair_storage');
+        /** @var PairStorage $pairStorage */
+        $pairStorage = $this->getContainer()->get('ongr_connections.pair_storage');
 
         if (isset($parameter) & !empty($parameter)) {
-            $set_value = $pair_storage->get($parameter);
+            $setValue = $pairStorage->get($parameter);
 
             $output->writeln(
                 "Parameter `$parameter`: " .
-                ($set_value === null ? 'has no value.' : var_export($set_value, true))
+                ($setValue === null ? 'has no value.' : var_export($setValue, true))
             );
 
-            if ($set & isset($value)) {
-                $pair_storage->set($parameter, $value);
-                $output->writeln('New value written: ' . var_export($value, true));
-            } elseif (isset($value)) {
-                $output->writeln('If you want to write new value, use --set option.');
+            if ($set) {
+                $pairStorage->set($parameter, $set);
+                $output->writeln('New value written: ' . var_export($set, true));
+            } else {
+                $output->writeln('If you want to write new value, use --set="<new value>" option.');
             }
         }
     }

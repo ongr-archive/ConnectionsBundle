@@ -330,7 +330,7 @@ class BinlogDiffProvider extends DiffProvider
         throw new \InvalidArgumentException(
             'Last sync parameter is not set! ' .
             'To set it, use command: ' .
-            'ongr:sync:provide:parameter ' . $parameter . ' set [value]'
+            'ongr:sync:provide:parameter --set="<new value>" ' . $parameter
         );
     }
 }

@@ -41,19 +41,19 @@ class SyncParametersCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand()
     {
         $parameter = 'winner';
-        $parameter_value = 'Red Viper';
-        $parameter_new_value = 'The Mountain';
+        $parameterValue = 'Red Viper';
+        $parameterNewValue = 'The Mountain';
 
         $this->pairStorage->expects($this->once())
             ->method('get')
             ->with($this->equalTo($parameter))
-            ->willReturn($parameter_value);
+            ->willReturn($parameterValue);
 
         $this->pairStorage->expects($this->once())
             ->method('set')
             ->with(
                 $this->equalTo($parameter),
-                $this->equalTo($parameter_new_value)
+                $this->equalTo($parameterNewValue)
             );
 
         $container = new ContainerBuilder();
@@ -71,8 +71,7 @@ class SyncParametersCommandTest extends \PHPUnit_Framework_TestCase
             [
                 'command' => $command->getName(),
                 'parameter' => $parameter,
-                'value' => $parameter_new_value,
-                '--set' => true,
+                '--set' => $parameterNewValue,
             ]
         );
         $this->assertContains('New value written: \'The Mountain\'', $commandTester->getDisplay());
