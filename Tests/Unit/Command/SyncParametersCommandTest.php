@@ -71,8 +71,7 @@ class SyncParametersCommandTest extends \PHPUnit_Framework_TestCase
             [
                 'command' => $command->getName(),
                 'parameter' => $parameter,
-                'value' => $parameter_new_value,
-                '--set' => true,
+                '--set' => $parameter_new_value,
             ]
         );
         $this->assertContains('New value written: \'The Mountain\'', $commandTester->getDisplay());

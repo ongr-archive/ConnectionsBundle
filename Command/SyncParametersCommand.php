@@ -40,7 +40,7 @@ class SyncParametersCommand extends ContainerAwareCommand
                 'set',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Use --set to set new parameter value'
+                'Use --set="<new value>" to set new parameter value'
             );
     }
 
