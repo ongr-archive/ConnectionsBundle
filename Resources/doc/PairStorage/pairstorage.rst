@@ -6,7 +6,7 @@ PairStorage
 Initial configuration
 ---------------------
 
-Before using ``PairStorage``, it's Document, along with all other ``ConnectionsBundle`` documents, must be registered in ``ElasticSearch`` manager, i.e.:
+Before using ``PairStorage``, Pair Document, along with all other ``ConnectionsBundle`` documents, must be registered in ``ElasticSearch`` manager, i.e.:
 
 .. code-block:: yaml
 
@@ -50,4 +50,30 @@ To set value, use ``set($key, $value)`` method:
 .. code-block:: php
 
   $pairStorage->set('foo', 'bar');
+..
+
+If, for any reason, you want to completely remove ``key`` from ``PairStorage``, just use ``remove($key)`` method:
+
+.. code-block:: php
+
+  $pairStorage->remove('foo');
+..
+
+Setting value from command line
+-------------------------------
+
+You can use console command command ``ongr:sync:provide:parameter`` to get and set ``value`` for specific ``key``.
+
+To get value:
+
+.. code-block:: shell
+
+  app/console ongr:sync:provide:parameter foo
+..
+
+To set value, use `--set='new value'` option:
+
+.. code-block:: shell
+
+  app/console ongr:sync:provide:parameter --set='2000.01.01 01:01:01' foo
 ..
