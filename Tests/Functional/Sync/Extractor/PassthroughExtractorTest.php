@@ -59,10 +59,11 @@ class PassthroughExtractorTest extends TestBase
         $this->extractor->setContainer($this->getServiceContainer());
         $this->extractor->setStorageFacility($this->syncStorage);
 
-        $this->shopIds = $this->getServiceContainer()->getParameter('shop_ids');
+        $shops = $this->getServiceContainer()->getParameter('ongr_connections.shops');
 
-        foreach ($this->shopIds as $shopId) {
-            $this->storageManager->createStorage($shopId);
+        foreach ($shops as $shop) {
+            $this->shopIds[] = $shop['shop_id'];
+            $this->storageManager->createStorage($shop['shop_id']);
         }
     }
 
