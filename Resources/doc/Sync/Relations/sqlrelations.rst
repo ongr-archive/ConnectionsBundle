@@ -1,8 +1,5 @@
-Continuous Synchronization
-==========================
-
 SqlRelations
-------------
+============
 
 Sql relations listens to changes on primary tables and issues updates on joined tables.
 Update actions require additional parameter defining which fields to watch for changes.
@@ -18,7 +15,7 @@ Example extractor setup for sql:
         ongr_project.sql_relations.related_table.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\JoinStatement
         ongr_project.sql_relations.category.fields:
             - OXTITLE
-    
+
     services:
         ongr_project.sql_relations.category.create:
             class: %ongr_project.sql_relations.composed_trigger.class%
@@ -27,7 +24,7 @@ Example extractor setup for sql:
                 - { name: ongr_connections.sql_relation }
             calls:
                 - [ addStatement, [ @ongr_project.sql_relations.category.join.articles ] ]
-    
+
         ongr_project.sql_relations.category.delete:
             class: %ongr_project.sql_relations.composed_trigger.class%
             arguments: [oxcategories, D, 1, category, OLD.OXID]
@@ -35,7 +32,7 @@ Example extractor setup for sql:
                 - { name: ongr_connections.sql_relation }
             calls:
                 - [ addStatement, [ @ongr_project.sql_relations.category.join.articles ] ]
-    
+
         ongr_project.sql_relations.category.update:
             class: %ongr_project.sql_relations.composed_trigger.class%
             arguments: [oxcategories, U, 1, category, OLD.OXID, %ongr_project.sql_relations.category.fields%]
@@ -43,9 +40,9 @@ Example extractor setup for sql:
                 - { name: ongr_connections.sql_relation }
             calls:
                 - [ addStatement, [ @ongr_project.sql_relations.category.join.articles ] ]
-    
+
         ongr_project.sql_relations.category.join.articles:
             class: %ongr_project.sql_relations.related_table.class%
             arguments: [oxobject2category AS oc, oc.OXOBJECTID, oc.OXCATNID=NEW.OXID, product, U, 1]
-            
+
 ..
