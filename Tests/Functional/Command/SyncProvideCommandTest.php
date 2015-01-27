@@ -453,7 +453,7 @@ class SyncProvideCommandTest extends TestBase
         $this->setExpectedException(
             'InvalidArgumentException',
             'Last sync parameter is not set! To set it,' .
-            ' use command: ongr:sync:provide:parameter last_sync_date set [value]'
+            ' use command: ongr:sync:provide:parameter --set="<new value>" last_sync_date'
         );
         $this->executeCommand(static::$kernel);
     }
@@ -470,7 +470,7 @@ class SyncProvideCommandTest extends TestBase
         $this->setExpectedException(
             'InvalidArgumentException',
             'Last sync parameter is not set! To set it,' .
-            ' use command: ongr:sync:provide:parameter last_sync_position set [value]'
+            ' use command: ongr:sync:provide:parameter --set="<new value>" last_sync_position'
         );
         $this->executeCommand(static::$kernel);
     }
