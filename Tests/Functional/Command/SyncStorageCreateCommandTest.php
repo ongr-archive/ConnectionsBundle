@@ -21,7 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Integration test for ongr:sync:storage:create command.
  */
-class SyncStorageUpdateCommandTest extends TestBase
+class SyncStorageCreateCommandTest extends TestBase
 {
     /**
      * Check if table is created as expected.
