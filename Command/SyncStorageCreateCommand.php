@@ -54,7 +54,11 @@ class SyncStorageCreateCommand extends ContainerAwareCommand
     {
         $storage = $input->getArgument('storage');
         $shopId = $input->getOption('shop-id');
-        $shopId = (int)$shopId;
+
+        // Do not convert null value to integer, because null value is fully acceptable for required method.
+        if ($shopId !== null) {
+            $shopId = (int)$shopId;
+        }
 
         switch ($storage) {
             case SyncStorage::STORAGE_MYSQL:
