@@ -3,7 +3,7 @@ Full Import Command
 
 Full import command, invoked by ``ongr:import:full``.
 
-Imports all the data in your defined sources to your defined destinations.
+Imports all the data from your defined sources to your defined destinations.
 
 It extends `AbstractStartServiceCommand <Internals/Abstract_Start_Service_Command.rst>`_, so it accepts [PIPELINE_NAME] optional parameter.
 
