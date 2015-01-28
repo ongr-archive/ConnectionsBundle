@@ -1,19 +1,18 @@
-==============
-Import command
-==============
-Import command allows you to import your data from any defined source into any relevant consumer while modifying it.
+===========
+Full Import
+===========
 
-Working with import command
----------------------------
+Full import functionality allows you to import your data from any defined source into any relevant consumer while modifying it.
 
-Command usage
-~~~~~~~~~~~~~
+Running full import
+-------------------
 
-ongr:connections:import [PIPELINE_NAME]
+Use `Full Import command <Commands/ImportFullCommand/index.rst>`_ to run full import.
 
-PIPELINE_NAME sets custom pipeline name and defaults to "default".
+Running sync import
+-------------------
 
-See "Using different pipeline names" for more information.
+Use `Sync Import command <Commands/SyncExecuteCommand/index.rst>`_ to run sync import.
 
 
 Implementing your data import
