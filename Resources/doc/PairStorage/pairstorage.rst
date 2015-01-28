@@ -25,6 +25,7 @@ Usage
 -----
 
 ``PairStorage`` is a simple service which stores key-value in ``Elasticsearch`` document.
+
 Where:
 
 * key - a unique string identifier
