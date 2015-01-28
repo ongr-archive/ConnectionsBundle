@@ -7,5 +7,5 @@ This document covers console commands provided by this bundle.
         :maxdepth: 1
         :glob:
 
-        */*
-        Internals/*/*
+        *
+        Internals/*

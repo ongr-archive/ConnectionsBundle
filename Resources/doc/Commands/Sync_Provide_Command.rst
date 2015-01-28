@@ -8,7 +8,7 @@ Populates `Sync Storage <../Sync/Storage/sync_storage.rst>`_, i.e. scans your so
 for relevant object changes (creates, updates and deletes) and writes change data to
 `Sync Storage <../Sync/Storage/sync_storage.rst>`_.
 
-It extends `AbstractStartServiceCommand <Internals/AbstractStartServiceCommand/index.rst>`_ and therefore accepts [PIPELINE_NAME] optional parameter.
+It extends `AbstractStartServiceCommand <Internals/Abstract_Start_Service_Command.rst>`_ and therefore accepts [PIPELINE_NAME] optional parameter.
 
 Command usage
 ~~~~~~~~~~~~~

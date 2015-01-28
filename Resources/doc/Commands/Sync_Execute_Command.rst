@@ -5,7 +5,7 @@ This command is invoked via ``ongr:sync:execute``.
 
 Imports data from `Sync Storage <../Sync/Storage/sync_storage.rst>`_, i.e. creates, updates and deletes relevant objects that have changed in your source database.
 
-It extends `AbstractStartServiceCommand <Internals/AbstractStartServiceCommand/index.rst>`_, so it accepts [PIPELINE_NAME] optional parameter.
+It extends `AbstractStartServiceCommand <Internals/Abstract_Start_Service_Command.rst>`_, so it accepts [PIPELINE_NAME] optional parameter.
 
 Command usage
 ~~~~~~~~~~~~~
