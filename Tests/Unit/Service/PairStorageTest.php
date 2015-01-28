@@ -263,7 +263,7 @@ class PairStorageTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns mock of PairStorage.
      *
-     * @param object $ormManagerMock
+     * @param \ONGR\ElasticsearchBundle\ORM\Manager $ormManagerMock
      *
      * @return PairStorage
      */
