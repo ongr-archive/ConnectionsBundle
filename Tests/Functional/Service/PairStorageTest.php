@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use ONGR\ElasticsearchBundle\DSL\Query\MatchAllQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use ONGR\ElasticsearchBundle\ORM\Repository;
 
 class PairStorageTest extends WebTestCase
 {
@@ -146,7 +147,12 @@ class PairStorageTest extends WebTestCase
      */
     private function getPair($key, $value)
     {
-        $pair = new Pair();
+        /** @var Repository $repository */
+        $repository = $this->manager->getRepository('ONGRConnectionsBundle:Pair');
+
+        /** @var Pair $pair */
+        $pair = $repository->createDocument();
+        $pair->__setInitialized(true);
         $pair->setId($key);
         $pair->setValue($value);
         $pair->setScore(1.0);
