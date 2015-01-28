@@ -9,5 +9,5 @@ Contents:
     :maxdepth: 1
     :glob:
 
-    Commands/index.rst
+    Commands/index
     */*
