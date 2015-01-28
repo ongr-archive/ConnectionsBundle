@@ -1,5 +1,4 @@
 parameters:
-    ongr_connections.jobs_cleanup_service.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobsCleanupService
     ongr_connections.sync.job_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobManager
     ongr_connections.mapping_listener.class: ONGR\ConnectionsBundle\EventListener\LoadClassMetadataListener
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
@@ -10,9 +9,6 @@ parameters:
     ongr_connections.pipeline.abstract.class: ONGR\ConnectionsBundle\Pipeline\Pipeline
 
 services:
-    ongr_connections.jobs_cleanup_service:
-        class: %ongr_connections.jobs_cleanup_service.class%
-
     ongr_connections.sync.job_manager:
         class: %ongr_connections.sync.job_manager.class%
         arguments:
