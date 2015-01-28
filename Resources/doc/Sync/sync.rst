@@ -1,9 +1,78 @@
+Continuous Synchronization
+==========================
 
-====================
-ONGR synchronization
-====================
+Imports updated data to ONRG ElasticSearch (ES) from client data source.
 
-Imports data to ONRG ElasticSearch (ES) from Client data source.
+How does continuous synchronization work?
+-----------------------------------------
+
+Continuous synchronization consists of two steps:
+
+1. Data Sync Provide (called via `Sync Provide command <../Commands/Sync_Provide_Command.rst>`_).
+
+This step finds the changes made during the time since the last synchronization and writes ids of changed items to `synchronization storage <Storage/sync_storage.rst>`_.
+
+2. Data Sync Execute (called via `Sync Execute command <../Commands/Sync_Execute_Command.rst>`_).
+
+This step takes ids from synchronization storage, fetches relevant items from source database,
+writes updates to Elasticsearch storage and removes relevant rows from synchronization storage.
+
+Data Sync Provide
+~~~~~~~~~~~~~~~~~
+
+Data Sync Provide process uses `Pipeline functionality <../Pipeline/pipeline.rst>`_.
+
+Data Sync Provide source event listener service uses `Diff Provider <DiffProvider/diff_provider.rst>`_ service to
+obtain a Diff object to be stored in `synchronization storage <Storage/sync_storage.rst>`_.
+
+Data Sync Provide consume event listener service uses `Extractor <Extractor/extractor.rst>`_ to parse the Diff object
+and `Sync Storage Provider <Storage/sync_storage.rst>`_ to write the ids of changed objects.
+
+Extractor on its' own accord iterates through `SQL Relations <Relations/sql_relations.rst>`_ to ensure that objects which are "watched" are
+included in the change list.
+
+Each SQL Relation iterates through `joint statements <Relations/sql_relations.rst>`_ which ensure that the related objects
+are marked as changed as well.
+
+There is no modify event listener.
+
+Data Sync Execute
+~~~~~~~~~~~~~~~~~
+
+Data Sync Execute process is also based on `Pipeline functionality <../Pipeline/pipeline.rst>`_, and is similar to full import.
+
+Data Sync Execute Source event listener retrieves the list of changes from `synchronization storage <Storage/sync_storage.rst>`_,
+passes them on to Modify event listener, which maps the object from the source database to Elasticsearch Document, and passes it to
+Consume event listener, which in turn either persists or deletes the document and clears the processed rows from
+`synchronization storage <Storage/sync_storage.rst>`_.
+
+`Abstract Import class <DiffImport/diff_import.rst>`_ is provided as a base for continuous import implementations.
+
+Data sources for continuous synchronization
+-------------------------------------------
+
+Continuous synchronization provides abstract classes which can be used to implement usage of any data source:
+database, WebServices/API, files, etc.
+
+See `Diff Provider <DiffProvider/diff_provider.rst>`_ for more information.
+
+This bundle provides implementation of mysql database source using binlog.
+
+Continuous synchronization data storage
+---------------------------------------
+
+Continuous synchronization provides abstract classes which can be used to use any synchronization data storage back-end:
+mysql, redis, etc.
+
+See `Extractor <Extractor/extractor.rst>`_, `synchronization storage <Storage/sync_storage.rst>`_ for more information.
+
+This bundle provides implementation which uses mysql database as synchronization data storage back-end.
+
+Configuration
+~~~~~~~~~~~~~
+
+See `SQL Relations documentation <Relations/sql_relations.rst>`_ for information on how to configure what should be
+included in continuous synchronization.
 
 Sub-topics
 ----------
@@ -12,52 +81,3 @@ Sub-topics
         :glob:
 
         */*
-
-Client data source
-------------------
-Any possible data source.
-
- Examples:
-  - DB
-  - WebServices / API
-  - Files
-
-Workflow
---------
-- Get data from Client data source (abstraction)
-- Store data to temp storage (abstraction)
-- Save changes to ES
-- Delete data from temp storage
-
-1. Get data from Client data source
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Gets Client data needed to synchronize.
-
-Client data source could be any data provider: DB, WS, etc.
-
-Abstract provider class: `Diff Provider <DiffProvider/diff_provider.rst>`_
-
-2. Store data to temp storage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Formats, modifies, explodes and stores synchronization data to temp storage (abstraction).
-
-Temp storage could be any data storage: Mysql, Redis, etc.
-
-Abstract extractor class: `Extractor <Extractor/extractor.rst>`_
-
-Abstract storage class (codename): `SyncStorage <Storage/sync_storage.rst>`_
-
-3. Save changes to ES
-~~~~~~~~~~~~~~~~~~~~~
-
-Saves all changes to ES.
-
-Abstract import class: `DiffImport <DiffImport/diff_import.rst>`_
-
-4. Delete data from temp storage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Deletes saved changes from temp storage (`SyncStorage <Storage/sync_storage.rst>`_).
-

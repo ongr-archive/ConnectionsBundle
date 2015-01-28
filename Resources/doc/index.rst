@@ -10,4 +10,8 @@ Contents:
     :glob:
 
     Commands/index
-    */*
+    Import/*
+    Sync/*
+    PairStorage/*
+    Pipeline/*
+    UrlInvalidator/*
