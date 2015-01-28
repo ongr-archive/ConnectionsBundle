@@ -48,7 +48,9 @@ class ImportFullCommandTest extends ESDoctrineTestCase
             $actualDocuments[] = $document;
         }
 
-        $expectedDocument = new Product();
+        /** @var Product $expectedDocument */
+        $expectedDocument = $repository->createDocument();
+        $expectedDocument->__setInitialized(true);
         $expectedDocument->setId('1');
         $expectedDocument->setTitle('test_prod');
         $expectedDocument->setPrice('0.99');
@@ -57,7 +59,8 @@ class ImportFullCommandTest extends ESDoctrineTestCase
 
         $expectedDocuments[] = $expectedDocument;
 
-        $expectedDocument = new Product();
+        $expectedDocument = $repository->createDocument();
+        $expectedDocument->__setInitialized(true);
         $expectedDocument->setId('2');
         $expectedDocument->setTitle('test_prod2');
         $expectedDocument->setPrice('7.79');

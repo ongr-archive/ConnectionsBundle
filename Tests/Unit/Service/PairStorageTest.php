@@ -227,8 +227,10 @@ class PairStorageTest extends \PHPUnit_Framework_TestCase
     {
         return $this->getMock(
             'ONGR\ElasticsearchBundle\ORM\Manager',
-            ['getRepository', 'persist', 'commit', 'flush', 'refresh'],
-            [ null, null, [], [] ]
+            [],
+            [],
+            '',
+            false
         );
     }
 
@@ -241,8 +243,10 @@ class PairStorageTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->getMock(
             'ONGR\ElasticsearchBundle\ORM\Repository',
-            ['getBundlesMapping', 'find', 'remove'],
-            [$this->getOrmManagerMock(), null ]
+            [],
+            [],
+            '',
+            false
         );
 
         return $mock;
