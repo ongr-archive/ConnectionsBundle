@@ -1,12 +1,12 @@
 PairStorage
 ===========
 
-``PairStorage`` is internal service used to store run-time key-value parameters in ``ElasticSearch`` document for internal usage.
+``PairStorage`` is internal service used to store run-time key-value parameters in ``Elasticsearch`` document for internal usage.
 
 Initial configuration
 ---------------------
 
-Before using ``PairStorage``, Pair Document, along with all other ``ConnectionsBundle`` documents, must be registered in ``ElasticSearch`` manager, i.e.:
+Before using ``PairStorage``, Pair Document, along with all other ``ConnectionsBundle`` documents, must be registered in ``Elasticsearch`` manager, i.e.:
 
 .. code-block:: yaml
 
@@ -24,7 +24,7 @@ Before using ``PairStorage``, Pair Document, along with all other ``ConnectionsB
 Usage
 -----
 
-``PairStorage`` is a simple service which stores key-value in ``ElasticSearch`` document.
+``PairStorage`` is a simple service which stores key-value in ``Elasticsearch`` document.
 Where:
 
 * key - a unique string identifier
