@@ -33,7 +33,7 @@ class SyncProvideCommandTest extends TestBase
     /**
      * @var array
      */
-    private $shopIds;
+    private $shopIds = [];
 
     /**
      * Clear logs before each test.
@@ -55,10 +55,11 @@ class SyncProvideCommandTest extends TestBase
             ->getServiceContainer()
             ->get('ongr_connections.sync.storage_manager.mysql_storage_manager');
 
-        $this->shopIds = $this->getServiceContainer()->getParameter('shop_ids');
+        $shops = $this->getServiceContainer()->getParameter('ongr_connections.shops');
 
-        foreach ($this->shopIds as $shopId) {
-            $this->managerMysql->createStorage($shopId);
+        foreach ($shops as $shop) {
+            $this->shopIds[] = $shop['shop_id'];
+            $this->managerMysql->createStorage($shop['shop_id']);
         }
     }
 

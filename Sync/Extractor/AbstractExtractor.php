@@ -39,12 +39,18 @@ abstract class AbstractExtractor
      */
     protected function getShopIds()
     {
+        $shopIds = [];
+
         try {
-            $shops = $this->container->getParameter('shop_ids');
+            $shops = $this->container->getParameter('ongr_connections.shops');
         } catch (InvalidArgumentException $e) {
             $shops = [];
         }
 
-        return $shops;
+        foreach ($shops as $shop) {
+            $shopIds[] = $shop['shop_id'];
+        }
+
+        return $shopIds;
     }
 }

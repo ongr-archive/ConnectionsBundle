@@ -66,15 +66,22 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('active_shop')->end()
+                ->scalarNode('active_shop')->defaultValue('default')->end()
                 ->arrayNode('shops')
                     ->info('List of available shops')
-                    ->useAttributeAsKey('shop_id')
+                    ->useAttributeAsKey('shop')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('shop_id')->end()
                         ->end()
                     ->end()
+                    ->defaultValue(
+                        [
+                            'default' => [
+                                'shop_id' => '0',
+                            ],
+                        ]
+                    )
                 ->end()
                 ->scalarNode('entity_namespace')
                     ->defaultValue('ONGRConnectionsBundle:')
