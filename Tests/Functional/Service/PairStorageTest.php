@@ -45,12 +45,12 @@ class PairStorageTest extends WebTestCase
         $pair1 = $this->getPair('name0', 'test1');
         $pair2 = $this->getPair('name1', 'test13');
 
-        $repo = $this->manager->getRepository('ONGRConnectionsBundle:Pair');
+        $repository = $this->manager->getRepository('ONGRConnectionsBundle:Pair');
 
-        $search = $repo
+        $search = $repository
             ->createSearch()
             ->addQuery(new MatchAllQuery());
-        $documents = $repo->execute($search);
+        $documents = $repository->execute($search);
 
         $expected = [$pair1, $pair2];
 
