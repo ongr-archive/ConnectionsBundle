@@ -26,10 +26,6 @@ abstract class AbstractMySqlPass
     protected function addParameters(ContainerBuilder $container, Definition $definition)
     {
         $definition->addMethodCall(
-            'setJobTableName',
-            [$container->getParameter('ongr_connections.sync.jobs_table_name')]
-        );
-        $definition->addMethodCall(
             'setShops',
             [array_keys($container->getParameter('ongr_connections.shops'))]
         );

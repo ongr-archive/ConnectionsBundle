@@ -44,7 +44,6 @@ class ONGRConnectionsExtension extends Extension
         $loader->load('extractor_relations.yml');
 
         $this->initShops($container, $config);
-        $this->initJobs($container, $config);
         $this->initSyncStorage($container, $config);
         $this->initMappingListener($container, $config);
     }
@@ -69,26 +68,6 @@ class ONGRConnectionsExtension extends Extension
 
         $container->setParameter('ongr_connections.active_shop', $activeShop);
         $container->setParameter('ongr_connections.shops', $config['shops']);
-    }
-
-    /**
-     * Set up jobs.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function initJobs(ContainerBuilder $container, array $config)
-    {
-        $doctrineConnection = sprintf('doctrine.dbal.%s_connection', $config['sync']['jobs_connection']);
-        $container->setParameter('ongr_connections.sync.jobs_table_name', $config['sync']['jobs_table_name']);
-        $definition = $container->getDefinition('ongr_connections.sync.table_manager');
-        $definition->setArguments(
-            [
-                new Reference($doctrineConnection, ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
-                $config['sync']['jobs_table_name'],
-                array_keys($config['shops']),
-            ]
-        );
     }
 
     /**
