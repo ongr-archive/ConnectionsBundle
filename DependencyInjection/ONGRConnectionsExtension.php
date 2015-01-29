@@ -45,7 +45,6 @@ class ONGRConnectionsExtension extends Extension
 
         $this->initShops($container, $config);
         $this->initSyncStorage($container, $config);
-        $this->initMappingListener($container, $config);
     }
 
     /**
@@ -122,19 +121,5 @@ class ONGRConnectionsExtension extends Extension
         $definition->setArguments(
             [$container->getDefinition('ongr_connections.sync.storage_manager.mysql_storage_manager')]
         );
-    }
-
-    /**
-     * Set up mapping listener.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function initMappingListener(ContainerBuilder $container, array $config)
-    {
-        $definition = $container->getDefinition('ongr_connections.mapping_listener');
-        $definition->addMethodCall('addReplacement', ['@sync_jobs_table', $config['sync']['jobs_table_name']]);
-        $activeShopReplacement = !empty($activeShop) ? "_{$activeShop}" : '';
-        $definition->addMethodCall('addReplacement', ['@active_shop', $activeShopReplacement]);
     }
 }

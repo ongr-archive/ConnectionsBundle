@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('sync')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('jobs_table_name')->defaultValue('ongr_sync_jobs')->end()
                         ->arrayNode('managers')
                             ->useAttributeAsKey('manager')
                             ->prototype('array')
