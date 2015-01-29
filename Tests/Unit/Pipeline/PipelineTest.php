@@ -55,11 +55,12 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher(new EventDispatcher());
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
-
+        $expectedContext = 'This is a test of context';
         $consumer = new PipelineTestConsumer();
 
-        $source = function (SourcePipelineEvent $event) use ($data) {
+        $source = function (SourcePipelineEvent $event) use ($data, $expectedContext) {
             $event->addSource($data);
+            $event->setContext($expectedContext);
         };
 
         $pipeline = $pipelineFactory->create(
@@ -74,6 +75,7 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedConsumedItems, $consumer->getConsumeCalled());
         $this->assertEquals($expectedSkippedItems, $consumer->getSkipCalled());
+        $this->assertEquals($expectedContext, $pipeline->getContext());
     }
 
     /**
