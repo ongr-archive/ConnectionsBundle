@@ -124,6 +124,39 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                         'status' => self::STATUS_NEW,
                     ]
                 );
+
+                /*
+                 * Find meaningless operations and remove them, e.g. when user creates product|category|content, makes some
+                 * updates and then deletes that product|category|content, then leave only last operation - deletion.
+                 */
+
+                if ($operationType === 'D') {
+                    $sql = sprintf(
+                        "SELECT `id` FROM {$tableName}
+                        WHERE
+                            `type` != 'D'
+                            AND `document_type` = :documentType
+                            AND `document_id` = :documentId
+                            AND `status` = :status
+                            AND `id` < :id"
+                    );
+
+                    $statement = $connection->prepare($sql);
+                    $statement->execute(
+                        [
+                            'documentType' => $documentType,
+                            'documentId' => $documentId,
+                            'status' => self::STATUS_NEW,
+                            'id' => $connection->lastInsertId(),
+                        ]
+                    );
+
+                    $entries = $statement->fetchAll();
+
+                    foreach ($entries as $entry) {
+                        $this->removeRecord($entry['id'], [$shopId]);
+                    }
+                }
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
                 $sql = sprintf(

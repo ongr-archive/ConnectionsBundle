@@ -92,23 +92,9 @@ class SyncProvideCommandTest extends TestBase
                     'shop_id' => $shopId,
                 ],
                 [
-                    'type' => ActionTypes::UPDATE,
-                    'document_type' => 'product',
-                    'document_id' => 'art1',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
                     'type' => ActionTypes::CREATE,
                     'document_type' => 'product',
                     'document_id' => 'art0',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::CREATE,
-                    'document_type' => 'product',
-                    'document_id' => 'art1',
                     'status' => '0',
                     'shop_id' => $shopId,
                 ],
@@ -181,13 +167,6 @@ class SyncProvideCommandTest extends TestBase
                 [
                     'type' => ActionTypes::CREATE,
                     'document_type' => 'product',
-                    'document_id' => 'art1',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::CREATE,
-                    'document_type' => 'product',
                     'document_id' => 'art2',
                     'status' => '0',
                     'shop_id' => $shopId,
@@ -196,13 +175,6 @@ class SyncProvideCommandTest extends TestBase
                     'type' => ActionTypes::UPDATE,
                     'document_type' => 'product',
                     'document_id' => 'art0',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::UPDATE,
-                    'document_type' => 'product',
-                    'document_id' => 'art1',
                     'status' => '0',
                     'shop_id' => $shopId,
                 ],
@@ -266,13 +238,6 @@ class SyncProvideCommandTest extends TestBase
                 [
                     'type' => ActionTypes::CREATE,
                     'document_type' => 'product',
-                    'document_id' => 'art1',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::CREATE,
-                    'document_type' => 'product',
                     'document_id' => 'art2',
                     'status' => '0',
                     'shop_id' => $shopId,
@@ -281,13 +246,6 @@ class SyncProvideCommandTest extends TestBase
                     'type' => ActionTypes::UPDATE,
                     'document_type' => 'product',
                     'document_id' => 'art0',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::UPDATE,
-                    'document_type' => 'product',
-                    'document_id' => 'art1',
                     'status' => '0',
                     'shop_id' => $shopId,
                 ],
@@ -395,13 +353,6 @@ class SyncProvideCommandTest extends TestBase
                 [
                     'type' => ActionTypes::CREATE,
                     'document_type' => 'product',
-                    'document_id' => 'art1',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
-                [
-                    'type' => ActionTypes::CREATE,
-                    'document_type' => 'product',
                     'document_id' => 'art2',
                     'status' => '0',
                     'shop_id' => $shopId,
@@ -413,13 +364,7 @@ class SyncProvideCommandTest extends TestBase
                     'status' => '0',
                     'shop_id' => $shopId,
                 ],
-                [
-                    'type' => ActionTypes::UPDATE,
-                    'document_type' => 'product',
-                    'document_id' => 'art1',
-                    'status' => '0',
-                    'shop_id' => $shopId,
-                ],
+
                 [
                     'type' => ActionTypes::UPDATE,
                     'document_type' => 'product',

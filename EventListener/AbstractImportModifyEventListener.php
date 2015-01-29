@@ -14,6 +14,9 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
@@ -32,10 +35,17 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
     public function onModify(ItemPipelineEvent $event)
     {
         $item = $event->getItem();
-        if ($item instanceof AbstractImportItem) {
+
+        if ($item instanceof ImportItem) {
             $this->modify($item);
+        } elseif ($item instanceof SyncExecuteItem) {
+            $syncStorageData = $item->getSyncStorageData();
+
+            if ($syncStorageData['type'] !== ActionTypes::DELETE) {
+                $this->modify($item);
+            }
         } else {
-            $this->log('Item provided is not an AbstractImportItem', LogLevel::NOTICE);
+            $this->log('Provided item is not type of ImportItem or SyncExecuteItem', LogLevel::NOTICE);
         }
     }
 

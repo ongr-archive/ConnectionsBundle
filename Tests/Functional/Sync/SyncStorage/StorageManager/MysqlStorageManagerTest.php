@@ -369,6 +369,112 @@ class MysqlStorageManagerTest extends TestBase
     }
 
     /**
+     * Check actions deduction.
+     */
+    public function testMeaninglessModifications()
+    {
+        $processedRecords = [
+            (object)[
+                'operationType' => ActionTypes::CREATE,
+                'documentType' => 'product',
+                'documentId' => 401,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::CREATE,
+                'documentType' => 'product',
+                'documentId' => 402,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::CREATE,
+                'documentType' => 'product',
+                'documentId' => 403,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::UPDATE,
+                'documentType' => 'product',
+                'documentId' => 401,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::UPDATE,
+                'documentType' => 'product',
+                'documentId' => 402,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::DELETE,
+                'documentType' => 'product',
+                'documentId' => 401,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::CREATE,
+                'documentType' => 'product',
+                'documentId' => 401,
+                'dateTime' => new DateTime('now'),
+            ],
+            (object)[
+                'operationType' => ActionTypes::UPDATE,
+                'documentType' => 'product',
+                'documentId' => 402,
+                'dateTime' => new DateTime('now'),
+            ],
+        ];
+
+        $expectedRecords = [
+            [
+                'id' => '2',
+                'type' => 'C',
+                'document_type' => 'product',
+                'document_id' => '402',
+                'status' => '0',
+            ],
+            [
+                'id' => '3',
+                'type' => 'C',
+                'document_type' => 'product',
+                'document_id' => '403',
+                'status' => '0',
+            ],
+            [
+                'id' => '5',
+                'type' => 'U',
+                'document_type' => 'product',
+                'document_id' => '402',
+                'status' => '0',
+            ],
+            [
+                'id' => '6',
+                'type' => 'D',
+                'document_type' => 'product',
+                'document_id' => '401',
+                'status' => '0',
+            ],
+            [
+                'id' => '7',
+                'type' => 'C',
+                'document_type' => 'product',
+                'document_id' => '401',
+                'status' => '0',
+            ],
+        ];
+
+        $this->service->createStorage();
+        $this->addRecords($processedRecords);
+
+        $actualyRecords = $this->getConnection()->fetchAll(
+            'SELECT * FROM `' . self::TABLE_NAME . '`
+            WHERE `document_type` = :documentType',
+            ['documentType' => 'product']
+        );
+
+        $this->compareRecords($expectedRecords, $actualyRecords, true);
+    }
+
+    /**
      * Add data for tests.
      *
      * @param array $recordData
