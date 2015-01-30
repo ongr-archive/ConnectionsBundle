@@ -1,18 +1,17 @@
-===========
-Full Import
-===========
+Import functionality
+====================
 
-Full import functionality allows you to import your data from any defined source into any relevant consumer while modifying it.
+Import functionality allows you to import your data from any defined source into any relevant consumer while modifying it.
 
 Running full import
 -------------------
 
-Use `Full Import command <Commands/ImportFullCommand/index.rst>`_ to run full import.
+Use `Full Import command <../Commands/ImportFullCommand/index.rst>`_ to run full import.
 
 Running sync import
 -------------------
 
-Use `Sync Import command <Commands/SyncExecuteCommand/index.rst>`_ to run sync import.
+Use `Sync Import command <../Commands/SyncExecuteCommand/index.rst>`_ to run sync import.
 
 
 Implementing your data import
