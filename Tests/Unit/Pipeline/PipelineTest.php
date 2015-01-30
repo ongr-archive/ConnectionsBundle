@@ -86,7 +86,7 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     public function onModify(ItemPipelineEvent $event)
     {
         if ($event->getItem() == 'skip') {
-            ItemSkipper::skip($event, 'reason');
+            ItemSkipper::skip($event, 'Test reason for skip');
         }
     }
 }

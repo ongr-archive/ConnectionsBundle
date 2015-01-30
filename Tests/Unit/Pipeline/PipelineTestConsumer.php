@@ -42,7 +42,7 @@ class PipelineTestConsumer extends AbstractConsumeEventListener
      */
     public function skip(ItemPipelineEvent $event)
     {
-        if ($event->getItemSkip()->getReason() === 'reason') {
+        if ($event->getItemSkip()->getReason() === 'Test reason for skip') {
             $this->skipCalled++;
         }
     }
