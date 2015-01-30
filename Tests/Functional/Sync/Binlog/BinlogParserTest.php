@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Binlog;
 
-use ONGR\ConnectionsBundle\Entity\SyncJob;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
 use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -43,7 +43,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:32:58'),
                 BinlogParser::PARAM_POSITION => 522,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_CREATE,
+                    'type' => ActionTypes::CREATE,
                     'table' => 'test',
                     'set' => [
                         1 => '1',
@@ -55,7 +55,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:34:06'),
                 BinlogParser::PARAM_POSITION => 710,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_CREATE,
+                    'type' => ActionTypes::CREATE,
                     'table' => 'test',
                     'set' => [
                         1 => '2',
@@ -67,7 +67,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:34:39'),
                 BinlogParser::PARAM_POSITION => 923,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_UPDATE,
+                    'type' => ActionTypes::UPDATE,
                     'table' => 'test',
                     'where' => [
                         1 => '2',
@@ -83,7 +83,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:22'),
                 BinlogParser::PARAM_POSITION => 1190,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_UPDATE,
+                    'type' => ActionTypes::UPDATE,
                     'table' => 'test',
                     'where' => [
                         1 => '1',
@@ -99,7 +99,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:22'),
                 BinlogParser::PARAM_POSITION => 1190,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_UPDATE,
+                    'type' => ActionTypes::UPDATE,
                     'table' => 'test',
                     'where' => [
                         1 => '2',
@@ -115,7 +115,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:46'),
                 BinlogParser::PARAM_POSITION => 1387,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_DELETE,
+                    'type' => ActionTypes::DELETE,
                     'table' => 'test',
                     'where' => [
                         1 => '1',
@@ -127,7 +127,7 @@ class BinlogParserTest extends TestBase
                 BinlogParser::PARAM_DATE => new \DateTime('2014-09-05 10:35:52'),
                 BinlogParser::PARAM_POSITION => 1584,
                 BinlogParser::PARAM_QUERY => [
-                    'type' => SyncJob::TYPE_DELETE,
+                    'type' => ActionTypes::DELETE,
                     'table' => 'test',
                     'where' => [
                         1 => '2',
@@ -246,7 +246,7 @@ class BinlogParserTest extends TestBase
         $parser
             ->expects($this->once())
             ->method('handleStart')
-            ->willReturn(['type' => SyncJob::TYPE_CREATE]);
+            ->willReturn(['type' => ActionTypes::CREATE]);
 
         $parser
             ->expects($this->any())
@@ -280,7 +280,7 @@ class BinlogParserTest extends TestBase
         $parser
             ->expects($this->once())
             ->method('handleStart')
-            ->willReturn(['type' => SyncJob::TYPE_DELETE]);
+            ->willReturn(['type' => ActionTypes::DELETE]);
 
         $parser
             ->expects($this->any())

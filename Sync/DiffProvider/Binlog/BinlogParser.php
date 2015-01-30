@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog;
 
-use ONGR\ConnectionsBundle\Entity\SyncJob;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 
 /**
  * Parses binary log data (Interpreter).
@@ -225,11 +225,11 @@ class BinlogParser implements \Iterator
 
         $this->getNextLine(self::LINE_TYPE_QUERY);
 
-        if ($buffer['type'] == SyncJob::TYPE_DELETE || $buffer['type'] === SyncJob::TYPE_UPDATE) {
+        if ($buffer['type'] == ActionTypes::DELETE || $buffer['type'] === ActionTypes::UPDATE) {
             $buffer['where'] = $this->handleStatement($this->lastLine, self::STATEMENT_TYPE_WHERE);
         }
 
-        if ($buffer['type'] == SyncJob::TYPE_CREATE || $buffer['type'] === SyncJob::TYPE_UPDATE) {
+        if ($buffer['type'] == ActionTypes::CREATE || $buffer['type'] === ActionTypes::UPDATE) {
             $buffer['set'] = $this->handleStatement($this->lastLine, self::STATEMENT_TYPE_SET);
         }
 
@@ -487,11 +487,11 @@ class BinlogParser implements \Iterator
     {
         switch ($type) {
             case 'INSERT INTO':
-                return SyncJob::TYPE_CREATE;
+                return ActionTypes::CREATE;
             case 'UPDATE':
-                return SyncJob::TYPE_UPDATE;
+                return ActionTypes::UPDATE;
             case 'DELETE FROM':
-                return SyncJob::TYPE_DELETE;
+                return ActionTypes::DELETE;
             default:
                 throw new \UnexpectedValueException("Unknown statement of type {$type}");
         }
