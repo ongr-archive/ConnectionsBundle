@@ -126,8 +126,9 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                 );
 
                 /*
-                 * Find meaningless operations and remove them, e.g. when user creates product|category|content, makes some
-                 * updates and then deletes that product|category|content, then leave only last operation - deletion.
+                 * Find meaningless operations and remove them, e.g. when user creates product|category|content, makes
+                 * some updates and then deletes that product|category|content, then leave only the last operation -
+                 * deletion.
                  */
 
                 if ($operationType === 'D') {
