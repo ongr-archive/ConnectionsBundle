@@ -17,6 +17,11 @@ namespace ONGR\ConnectionsBundle\Pipeline;
 class ItemSkip
 {
     /**
+     * @var string Reason for skipping.
+     */
+    private $reason;
+
+    /**
      * @return string
      */
     public function getReason()
@@ -31,9 +36,4 @@ class ItemSkip
     {
         $this->reason = $reason;
     }
-
-    /**
-     * @var string Reason for skipping.
-     */
-    private $reason;
 }
