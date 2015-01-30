@@ -32,21 +32,17 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('sync')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('jobs_table_name')->defaultValue('ongr_sync_jobs')->end()
-                        ->scalarNode('jobs_connection')->defaultValue('default')->end()
                         ->arrayNode('managers')
                             ->useAttributeAsKey('manager')
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('manager')->end()
-                                    ->scalarNode('job_manager')->end()
                                     ->scalarNode('data_collector')->end()
                                 ->end()
                             ->end()
                             ->defaultValue(
                                 [
                                     'default' => [
-                                        'job_manager' => 'ongr_connections.sync.job_manager',
                                         'data_collector' => 'ongr_connections.doctrine_data_collector',
                                     ],
                                 ]

@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Entity for data synchronization job.
  *
  * @ORM\Entity
- * @ORM\Table("@sync_jobs_table")
+ * @ORM\Table("ongr_sync_jobs")
  */
 class SyncJob
 {
@@ -51,7 +51,7 @@ class SyncJob
     /**
      * @var int
      *
-     * @ORM\Column(name="`status@active_shop`")
+     * @ORM\Column(name="`status`")
      */
     protected $status;
 
