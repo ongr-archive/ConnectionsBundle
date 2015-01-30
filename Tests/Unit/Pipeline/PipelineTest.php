@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Pipeline;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Pipeline\ItemSkipException;
+use ONGR\ConnectionsBundle\Pipeline\ItemSkipper;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -82,13 +82,11 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
      * OnModify.
      *
      * @param ItemPipelineEvent $event
-     *
-     * @throws ItemSkipException
      */
     public function onModify(ItemPipelineEvent $event)
     {
         if ($event->getItem() == 'skip') {
-            throw new ItemSkipException();
+            ItemSkipper::skip($event, 'reason');
         }
     }
 }

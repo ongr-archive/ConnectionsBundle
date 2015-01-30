@@ -71,14 +71,10 @@ class Pipeline implements PipelineInterface
                 $itemEvent = new ItemPipelineEvent($item);
                 $itemEvent->setContext($this->getContext());
 
-                try {
-                    $dispatcher->dispatch(
-                        $this->getEventName(self::EVENT_SUFFIX_MODIFY),
-                        $itemEvent
-                    );
-                } catch (ItemSkipException $itemSkipException) {
-                    $itemEvent->setSkipException($itemSkipException);
-                }
+                $dispatcher->dispatch(
+                    $this->getEventName(self::EVENT_SUFFIX_MODIFY),
+                    $itemEvent
+                );
 
                 $dispatcher->dispatch(
                     $this->getEventName(self::EVENT_SUFFIX_CONSUME),
