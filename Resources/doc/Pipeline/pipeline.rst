@@ -31,8 +31,10 @@ Example:
 
 Item skipping
 -------------
-If item for some reason should be skipped without stopping pipeline, ItemSkipException can be used.
+If item for some reason should be skipped without stopping pipeline, ItemSkipper static class can be used.
 
-When modifier throws ``ItemSkipException`` pipeline catches it and sets skipException in ``ItemPipelineEvent``.
-If ``AbstractConsumeEventListener`` is used and ``skipException`` exception is set, ``skip`` method will be called.
+When modifier invokes ``ItemSkipper::skip`` method, it sets ``ItemSkip`` object in ``ItemPipelineEvent`` with a reason
+for skipping (optional).
+
+If ``AbstractConsumeEventListener`` is used and ``ItemSkip`` is set, ``skip`` method will be called.
 Otherwise ``consume`` will be invoked.

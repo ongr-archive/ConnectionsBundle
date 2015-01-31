@@ -25,7 +25,7 @@ abstract class AbstractConsumeEventListener
      */
     public function onConsume(ItemPipelineEvent $event)
     {
-        if ($event->getSkipException()) {
+        if ($event->getItemSkip()) {
             $this->skip($event);
         } else {
             $this->consume($event);

@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Pipeline\Event;
 
-use ONGR\ConnectionsBundle\Pipeline\ItemSkipException;
+use ONGR\ConnectionsBundle\Pipeline\ItemSkip;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -32,9 +32,9 @@ class ItemPipelineEvent extends Event
     private $output;
 
     /**
-     * @var ItemSkipException
+     * @var ItemSkip
      */
-    private $skipException;
+    private $itemSkip;
 
     /**
      * @param mixed $item
@@ -77,21 +77,21 @@ class ItemPipelineEvent extends Event
     }
 
     /**
-     * @return ItemSkipException
+     * @return ItemSkip
      */
-    public function getSkipException()
+    public function getItemSkip()
     {
-        return $this->skipException;
+        return $this->itemSkip;
     }
 
     /**
-     * @param ItemSkipException $skipException
+     * @param ItemSkip $itemSkip
      *
      * @return $this
      */
-    public function setSkipException(ItemSkipException $skipException)
+    public function setItemSkip(ItemSkip $itemSkip)
     {
-        $this->skipException = $skipException;
+        $this->itemSkip = $itemSkip;
 
         return $this;
     }
