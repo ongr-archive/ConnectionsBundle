@@ -236,8 +236,9 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
 
         $itemRow = $item->getItem();
         $oldItemRow = $item->getOldItem();
+
         foreach (array_keys($trackedFields) as $key) {
-            if ($itemRow[$key] !== $oldItemRow[$key]) {
+            if (array_key_exists($key, $itemRow) && $itemRow[$key] !== $oldItemRow[$key]) {
                 return true;
             }
         }
