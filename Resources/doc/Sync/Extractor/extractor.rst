@@ -1,7 +1,7 @@
 Extractors
 ==========
 
-Extractors are special classes used by continuous functionality. Extractor class is responsible for marking items as changed
+Extractors are special classes used by continuous import functionality. Extractor class is responsible for marking items as changed
 in `Sync Storage <Storage/sync_storage.rst>`_. It "tracks" changes by reading through a diff provided by a
 `Diff provider <../DiffProvider/diff_provider.rst>`_.
 
