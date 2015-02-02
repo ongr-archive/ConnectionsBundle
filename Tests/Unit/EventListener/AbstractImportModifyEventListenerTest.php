@@ -58,7 +58,7 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 new \stdClass,
-                'Item provided is not an AbstractImportItem',
+                'The type of provided item is not ImportItem or SyncExecuteItem.',
             ],
         ];
     }

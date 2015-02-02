@@ -14,6 +14,9 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
@@ -32,10 +35,17 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
     public function onModify(ItemPipelineEvent $event)
     {
         $item = $event->getItem();
-        if ($item instanceof AbstractImportItem) {
-            $this->modify($item);
+
+        if ($item instanceof ImportItem) {
+            $this->modify($item, $event);
+        } elseif ($item instanceof SyncExecuteItem) {
+            $syncStorageData = $item->getSyncStorageData();
+
+            if ($syncStorageData['type'] !== ActionTypes::DELETE) {
+                $this->modify($item, $event);
+            }
         } else {
-            $this->log('Item provided is not an AbstractImportItem', LogLevel::NOTICE);
+            $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::NOTICE);
         }
     }
 
@@ -43,6 +53,7 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
      * Assigns raw data to given object.
      *
      * @param AbstractImportItem $eventItem
+     * @param ItemPipelineEvent  $event
      */
-    abstract protected function modify(AbstractImportItem $eventItem);
+    abstract protected function modify(AbstractImportItem $eventItem, ItemPipelineEvent $event);
 }
