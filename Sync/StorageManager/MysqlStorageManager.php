@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager;
 
@@ -124,6 +125,10 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
                         'status' => self::STATUS_NEW,
                     ]
                 );
+
+                if ($operationType === 'D') {
+                    $this->deductionForDeletion($connection, $tableName, $documentType, $documentId, $shopId);
+                }
             } catch (DBALException $e) {
                 // Record exists, check if update is needed.
                 $sql = sprintf(
@@ -274,6 +279,47 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     {
         foreach ($params as $param) {
             $statement->bindValue($param[0], $param[1], $param[2]);
+        }
+    }
+
+    /**
+     * Find meaningless operations and remove them.
+     *
+     * When user creates product|category|content, makes some updates and then deletes that product|category|content,
+     * then leave only the last operation - deletion.
+     *
+     * @param Connection $connection
+     * @param string     $tableName
+     * @param string     $documentType
+     * @param int        $documentId
+     * @param int        $shopId
+     */
+    private function deductionForDeletion($connection, $tableName, $documentType, $documentId, $shopId)
+    {
+        $sql = sprintf(
+            "SELECT `id` FROM {$tableName}
+            WHERE
+                `type` != 'D'
+                AND `document_type` = :documentType
+                AND `document_id` = :documentId
+                AND `status` = :status
+                AND `id` < :id"
+        );
+
+        $statement = $connection->prepare($sql);
+        $statement->execute(
+            [
+                'documentType' => $documentType,
+                'documentId' => $documentId,
+                'status' => self::STATUS_NEW,
+                'id' => $connection->lastInsertId(),
+            ]
+        );
+
+        $entries = $statement->fetchAll();
+
+        foreach ($entries as $entry) {
+            $this->removeRecord($entry['id'], [$shopId]);
         }
     }
 }
