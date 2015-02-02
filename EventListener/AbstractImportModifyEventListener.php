@@ -45,7 +45,7 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
                 $this->modify($item);
             }
         } else {
-            $this->log('Provided item is not type of ImportItem or SyncExecuteItem', LogLevel::NOTICE);
+            $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::NOTICE);
         }
     }
 
