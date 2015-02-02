@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Import;
 
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
+use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 
 /**
@@ -23,8 +24,9 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
      * Does nothing.
      *
      * @param AbstractImportItem $eventItem
+     * @param ItemPipelineEvent  $event
      */
-    protected function modify(AbstractImportItem $eventItem)
+    protected function modify(AbstractImportItem $eventItem, ItemPipelineEvent $event)
     {
     }
 }
