@@ -34,7 +34,7 @@ included in the change list.
 Each SQL Relation iterates through `joint statements <Relations/sql_relations.rst>`_ which ensure that the related objects
 are marked as changed as well.
 
-There is no modify event listener.
+There is no modify or finish event listener.
 
 Data Sync Execute
 ~~~~~~~~~~~~~~~~~
