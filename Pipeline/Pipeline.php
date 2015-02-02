@@ -53,6 +53,7 @@ class Pipeline implements PipelineInterface
             $this->getEventName(self::EVENT_SUFFIX_SOURCE),
             $sourceEvent
         );
+        $this->setContext($sourceEvent->getContext());
         $sources = $sourceEvent->getSources();
         $outputs = [];
 
@@ -63,20 +64,17 @@ class Pipeline implements PipelineInterface
             $this->getEventName(self::EVENT_SUFFIX_START),
             $startEvent
         );
+        $this->setContext($startEvent->getContext());
 
         foreach ($sources as $source) {
             foreach ($source as $item) {
                 $itemEvent = new ItemPipelineEvent($item);
                 $itemEvent->setContext($this->getContext());
 
-                try {
-                    $dispatcher->dispatch(
-                        $this->getEventName(self::EVENT_SUFFIX_MODIFY),
-                        $itemEvent
-                    );
-                } catch (ItemSkipException $itemSkipException) {
-                    $itemEvent->setSkipException($itemSkipException);
-                }
+                $dispatcher->dispatch(
+                    $this->getEventName(self::EVENT_SUFFIX_MODIFY),
+                    $itemEvent
+                );
 
                 $dispatcher->dispatch(
                     $this->getEventName(self::EVENT_SUFFIX_CONSUME),
@@ -87,6 +85,8 @@ class Pipeline implements PipelineInterface
                 if ($output !== null) {
                     $outputs[] = $output;
                 }
+
+                $this->setContext($itemEvent->getContext());
             }
         }
 

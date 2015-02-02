@@ -1,6 +1,4 @@
 parameters:
-    ongr_connections.jobs_cleanup_service.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobsCleanupService
-    ongr_connections.sync.job_manager.class: ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\JobManager
     ongr_connections.mapping_listener.class: ONGR\ConnectionsBundle\EventListener\LoadClassMetadataListener
     ongr_connections.sync_task_complete_blocker_listener.class: ONGR\ConnectionsBundle\EventListener\SyncTaskCompleteBlockerListener
     ongr_connections.trigger_create_service.trigger_bundle_name: 'ONGRConnectionsBundle'
@@ -10,20 +8,6 @@ parameters:
     ongr_connections.pipeline.abstract.class: ONGR\ConnectionsBundle\Pipeline\Pipeline
 
 services:
-    ongr_connections.jobs_cleanup_service:
-        class: %ongr_connections.jobs_cleanup_service.class%
-
-    ongr_connections.sync.job_manager:
-        class: %ongr_connections.sync.job_manager.class%
-        arguments:
-            - @doctrine.orm.entity_manager
-            - 'ONGRConnectionsBundle:' # Extension replaces this argument with value from config.
-        calls:
-            - [setLogger, [@?logger]]
-        tags:
-            - { name: ongr_connections.sync.job_manager, type: default }
-            - { name: monolog.logger, channel: sync }
-
     ongr_connections.mapping_listener:
         class: %ongr_connections.mapping_listener.class%
         tags:

@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\Pipeline;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Pipeline\ItemSkipException;
+use ONGR\ConnectionsBundle\Pipeline\ItemSkipper;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -55,11 +55,12 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $pipelineFactory = new PipelineFactory();
         $pipelineFactory->setDispatcher(new EventDispatcher());
         $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
-
+        $expectedContext = 'This is a test of context';
         $consumer = new PipelineTestConsumer();
 
-        $source = function (SourcePipelineEvent $event) use ($data) {
+        $source = function (SourcePipelineEvent $event) use ($data, $expectedContext) {
             $event->addSource($data);
+            $event->setContext($expectedContext);
         };
 
         $pipeline = $pipelineFactory->create(
@@ -74,19 +75,18 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedConsumedItems, $consumer->getConsumeCalled());
         $this->assertEquals($expectedSkippedItems, $consumer->getSkipCalled());
+        $this->assertEquals($expectedContext, $pipeline->getContext());
     }
 
     /**
      * OnModify.
      *
      * @param ItemPipelineEvent $event
-     *
-     * @throws ItemSkipException
      */
     public function onModify(ItemPipelineEvent $event)
     {
         if ($event->getItem() == 'skip') {
-            throw new ItemSkipException();
+            ItemSkipper::skip($event, 'Test reason for skip');
         }
     }
 }

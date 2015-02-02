@@ -17,11 +17,6 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs;
 trait SyncTrait
 {
     /**
-     * @var string Job table name.
-     */
-    private $jobTableName;
-
-    /**
      * @var string The current shop used.
      */
     protected $activeShop;
@@ -51,25 +46,5 @@ trait SyncTrait
     public function setShops($shops)
     {
         $this->shops = $shops;
-    }
-
-    /**
-     * Returns job table.
-     *
-     * @return mixed
-     */
-    public function getJobTableName()
-    {
-        return $this->jobTableName;
-    }
-
-    /**
-     * Sets job table.
-     *
-     * @param mixed $jobTableName
-     */
-    public function setJobTableName($jobTableName)
-    {
-        $this->jobTableName = $jobTableName;
     }
 }

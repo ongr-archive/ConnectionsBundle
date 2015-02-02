@@ -21,25 +21,34 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Integration test for ongr:sync:storage:create command.
  */
-class SyncStorageUpdateCommandTest extends TestBase
+class SyncStorageCreateCommandTest extends TestBase
 {
     /**
-     * Check if table is created as expected.
+     * @var \Symfony\Component\Console\Command\Command
      */
-    public function testExecute()
+    private $executeCommand;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->setExecuteCommandInstance();
+    }
+
+    /**
+     * Check if table with shop id was created as expected.
+     */
+    public function testExecuteWithShopId()
     {
         $testShopId = 14;
 
-        $kernel = self::createClient()->getKernel();
-
-        $application = new Application($kernel);
-        $application->add(new SyncStorageCreateCommand());
-        $command = $application->find('ongr:sync:storage:create');
-
-        $commandTester = new CommandTester($command);
+        $commandTester = new CommandTester($this->executeCommand);
         $commandTester->execute(
             [
-                'command' => $command->getName(),
+                'command' => $this->executeCommand->getName(),
                 'storage' => SyncStorage::STORAGE_MYSQL,
                 '--shop-id' => $testShopId,
             ]
@@ -64,6 +73,35 @@ class SyncStorageUpdateCommandTest extends TestBase
     }
 
     /**
+     * Check if table without shop id was created as expected.
+     */
+    public function testExecuteWithoutShopId()
+    {
+        $defaultStorage = 'ongr_sync_storage';
+
+        $commandTester = new CommandTester($this->executeCommand);
+        $commandTester->execute(
+            [
+                'command' => $this->executeCommand->getName(),
+                'storage' => SyncStorage::STORAGE_MYSQL,
+            ]
+        );
+
+        $this->assertEquals(
+            'Storage successfully created for ' . SyncStorage::STORAGE_MYSQL . '.' . PHP_EOL,
+            $commandTester->getDisplay()
+        );
+
+        $actual = $this->getConnection()->getSchemaManager()->listTableDetails($defaultStorage);
+
+        $this->getConnection()->getSchemaManager()->dropTable($defaultStorage);
+        $this->importData('SyncStorage/storageWithoutShop.sql');
+        $expected = $this->getConnection()->getSchemaManager()->listTableDetails($defaultStorage);
+
+        $this->compareTable($expected, $actual);
+    }
+
+    /**
      * Tests whether both tables are equal.
      *
      * @param Table $expected
@@ -79,5 +117,18 @@ class SyncStorageUpdateCommandTest extends TestBase
             $expected->getOptions(),
             $actual->getOptions()
         );
+    }
+
+    /**
+     * Prepare and set instance of execute command.
+     */
+    private function setExecuteCommandInstance()
+    {
+        $kernel = self::createClient()->getKernel();
+
+        $application = new Application($kernel);
+        $application->add(new SyncStorageCreateCommand());
+
+        $this->executeCommand = $application->find('ongr:sync:storage:create');
     }
 }
