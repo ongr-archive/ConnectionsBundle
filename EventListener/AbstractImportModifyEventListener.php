@@ -33,7 +33,7 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
     {
         $item = $event->getItem();
         if ($item instanceof AbstractImportItem) {
-            $this->modify($item);
+            $this->modify($item, $event);
         } else {
             $this->log('Item provided is not an AbstractImportItem', LogLevel::NOTICE);
         }
@@ -43,6 +43,7 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
      * Assigns raw data to given object.
      *
      * @param AbstractImportItem $eventItem
+     * @param ItemPipelineEvent  $event
      */
-    abstract protected function modify(AbstractImportItem $eventItem);
+    abstract protected function modify(AbstractImportItem $eventItem, ItemPipelineEvent $event);
 }
