@@ -37,15 +37,13 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
         $item = $event->getItem();
 
         if ($item instanceof ImportItem) {
-            $this->modify($item);
+            $this->modify($item, $event);
         } elseif ($item instanceof SyncExecuteItem) {
             $syncStorageData = $item->getSyncStorageData();
 
             if ($syncStorageData['type'] !== ActionTypes::DELETE) {
-                $this->modify($item);
+                $this->modify($item, $event);
             }
-        if ($item instanceof AbstractImportItem) {
-            $this->modify($item, $event);
         } else {
             $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::NOTICE);
         }

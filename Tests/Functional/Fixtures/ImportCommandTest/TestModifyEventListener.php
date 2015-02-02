@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest;
 
 use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
+use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 
@@ -24,8 +25,9 @@ class TestModifyEventListener extends AbstractImportModifyEventListener
      * Assigns data in entity to relevant fields in document.
      *
      * @param AbstractImportItem $eventItem
+     * @param ItemPipelineEvent  $event
      */
-    protected function modify(AbstractImportItem $eventItem)
+    protected function modify(AbstractImportItem $eventItem, ItemPipelineEvent $event)
     {
         /** @var TestProduct $data */
         $data = $eventItem->getEntity();
