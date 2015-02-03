@@ -269,3 +269,19 @@ e.g.:
 And call *ongr:connections:import* command using *{$name}*, e.g. ongr:connections:import MySpecialEventName
 
 See command usage for usage details.
+
+Internals provided for custom import
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are abstract EventListeners provided by the pipeline:
+
+.. toctree::
+        :maxdepth: 1
+        :glob:
+
+        ../Pipeline/EventListeners/abstract_import_source_event_listener
+        ../Pipeline/EventListeners/abstract_import_modify_event_listener
+        ../Pipeline/EventListeners/abstract_import_consume_event_listener
+        ../Pipeline/EventListeners/abstract_import_finish_event_listener
+
+as well as an implementation of `memory-efficient iterator for Doctrine ORM <Internals/doctrine_import_iterator.rst>`_

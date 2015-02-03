@@ -55,3 +55,18 @@ for skipping (optional).
 
 If ``AbstractConsumeEventListener`` is used and ``ItemSkip`` is set, ``skip`` method will be called.
 Otherwise ``consume`` will be invoked.
+
+
+Event listeners provided by ConnectionsBundle
+---------------------------------------------
+
+There are several abstract classes to extend upon if you wish to implement your own pipeline:
+
+.. toctree::
+        :maxdepth: 1
+        :glob:
+
+        EventListeners/abstract_import_source_event_listener
+        EventListeners/abstract_import_modify_event_listener
+        EventListeners/abstract_import_consume_event_listener
+        EventListeners/abstract_import_finish_event_listener
