@@ -6,6 +6,7 @@ This class gets items from **Doctrine ORM** and creates empty **Elasticsearch do
 Constructor arguments are as follows:
 
 .. code-block:: php
+
     /**
      * @param EntityManager $manager
      * @param string        $entityClass
