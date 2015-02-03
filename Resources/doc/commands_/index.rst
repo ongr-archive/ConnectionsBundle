@@ -8,4 +8,4 @@ This document covers console commands provided by this bundle.
         :glob:
 
         *
-        Internals/*
+        internals/*

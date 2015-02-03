@@ -1,6 +1,15 @@
 Pipeline
 ========
 
+Overview
+--------
+
+|pipeline_overview|
+
+.. |pipeline_overview| image:: ../images/pipeline_overview.png
+
+An example of pipeline data and process flow. Please note that source database can be anything - as
+
 Pipeline is used to process data with 5 events:
 
 - Source
@@ -66,7 +75,7 @@ There are several abstract classes to extend upon if you wish to implement your 
         :maxdepth: 1
         :glob:
 
-        EventListeners/abstract_import_source_event_listener
-        EventListeners/abstract_import_modify_event_listener
-        EventListeners/abstract_import_consume_event_listener
-        EventListeners/abstract_import_finish_event_listener
+        event_listeners/abstract_import_source_event_listener
+        event_listeners/abstract_import_modify_event_listener
+        event_listeners/abstract_import_consume_event_listener
+        event_listeners/abstract_import_finish_event_listener

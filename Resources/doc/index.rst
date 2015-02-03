@@ -9,9 +9,9 @@ Contents:
     :maxdepth: 1
     :glob:
 
-    Commands/index
-    Import/*
-    Sync/*
-    PairStorage/*
-    Pipeline/*
-    UrlInvalidator/*
+    commands/index
+    import/*
+    sync/*
+    pair_storage/*
+    pipeline/*
+    url_invalidator/*
