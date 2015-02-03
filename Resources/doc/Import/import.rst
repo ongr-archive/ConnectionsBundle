@@ -3,6 +3,15 @@ Import functionality
 
 Import functionality allows you to import your data from any defined source into any relevant consumer while modifying it.
 
+Import functionality overview
+-----------------------------
+
+|import_overview|
+
+.. |import_overview| image:: ../images/import_overview.png
+
+For more information about how Pipeline works, see `Pipeline documentation <../Pipeline/pipeline.rst>`_.
+
 Running full import
 -------------------
 
