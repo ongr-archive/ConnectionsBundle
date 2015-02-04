@@ -83,7 +83,10 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
                         $this->getShopIds()
                     );
                 } elseif (empty($statements)) {
-                    throw new \LogicException('Relation does not have any effect');
+                    throw new \LogicException(
+                        'Missing related statements or no document type set in relation "'
+                        . $relation->getName() . '"'
+                    );
                 }
 
                 foreach ($statements as $statement) {

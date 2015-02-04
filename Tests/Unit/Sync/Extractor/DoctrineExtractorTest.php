@@ -36,6 +36,7 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 
         $relation->expects($this->any())->method('getTriggerTypeAlias')->willReturn(ActionTypes::UPDATE);
         $relation->expects($this->any())->method('getTable')->willReturn('table');
+        $relation->expects($this->any())->method('getName')->willReturn('relation');
 
         /** @var RelationsCollection|\PHPUnit_Framework_MockObject_MockObject $relationsCollection */
         $relationsCollection = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection');
@@ -49,7 +50,10 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         $item = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem');
         $item->expects($this->any())->method('getCategory')->willReturn('table');
 
-        $this->setExpectedException('\LogicException', 'Relation does not have any effect');
+        $this->setExpectedException(
+            '\LogicException',
+            'Missing related statements or no document type set in relation "relation"'
+        );
         $extractor->extract($item);
     }
 

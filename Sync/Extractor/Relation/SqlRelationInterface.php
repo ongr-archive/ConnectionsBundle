@@ -34,9 +34,24 @@ interface SqlRelationInterface
     public function setTable($name);
 
     /**
+     * Sets name of the relation.
+     *
+     * @param string $name
+     */
+    public function setName($name);
+
+    /**
+     * Returns name of the relation.
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Returns trigger name used in DB.
      *
      * @return string
      */
     public function getTriggerName();
+
 }

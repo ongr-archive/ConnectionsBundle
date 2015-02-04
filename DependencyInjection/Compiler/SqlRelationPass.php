@@ -31,6 +31,7 @@ class SqlRelationPass extends AbstractMySqlPass implements CompilerPassInterface
         $triggersManagerDefinition = $container->getDefinition('ongr_connections.sync.relations_collection');
         foreach ($container->findTaggedServiceIds('ongr_connections.sql_relation') as $id => $tags) {
             $definition = $container->getDefinition($id);
+            $definition->addMethodCall('setName', [$id]);
             $this->addParameters($container, $definition);
             $triggersManagerDefinition->addMethodCall('addRelation', [new Reference($id)]);
         }

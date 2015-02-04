@@ -88,6 +88,11 @@ class SqlRelation implements SqlRelationInterface
     protected $statements = [];
 
     /**
+     * @var string Name of the relation.
+     */
+    private $name;
+
+    /**
      * Constructor.
      *
      * @param string      $table        Table name to hook on.
@@ -281,5 +286,21 @@ class SqlRelation implements SqlRelationInterface
     public function getStatements()
     {
         return $this->statements;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }
