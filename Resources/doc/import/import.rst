@@ -3,15 +3,17 @@ Import functionality
 
 Import functionality allows you to import your data from any defined source into any relevant consumer while modifying it.
 
+It is based on Pipeline. For more information about how Pipeline works, see `Pipeline documentation <../pipeline/pipeline.rst>`_.
+
 Running full import
 -------------------
 
-Use `Full Import command <../Commands/ImportFullCommand/index.rst>`_ to run full import.
+Use `Full Import command <../commands/import_full_command.rst>`_ to run full import.
 
 Running sync import
 -------------------
 
-Use `Sync Import command <../Commands/SyncExecuteCommand/index.rst>`_ to run sync import.
+Use `Sync Import command <../commands/sync_execute_command.rst>`_ to run sync import.
 
 
 Implementing your data import
@@ -269,3 +271,26 @@ e.g.:
 And call *ongr:connections:import* command using *{$name}*, e.g. ongr:connections:import MySpecialEventName
 
 See command usage for usage details.
+
+Internals provided for custom import
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are abstract EventListeners provided by the pipeline:
+
+.. toctree::
+        :maxdepth: 1
+        :glob:
+
+        ../pipeline/event_listeners/abstract_import_source_event_listener
+        ../pipeline/event_listeners/abstract_import_modify_event_listener
+        ../pipeline/event_listeners/abstract_import_consume_event_listener
+        ../pipeline/event_listeners/abstract_consume_event_listener
+
+as well as
+
+.. toctree::
+        :maxdepth: 1
+        :glob:
+
+        internals/doctrine_import_iterator
+        internals/import_item

@@ -5,9 +5,9 @@ Sql relations are special classes that tell extractor which fields/tables to wat
 
 By default, all services tagged with a ``{ name: ongr_connections.sql_relation }`` are added to a single service
 called ``ongr_connections.sync.relations_collection``, which later on can be passed as a parameter for
-an `extractor <../Extractor/extractor.rst>`_ via ``setRelationsCollection`` method.
+an `extractor <../extractor/extractor.rst>`_ via ``setRelationsCollection`` method.
 
-When `extractor <../Extractor/extractor.rst>`_ looks for changes, it iterates through the relations collection -
+When `extractor <../extractor/extractor.rst>`_ looks for changes, it iterates through the relations collection -
 executing each relation as to mark down which changes in the database are relevant.
 
     NOTE: Only ``DoctrineExtractor`` supports sql relations so far.
@@ -81,7 +81,7 @@ There are classes that help implement cascading data changes, e.g. if you have c
 category, you also have to update all the products which use said categories' name.
 
 ``Extractor\Relation\JoinStatement`` class does exactly that: you can attach it to a composed relation and when changes are
-detected, `extractor <../Extractor/extractor.rst>`_ calls the related statements and marks related documents as changed.
+detected, `extractor <../extractor/extractor.rst>`_ calls the related statements and marks related documents as changed.
 
 Example cascading change configuration:
 

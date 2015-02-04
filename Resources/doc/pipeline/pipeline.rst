@@ -1,6 +1,15 @@
 Pipeline
 ========
 
+Overview
+--------
+
+|pipeline_overview|
+
+.. |pipeline_overview| image:: ../images/pipeline_overview.png
+
+An example of pipeline data and process flow. Please note that source database can be anything - SQL database, web service, file, etc.
+
 Pipeline is used to process data with 5 events:
 
 - Source
@@ -55,3 +64,18 @@ for skipping (optional).
 
 If ``AbstractConsumeEventListener`` is used and ``ItemSkip`` is set, ``skip`` method will be called.
 Otherwise ``consume`` will be invoked.
+
+
+Event listeners provided by ConnectionsBundle
+---------------------------------------------
+
+There are several abstract classes to extend upon if you wish to implement your own pipeline:
+
+.. toctree::
+        :maxdepth: 1
+        :glob:
+
+        event_listeners/abstract_import_source_event_listener
+        event_listeners/abstract_import_modify_event_listener
+        event_listeners/abstract_import_consume_event_listener
+        event_listeners/abstract_consume_event_listener

@@ -5,7 +5,7 @@ This command is invoked via ``ongr:sync:provide:parameter``.
 
 Sets or gets parameter used by Sync Import provider, e.g. last import date.
 
-Uses `pair storage <../PairStorage/index.rst>`_ to store values.
+Uses `pair storage <../pair_storage/index.rst>`_ to store values.
 
 Command usage
 ~~~~~~~~~~~~~
