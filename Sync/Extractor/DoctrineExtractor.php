@@ -46,6 +46,8 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \LogicException
      */
     public function extract(BaseDiffItem $item)
     {
@@ -66,18 +68,24 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
 
                 $idFieldName = str_replace(['OLD.', 'NEW.'], '', $idField);
                 $itemRow = $item->getItem();
-                $itemId = $itemRow[$idFieldName];
-
-                $storage = $this->getStorageFacility();
-                $storage->save(
-                    $action,
-                    $insertList[JobTableFields::TYPE]['value'],
-                    $itemId,
-                    $item->getTimestamp(),
-                    $this->getShopIds()
-                );
 
                 $statements = $relation->getStatements();
+
+                if (isset($insertList[JobTableFields::TYPE]['value'])) {
+                    $itemId = $itemRow[$idFieldName];
+
+                    $storage = $this->getStorageFacility();
+                    $storage->save(
+                        $action,
+                        $insertList[JobTableFields::TYPE]['value'],
+                        $itemId,
+                        $item->getTimestamp(),
+                        $this->getShopIds()
+                    );
+                } elseif (empty($statements)) {
+                    throw new \LogicException('Relation does not have any effect');
+                }
+
                 foreach ($statements as $statement) {
                     $selectQuery = $statement->getSelectQuery();
                     $sql = $this->inlineContext($selectQuery, $itemRow);

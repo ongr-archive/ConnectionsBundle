@@ -11,7 +11,7 @@ parameters:
 services:
     ongr_project.sql_relations.category.delete:
         class: %ongr_project.sql_relations.sql_relation.class%
-        arguments: [oxcategories, D, 1, category, OLD.OXID]
+        arguments: [oxcategories, D, OLD.OXID, 1, category]
         tags:
             - { name: ongr_connections.sql_relation }
         calls:
@@ -19,7 +19,7 @@ services:
 
     ongr_project.sql_relations.category.update:
         class: %ongr_project.sql_relations.sql_relation.class%
-        arguments: [oxcategories, U, 1, category, OLD.OXID, %ongr_project.sql_relations.category.fields%]
+        arguments: [oxcategories, U, OLD.OXID, 1, category, %ongr_project.sql_relations.category.fields%]
         tags:
             - { name: ongr_connections.sql_relation }
         calls:
@@ -31,18 +31,26 @@ services:
 
     ongr_project.sql_relations.product.create:
         class: %ongr_project.sql_relations.sql_relation.class%
-        arguments: [oxarticles, C, 1, product, NEW.OXID]
+        arguments: [oxarticles, C, NEW.OXID, 1, product]
         tags:
             - { name: ongr_connections.sql_relation }
 
     ongr_project.sql_relations.product.update:
         class: %ongr_project.sql_relations.sql_relation.class%
-        arguments: [oxarticles, U, 1, product, OLD.OXID]
+        arguments: [oxarticles, U, OLD.OXID, 1, product]
         tags:
             - { name: ongr_connections.sql_relation }
 
     ongr_project.sql_relations.product.delete:
         class: %ongr_project.sql_relations.sql_relation.class%
-        arguments: [oxarticles, D, 1, product, OLD.OXID]
+        arguments: [oxarticles, D, OLD.OXID, 1, product]
         tags:
             - { name: ongr_connections.sql_relation }
+
+    ongr_project.sql_relations.category.product.update:
+        class: %ongr_project.sql_relations.sql_relation.class%
+        arguments: [oxcategories, U, OLD.OXID]
+        tags:
+            - { name: ongr_connections.sql_relation }
+        calls:
+            - [ addStatement, [ @ongr_project.sql_relations.category.join.articles ] ]
