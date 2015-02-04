@@ -19,8 +19,8 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
-use ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation;
 use ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection;
+use ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
@@ -52,7 +52,7 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
         $connection = $this->getConnection();
         $relations = $this->getRelationsCollection()->getRelations();
         $action = $this->resolveItemAction($item);
-        /** @var \ONGR\ConnectionsBundle\Sync\Extractor\Relation\ComposedSqlRelation $relation */
+        /** @var \ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation $relation */
         foreach ($relations as $relation) {
             $table = $relation->getTable();
             if ($table === $item->getCategory() && $action === $relation->getTriggerTypeAlias()) {
@@ -216,14 +216,14 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Checks whether any of tracked fields has been modified.
      *
-     * @param BaseDiffItem        $item
-     * @param ComposedSqlRelation $relation
+     * @param BaseDiffItem $item
+     * @param SqlRelation  $relation
      *
      * @return bool
      *
      * @throws \InvalidArgumentException
      */
-    private function isTrackedFieldModified(BaseDiffItem $item, ComposedSqlRelation $relation)
+    private function isTrackedFieldModified(BaseDiffItem $item, SqlRelation $relation)
     {
         if (!$item instanceof UpdateDiffItem) {
             throw new \InvalidArgumentException('Wrong diff item type. Got: ' . get_class($item));

@@ -18,7 +18,7 @@ use ONGR\ConnectionsBundle\Sync\JobTableFields;
 /**
  * Class for managing simple triggers.
  */
-class SimpleSqlRelation implements SqlRelationInterface
+class SqlRelation implements SqlRelationInterface
 {
     use SyncTrait;
 
@@ -83,13 +83,18 @@ class SimpleSqlRelation implements SqlRelationInterface
     protected $defaultJobType = self::TYPE_PARTIAL;
 
     /**
+     * @var JoinStatementInterface[]
+     */
+    protected $statements = [];
+
+    /**
      * Constructor.
      *
      * @param string      $table        Table name to hook on.
      * @param string      $type         Trigger and default job type C - create, U - update,  D - delete.
      * @param int|null    $updateType   Partial update - 0, full update - 1.
-     * @param null        $documentType Type of target document.
-     * @param null        $idField      Source for document id.
+     * @param string|null $documentType Type of target document.
+     * @param int|null    $idField      Source for document id.
      * @param array       $trackFields  Array of table fields to track, all using default priority.
      * @param string|null $jobType      C - create, U - update,  D - delete.
      */
@@ -260,5 +265,21 @@ class SimpleSqlRelation implements SqlRelationInterface
     public function getTriggerTypeAlias()
     {
         return $this->typeAlias;
+    }
+
+    /**
+     * @param JoinStatementInterface $statement
+     */
+    public function addStatement(JoinStatementInterface $statement)
+    {
+        $this->statements[] = $statement;
+    }
+
+    /**
+     * @return JoinStatementInterface[]
+     */
+    public function getStatements()
+    {
+        return $this->statements;
     }
 }
