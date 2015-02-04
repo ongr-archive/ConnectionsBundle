@@ -83,7 +83,7 @@ category, you also have to update all the products which use said categories' na
 ``Extractor\Relation\JoinStatement`` class does exactly that: you can attach it to a relation and when changes are
 detected, `extractor <../extractor/extractor.rst>`_ calls the related statements and marks related documents as changed.
 
-It ``$documentType`` is left undefined document itself will not be marked as changed but related statements will.
+If ``$documentType`` is left undefined document itself will not be marked as changed but related statements will.
 
 Example cascading change configuration:
 
