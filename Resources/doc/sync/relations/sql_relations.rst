@@ -36,21 +36,21 @@ Example simple sql relations setup:
     services:
         # Relation for category creation.
         my_project.sql_relations.category.create:
-            class: %ongr_connections.sql_relations.composed_relation.class%
+            class: %ongr_connections.sql_relations.sql_relation.class%
             arguments: [my_categories, C, 1, category, NEW.categories_id]
             tags:
                 - { name: ongr_connections.sql_relation }  # This tag is used to collect all sql relations.
 
         # Relation for category update.
         my_project.sql_relations.category.update:
-            class: %ongr_connections.sql_relations.composed_relation.class%
+            class: %ongr_connections.sql_relations.sql_relation.class%
             arguments: [my_categories, U, 1, category, NEW.categories_id]
             tags:
                 - { name: ongr_connections.sql_relation }  # This tag is used to collect all sql relations.
 
         # Relation for category deletion
         my_project.sql_relations.category.delete:
-            class: %ongr_connections.sql_relations.composed_relation.class%
+            class: %ongr_connections.sql_relations.sql_relation.class%
             arguments: [my_categories, D, 1, category, OLD.categories_id]
             tags:
                 - { name: ongr_connections.sql_relation }  # This tag is used to collect all sql relations.
@@ -64,9 +64,9 @@ Extractor constructor arguments are as follows:
     /**
      * @param string      $table        Table name to hook on.
      * @param string      $type         Trigger and default job type C - create, U - update,  D - delete.
+     * @param int|null    $idField      Source for document id.
      * @param int|null    $updateType   Partial update - 0, full update - 1.
-     * @param null        $documentType Type of target document.
-     * @param null        $idField      Source for document id.
+     * @param string|null $documentType Type of target document.
      * @param array       $trackFields  Array of table fields to track, all using default priority.
      * @param string|null $jobType      C - create, U - update,  D - delete.
      */
@@ -80,8 +80,10 @@ Cascading changes
 There are classes that help implement cascading data changes, e.g. if you have changed the name of the
 category, you also have to update all the products which use said categories' name.
 
-``Extractor\Relation\JoinStatement`` class does exactly that: you can attach it to a composed relation and when changes are
+``Extractor\Relation\JoinStatement`` class does exactly that: you can attach it to a relation and when changes are
 detected, `extractor <../extractor/extractor.rst>`_ calls the related statements and marks related documents as changed.
+
+It ``$documentType`` is left undefined document itself will not be marked as changed but related statements will.
 
 Example cascading change configuration:
 
