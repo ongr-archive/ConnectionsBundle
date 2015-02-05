@@ -1,7 +1,7 @@
 Descriptors
 ===========
 
-Sql descriptors are special classes that tell extractor which fields/tables to watch for changes.
+Extraction descriptors are special classes that tell extractor which fields/tables to watch for changes.
 
 By default, all services tagged with a ``{ name: ongr_connections.extraction_descriptor }`` are added to a single service
 called ``ongr_connections.sync.extraction_collection``, which later on can be passed as a parameter for
@@ -80,7 +80,7 @@ Cascading changes
 There are classes that help implement cascading data changes, e.g. if you have changed the name of the
 category, you also have to update all the products which use said categories' name.
 
-``Extractor\Relation\JoinRelation`` class does exactly that: you can attach it to a relation and when changes are
+``Extractor\Descriptor\JoinRelation`` class does exactly that: you can attach it to a descriptor and when changes are
 detected, `extractor <../extractor/extractor.rst>`_ calls the relations and marks related documents as changed.
 
 If ``$documentType`` is left undefined document itself will not be marked as changed but related items will.
