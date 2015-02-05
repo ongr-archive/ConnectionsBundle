@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle;
 
-use ONGR\ConnectionsBundle\DependencyInjection\Compiler\ExtractorDescriptorPass;
+use ONGR\ConnectionsBundle\DependencyInjection\Compiler\ExtractionDescriptorPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -27,6 +27,6 @@ class ONGRConnectionsBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new ExtractorDescriptorPass());
+        $container->addCompilerPass(new ExtractionDescriptorPass());
     }
 }

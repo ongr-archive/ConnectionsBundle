@@ -3,7 +3,7 @@ Descriptors
 
 Sql descriptors are special classes that tell extractor which fields/tables to watch for changes.
 
-By default, all services tagged with a ``{ name: ongr_connections.extractor_descriptor }`` are added to a single service
+By default, all services tagged with a ``{ name: ongr_connections.extraction_descriptor }`` are added to a single service
 called ``ongr_connections.sync.extraction_collection``, which later on can be passed as a parameter for
 an `extractor <../extractor/extractor.rst>`_ via ``setExtractionCollection`` method.
 
@@ -29,7 +29,7 @@ Example extractor configuration:
         class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection
 
 
-Example simple extractor descriptors setup:
+Example simple extraction Descriptors setup:
 
 .. code-block:: yaml
 
@@ -39,25 +39,25 @@ Example simple extractor descriptors setup:
             class: %ongr_connections.extractor.descriptor.class%
             arguments: [my_categories, C, 1, category, NEW.categories_id]
             tags:
-                - { name: ongr_connections.extractor_descriptor }  # This tag is used to collect all descriptors.
+                - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
         # Descriptor for category update.
         my_project.extractor.descriptors.category.update:
             class: %ongr_connections.extractor.descriptor.class%
             arguments: [my_categories, U, 1, category, NEW.categories_id]
             tags:
-                - { name: ongr_connections.extractor_descriptor }  # This tag is used to collect all descriptors.
+                - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
         # Descriptor for category deletion
         my_project.extractor.descriptors.category.delete:
             class: %ongr_connections.extractor.descriptor.class%
             arguments: [my_categories, D, 1, category, OLD.categories_id]
             tags:
-                - { name: ongr_connections.extractor_descriptor }  # This tag is used to collect all descriptors.
+                - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
 ..
 
-Extractor descriptor constructor arguments are as follows:
+Extraction Descriptor constructor arguments are as follows:
 
 .. code-block:: php
 
@@ -100,7 +100,7 @@ Example cascading change configuration:
             class: %ongr_connections.extractor.descriptor.class%
             arguments: [my_categories, U, 1, category, NEW.categories_id]
             tags:
-                - { name: ongr_connections.extractor_descriptor }
+                - { name: ongr_connections.extraction_descriptor }
             calls:
                 - [ addRelation, [ @my_project.sql_relations.product.join.category ] ] # Call this relation if category is updated.
 

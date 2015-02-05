@@ -12,24 +12,24 @@
 namespace Unit\Sync\Extractor\Descriptor;
 
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor;
 use ReflectionClass;
 
-class ExtractorDescriptorTest extends \PHPUnit_Framework_TestCase
+class ExtractionDescriptorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests setters and getters.
      */
     public function testSetterAndGetter()
     {
-        $class = new ReflectionClass('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor');
+        $class = new ReflectionClass('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor');
         $defaultJobTypeProperty = $class->getProperty('defaultJobType');
         $defaultJobTypeProperty->setAccessible(true);
 
-        $descriptor = new ExtractorDescriptor();
+        $descriptor = new ExtractionDescriptor();
 
-        $descriptor->setDefaultJobType(ExtractorDescriptor::TYPE_FULL);
-        $this->assertEquals(ExtractorDescriptor::TYPE_FULL, $defaultJobTypeProperty->getValue($descriptor));
+        $descriptor->setDefaultJobType(ExtractionDescriptor::TYPE_FULL);
+        $this->assertEquals(ExtractionDescriptor::TYPE_FULL, $defaultJobTypeProperty->getValue($descriptor));
 
         $descriptor->setUpdateFields(['field']);
         $this->assertEquals(['field'], $descriptor->getUpdateFields());

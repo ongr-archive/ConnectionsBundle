@@ -1,5 +1,5 @@
 parameters:
-    ongr_project.extractor.descriptor.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor
+    ongr_project.extractor.descriptor.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor
     ongr_project.extractor.join_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\JoinRelation
     ongr_project.sql_relations.category.fields:
         - OXTITLE
@@ -13,7 +13,7 @@ services:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxcategories, D, OLD.OXID, 1, category]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
         calls:
             - [ addRelation, [ @ongr_project.sql_relations.category.join.articles ] ]
 
@@ -21,7 +21,7 @@ services:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxcategories, U, OLD.OXID, 1, category, %ongr_project.sql_relations.category.fields%]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
         calls:
             - [ addRelation, [ @ongr_project.sql_relations.category.join.articles ] ]
 
@@ -33,24 +33,24 @@ services:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxarticles, C, NEW.OXID, 1, product]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
 
     ongr_project.sql_relations.product.update:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxarticles, U, OLD.OXID, 1, product]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
 
     ongr_project.sql_relations.product.delete:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxarticles, D, OLD.OXID, 1, product]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
 
     ongr_project.sql_relations.category.product.update:
         class: %ongr_project.extractor.descriptor.class%
         arguments: [oxcategories, U, OLD.OXID]
         tags:
-            - { name: ongr_connections.extractor_descriptor }
+            - { name: ongr_connections.extraction_descriptor }
         calls:
             - [ addRelation, [ @ongr_project.sql_relations.category.join.articles ] ]

@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 /**
  * Interface for extraction descriptor.
  */
-interface ExtractorDescriptorInterface
+interface ExtractionDescriptorInterface
 {
     /**
      * @param string $type

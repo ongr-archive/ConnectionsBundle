@@ -18,7 +18,7 @@ use ONGR\ConnectionsBundle\Sync\JobTableFields;
 /**
  * Class for describing extractions.
  */
-class ExtractorDescriptor implements ExtractorDescriptorInterface
+class ExtractionDescriptor implements ExtractionDescriptorInterface
 {
     use SyncTrait;
 

@@ -28,7 +28,7 @@ obtain a Diff object to be stored in `synchronization storage <storage/sync_stor
 Data Sync Provide consume event listener service uses `Extractor <extractor/extractor.rst>`_ to parse the Diff object
 and `Sync Storage Provider <storage/sync_storage.rst>`_ to write the ids of changed objects.
 
-Extractor on its' own accord iterates through `extractor descriptors <descriptors/descriptors.rst>`_ to ensure that objects which are "watched" are
+Extractor on its' own accord iterates through `extraction Descriptors <descriptors/descriptors.rst>`_ to ensure that objects which are "watched" are
 included in the change list.
 
 Each Descriptor iterates through `joint relations <descriptors/descriptors.rst>`_ which ensure that the related objects

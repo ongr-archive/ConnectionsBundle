@@ -12,7 +12,7 @@
 namespace Unit\Sync\Extractor\Descriptor;
 
 use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection;
-use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor;
 
 /**
  * ExtractionCollectionTest class.
@@ -27,17 +27,17 @@ class ExtractionCollectionTest extends \PHPUnit_Framework_TestCase
         $collection = new ExtractionCollection();
         $this->assertEquals([], $collection->getDescriptors());
 
-        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $descriptor1 */
+        /** @var ExtractionDescriptor|\PHPUnit_Framework_MockObject_MockObject $descriptor1 */
         $descriptor1 = $this->getMock(
-            'ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor',
+            'ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor',
             [],
             [],
             '',
             false
         );
-        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $descriptor2 */
+        /** @var ExtractionDescriptor|\PHPUnit_Framework_MockObject_MockObject $descriptor2 */
         $descriptor2 = $this->getMock(
-            'ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor',
+            'ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor',
             [],
             [],
             '',

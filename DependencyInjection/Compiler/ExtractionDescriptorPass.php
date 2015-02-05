@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Adds services tagged as sql relation to descriptors collection.
  */
-class ExtractorDescriptorPass extends AbstractExtractorDescriptorPass implements CompilerPassInterface
+class ExtractionDescriptorPass extends AbstractExtractionDescriptorPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
@@ -28,12 +28,12 @@ class ExtractorDescriptorPass extends AbstractExtractorDescriptorPass implements
         if (!$container->hasDefinition('ongr_connections.sync.extraction_collection')) {
             return;
         }
-        $triggersManagerDefinition = $container->getDefinition('ongr_connections.sync.extraction_collection');
-        foreach ($container->findTaggedServiceIds('ongr_connections.extractor_descriptor') as $id => $tags) {
+        $collectionDefinition = $container->getDefinition('ongr_connections.sync.extraction_collection');
+        foreach ($container->findTaggedServiceIds('ongr_connections.extraction_descriptor') as $id => $tags) {
             $definition = $container->getDefinition($id);
             $definition->addMethodCall('setName', [$id]);
             $this->addParameters($container, $definition);
-            $triggersManagerDefinition->addMethodCall('addDescriptor', [new Reference($id)]);
+            $collectionDefinition->addMethodCall('addDescriptor', [new Reference($id)]);
         }
     }
 }

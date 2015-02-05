@@ -17,20 +17,20 @@ namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 class ExtractionCollection
 {
     /**
-     * @var ExtractorDescriptorInterface[]
+     * @var ExtractionDescriptorInterface[]
      */
     private $descriptors = [];
 
     /**
-     * @param ExtractorDescriptorInterface $descriptor
+     * @param ExtractionDescriptorInterface $descriptor
      */
-    public function addDescriptor(ExtractorDescriptorInterface $descriptor)
+    public function addDescriptor(ExtractionDescriptorInterface $descriptor)
     {
         $this->descriptors[] = $descriptor;
     }
 
     /**
-     * @return ExtractorDescriptorInterface[]
+     * @return ExtractionDescriptorInterface[]
      */
     public function getDescriptors()
     {
@@ -38,7 +38,7 @@ class ExtractionCollection
     }
 
     /**
-     * @param ExtractorDescriptorInterface[] $descriptors
+     * @param ExtractionDescriptorInterface[] $descriptors
      */
     public function setDescriptors($descriptors)
     {

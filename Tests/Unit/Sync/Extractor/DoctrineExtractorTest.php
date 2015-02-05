@@ -16,7 +16,7 @@ use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection;
-use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor;
 use ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor;
 use ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Sync\Extractor\InvalidDiffItem;
 use ReflectionClass;
@@ -31,8 +31,8 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
-        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $extractionCollection $descriptor */
-        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor');
+        /** @var ExtractionDescriptor|\PHPUnit_Framework_MockObject_MockObject $extractionCollection $descriptor */
+        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor');
 
         $descriptor->expects($this->any())->method('getTriggerTypeAlias')->willReturn(ActionTypes::UPDATE);
         $descriptor->expects($this->any())->method('getTable')->willReturn('table');
@@ -82,8 +82,8 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('isTrackedFieldModified');
         $method->setAccessible(true);
 
-        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $relationsCollection $descriptor */
-        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor');
+        /** @var ExtractionDescriptor|\PHPUnit_Framework_MockObject_MockObject $relationsCollection $descriptor */
+        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionDescriptor');
 
         $this->setExpectedException(
             '\InvalidArgumentException',
