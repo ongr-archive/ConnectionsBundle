@@ -53,4 +53,33 @@ interface ExtractorDescriptorInterface
      * @return string
      */
     public function getTriggerName();
+
+    /**
+     * Returns update fields.
+     *
+     * @return array
+     */
+    public function getUpdateFields();
+
+    /**
+     * Returns described table.
+     */
+    public function getTable();
+
+    /**
+     * Returns trigger type alias.
+     */
+    public function getTriggerTypeAlias();
+
+    /**
+     * Returns insert list.
+     */
+    public function getSqlInsertList();
+
+    /**
+     * Returns Descriptor relations.
+     *
+     * @return RelationInterface[]
+     */
+    public function getRelations();
 }

@@ -20,7 +20,7 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection;
-use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptorInterface;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
@@ -54,7 +54,7 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
         $connection = $this->getConnection();
         $descriptors = $this->getExtractionCollection()->getDescriptors();
         $action = $this->resolveItemAction($item);
-        /** @var ExtractorDescriptor $descriptor */
+        /** @var ExtractorDescriptorInterface $descriptor */
         foreach ($descriptors as $descriptor) {
             $table = $descriptor->getTable();
             if ($table === $item->getCategory() && $action === $descriptor->getTriggerTypeAlias()) {
@@ -227,14 +227,14 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Checks whether any of tracked fields has been modified.
      *
-     * @param BaseDiffItem        $item
-     * @param ExtractorDescriptor $relation
+     * @param BaseDiffItem                 $item
+     * @param ExtractorDescriptorInterface $relation
      *
      * @return bool
      *
      * @throws \InvalidArgumentException
      */
-    private function isTrackedFieldModified(BaseDiffItem $item, ExtractorDescriptor $relation)
+    private function isTrackedFieldModified(BaseDiffItem $item, ExtractorDescriptorInterface $relation)
     {
         if (!$item instanceof UpdateDiffItem) {
             throw new \InvalidArgumentException('Wrong diff item type. Got: ' . get_class($item));
