@@ -53,5 +53,4 @@ interface SqlRelationInterface
      * @return string
      */
     public function getTriggerName();
-
 }
