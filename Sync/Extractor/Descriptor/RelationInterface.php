@@ -19,11 +19,7 @@ interface RelationInterface
     /**
      * Returns select query.
      *
-     * Query format:
-     * First element - query in sprintf format.
-     * Other elements - query parameters.
-     *
-     * @return array
+     * @return string
      */
     public function getSelectQuery();
 
