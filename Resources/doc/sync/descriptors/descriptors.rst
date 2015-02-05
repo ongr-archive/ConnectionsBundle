@@ -37,21 +37,21 @@ Example simple extraction Descriptors setup:
         # Descriptor for category creation.
         my_project.extractor.descriptors.category.create:
             class: %ongr_connections.extractor.descriptor.class%
-            arguments: [my_categories, C, 1, category, NEW.categories_id]
+            arguments: [my_categories, C, NEW.categories_id, 1, category]
             tags:
                 - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
         # Descriptor for category update.
         my_project.extractor.descriptors.category.update:
             class: %ongr_connections.extractor.descriptor.class%
-            arguments: [my_categories, U, 1, category, NEW.categories_id]
+            arguments: [my_categories, U, NEW.categories_id, 1, category]
             tags:
                 - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
         # Descriptor for category deletion
         my_project.extractor.descriptors.category.delete:
             class: %ongr_connections.extractor.descriptor.class%
-            arguments: [my_categories, D, 1, category, OLD.categories_id]
+            arguments: [my_categories, D, OLD.categories_id, 1, category]
             tags:
                 - { name: ongr_connections.extraction_descriptor }  # This tag is used to collect all descriptors.
 
@@ -89,8 +89,26 @@ Example cascading change configuration:
 
 .. code-block:: yaml
 
-    parameters:
-        ongr_connections.extractor.join_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\JoinRelation
+    services:
+        #
+        # Create and delete descriptors omitted for brevity.
+        #
+        my_project.extractor.descriptors.category.update:
+            class: %ongr_connections.extractor.descriptor.class%
+            arguments: [my_categories, U, NEW.categories_id, 1, category]
+            tags:
+                - { name: ongr_connections.extraction_descriptor }
+            calls:
+                - [ addRelation, [ @my_project.extractor.descriptors.product.join.category ] ] # Call this relation if category is updated.
+
+        my_project.extractor.descriptors.product.join.category:
+            class: %ongr_connections.extractor.join_relation.class%
+            arguments: [my_products_to_categories AS product_to_category, product_to_category.products_id, product_to_category.categories_id=NEW.categories_id, product, U, 1]
+..
+
+Example cascading change but not effecting triggered item:
+
+.. code-block:: yaml
 
     services:
         #
@@ -98,11 +116,11 @@ Example cascading change configuration:
         #
         my_project.extractor.descriptors.category.update:
             class: %ongr_connections.extractor.descriptor.class%
-            arguments: [my_categories, U, 1, category, NEW.categories_id]
+            arguments: [my_categories, U, NEW.categories_id]
             tags:
                 - { name: ongr_connections.extraction_descriptor }
             calls:
-                - [ addRelation, [ @my_project.sql_relations.product.join.category ] ] # Call this relation if category is updated.
+                - [ addRelation, [ @my_project.extractor.descriptors.product.join.category ] ] # Call this relation if category is updated.
 
         my_project.extractor.descriptors.product.join.category:
             class: %ongr_connections.extractor.join_relation.class%

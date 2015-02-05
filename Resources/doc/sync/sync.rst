@@ -69,7 +69,7 @@ This bundle provides implementation which uses mysql database as synchronization
 Configuration
 ~~~~~~~~~~~~~
 
-See `Extraction Descriptors documentation <descriptors/sql_relations.rst>`_ for information on how to configure what should be
+See `Extraction Descriptors documentation <descriptors/descriptors.rst>`_ for information on how to configure what should be
 included in continuous synchronization.
 
 Sub-topics
