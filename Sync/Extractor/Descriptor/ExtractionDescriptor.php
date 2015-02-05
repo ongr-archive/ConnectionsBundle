@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\SyncTrait;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 
 /**
- * Class for managing simple triggers.
+ * Class for describing extractions.
  */
-class SimpleSqlRelation implements SqlRelationInterface
+class ExtractionDescriptor implements ExtractionDescriptorInterface
 {
     use SyncTrait;
 
@@ -83,22 +83,32 @@ class SimpleSqlRelation implements SqlRelationInterface
     protected $defaultJobType = self::TYPE_PARTIAL;
 
     /**
+     * @var RelationInterface[]
+     */
+    protected $relations = [];
+
+    /**
+     * @var string Name of the relation.
+     */
+    private $name;
+
+    /**
      * Constructor.
      *
      * @param string      $table        Table name to hook on.
      * @param string      $type         Trigger and default job type C - create, U - update,  D - delete.
+     * @param int|null    $idField      Source for document id.
      * @param int|null    $updateType   Partial update - 0, full update - 1.
-     * @param null        $documentType Type of target document.
-     * @param null        $idField      Source for document id.
+     * @param string|null $documentType Type of target document.
      * @param array       $trackFields  Array of table fields to track, all using default priority.
      * @param string|null $jobType      C - create, U - update,  D - delete.
      */
     public function __construct(
         $table = null,
         $type = null,
+        $idField = null,
         $updateType = self::TYPE_PARTIAL,
         $documentType = null,
-        $idField = null,
         $trackFields = [],
         $jobType = null
     ) {
@@ -260,5 +270,37 @@ class SimpleSqlRelation implements SqlRelationInterface
     public function getTriggerTypeAlias()
     {
         return $this->typeAlias;
+    }
+
+    /**
+     * @param RelationInterface $relation
+     */
+    public function addRelation(RelationInterface $relation)
+    {
+        $this->relations[] = $relation;
+    }
+
+    /**
+     * @return RelationInterface[]
+     */
+    public function getRelations()
+    {
+        return $this->relations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

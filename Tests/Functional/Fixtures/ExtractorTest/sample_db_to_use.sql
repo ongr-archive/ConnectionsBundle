@@ -1,5 +1,5 @@
 /**
- * Populates binlog with test data, introduces one second difference between insert and update statements.
+ * Populates binlog with test data, introduces one second difference between insert and update relations.
  */
 INSERT INTO `oxcategories` (OXID, OXTITLE) VALUES ('cat0', 'title1');
 UPDATE `oxcategories` SET OXTITLE='title2' WHERE OXID='cat0';

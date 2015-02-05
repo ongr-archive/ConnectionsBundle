@@ -9,21 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 /**
  * This interface defines structure for generating job insert statement.
  */
-interface JoinStatementInterface
+interface RelationInterface
 {
     /**
      * Returns select query.
      *
-     * Query format:
-     * First element - query in sprintf format.
-     * Other elements - query parameters.
-     *
-     * @return array
+     * @return string
      */
     public function getSelectQuery();
 

@@ -16,23 +16,24 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Adds services tagged as sql relation to relations collection.
+ * Adds services tagged as sql relation to descriptors collection.
  */
-class SqlRelationPass extends AbstractMySqlPass implements CompilerPassInterface
+class ExtractionDescriptorPass extends AbstractExtractionDescriptorPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('ongr_connections.sync.relations_collection')) {
+        if (!$container->hasDefinition('ongr_connections.sync.extraction_collection')) {
             return;
         }
-        $triggersManagerDefinition = $container->getDefinition('ongr_connections.sync.relations_collection');
-        foreach ($container->findTaggedServiceIds('ongr_connections.sql_relation') as $id => $tags) {
+        $collectionDefinition = $container->getDefinition('ongr_connections.sync.extraction_collection');
+        foreach ($container->findTaggedServiceIds('ongr_connections.extraction_descriptor') as $id => $tags) {
             $definition = $container->getDefinition($id);
+            $definition->addMethodCall('setName', [$id]);
             $this->addParameters($container, $definition);
-            $triggersManagerDefinition->addMethodCall('addRelation', [new Reference($id)]);
+            $collectionDefinition->addMethodCall('addDescriptor', [new Reference($id)]);
         }
     }
 }

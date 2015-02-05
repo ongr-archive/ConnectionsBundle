@@ -1,5 +1,5 @@
 /**
- * Populates binlog with test data, introduces one second difference between insert and update statements.
+ * Populates binlog with test data, introduces one second difference between insert and update relations.
  */
 CREATE TABLE `oxcategories` (
    OXID VARCHAR(100),

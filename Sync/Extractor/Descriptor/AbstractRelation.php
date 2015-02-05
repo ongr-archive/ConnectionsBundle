@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 /**
  * This class has basic methods to create sync job insert sql statement..
  */
-abstract class AbstractJoinStatement implements JoinStatementInterface
+abstract class AbstractRelation implements RelationInterface
 {
     /**
      * @var string

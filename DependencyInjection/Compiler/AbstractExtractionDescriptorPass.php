@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * Helper base class for adding MySQL parameters to the given definition.
  */
-abstract class AbstractMySqlPass
+abstract class AbstractExtractionDescriptorPass
 {
     /**
      * @param ContainerBuilder $container

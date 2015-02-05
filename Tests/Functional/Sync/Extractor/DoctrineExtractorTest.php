@@ -39,10 +39,14 @@ class DoctrineExtractorTest extends TestBase
         /** @var SyncStorageInterface|\PHPUnit_Framework_MockObject_MockObject $dummySyncStorage */
         $dummySyncStorage = $this->getMock('\ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface');
         $dummySyncStorage
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(7))
             ->method('save')
             ->withConsecutive(
+                [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'category', 'cat0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
+                [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'product', 'art0', $this->isInstanceOf('\DateTime')],
                 [ActionTypes::UPDATE, 'product', 'art1', $this->isInstanceOf('\DateTime')]
             );
@@ -58,7 +62,7 @@ class DoctrineExtractorTest extends TestBase
         $item->setTimestamp(new \DateTime());
         $extractor->extract($item);
 
-        // Should not make any saves because no tracked field updated.
+        // Should save 2 products but not category.
         $item = new UpdateDiffItem();
         $item->setCategory('oxcategories');
         $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'Category']);
@@ -66,7 +70,7 @@ class DoctrineExtractorTest extends TestBase
         $item->setTimestamp(new \DateTime());
         $extractor->extract($item);
 
-        // Should make 3 save calls.
+        // Should make 5 save calls.
         $item->setItem(['OXID' => 'cat0', 'OXTITLE' => 'CategoryNew']);
         $extractor->extract($item);
     }

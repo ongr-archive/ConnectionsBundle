@@ -1,13 +1,13 @@
 parameters:
     ongr_connections.extractor.doctrine_extractor.class: ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor
     ongr_connections.extractor.passthrough_extractor.class: ONGR\ConnectionsBundle\Sync\Extractor\PassthroughExtractor
-    ongr_connections.sync.relations_collection.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection
+    ongr_connections.sync.extraction_collection.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection
 
 services:
     ongr_connections.sync.extractor.doctrine_extractor:
         class: %ongr_connections.extractor.doctrine_extractor.class%
         calls:
-            - [ setRelationsCollection, [ @ongr_connections.sync.relations_collection ] ]
+            - [ setExtractionCollection, [ @ongr_connections.sync.extraction_collection ] ]
             - [ setConnection, [ @database_connection ] ]
             - [ setStorageFacility, [ @ongr_connections.sync.sync_storage ] ]
             - [ setContainer, [ @service_container ] ]
@@ -18,5 +18,5 @@ services:
             - [ setStorageFacility, [ @ongr_connections.sync.sync_storage ] ]
             - [ setContainer, [ @service_container ] ]
 
-    ongr_connections.sync.relations_collection:
-        class: %ongr_connections.sync.relations_collection.class%
+    ongr_connections.sync.extraction_collection:
+        class: %ongr_connections.sync.extraction_collection.class%
