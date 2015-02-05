@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 /**
  * This interface defines structure for generating job insert statement.
  */
-interface JoinStatementInterface
+interface RelationInterface
 {
     /**
      * Returns select query.

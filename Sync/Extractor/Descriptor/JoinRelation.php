@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 
 /**
  * This class creates sql statement for inserting multiple jobs by related table.
  */
-class JoinStatement extends AbstractJoinStatement
+class JoinRelation extends AbstractRelation
 {
     /**
      * @var string

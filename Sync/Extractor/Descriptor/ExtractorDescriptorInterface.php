@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 /**
- * Interface for trigger.
+ * Interface for extraction descriptor.
  */
-interface SqlRelationInterface
+interface ExtractorDescriptorInterface
 {
     /**
      * @param string $type

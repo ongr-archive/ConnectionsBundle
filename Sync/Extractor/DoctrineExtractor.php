@@ -19,8 +19,8 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
-use ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection;
-use ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
@@ -40,9 +40,9 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     private $connection;
 
     /**
-     * @var RelationsCollection
+     * @var ExtractionCollection
      */
-    private $relationsCollection;
+    private $extractionCollection;
 
     /**
      * {@inheritdoc}
@@ -52,24 +52,24 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     public function extract(BaseDiffItem $item)
     {
         $connection = $this->getConnection();
-        $relations = $this->getRelationsCollection()->getRelations();
+        $descriptors = $this->getExtractionCollection()->getDescriptors();
         $action = $this->resolveItemAction($item);
-        /** @var \ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation $relation */
-        foreach ($relations as $relation) {
-            $table = $relation->getTable();
-            if ($table === $item->getCategory() && $action === $relation->getTriggerTypeAlias()) {
+        /** @var ExtractorDescriptor $descriptor */
+        foreach ($descriptors as $descriptor) {
+            $table = $descriptor->getTable();
+            if ($table === $item->getCategory() && $action === $descriptor->getTriggerTypeAlias()) {
                 if ($action === ActionTypes::UPDATE
-                    && !$this->isTrackedFieldModified($item, $relation)
+                    && !$this->isTrackedFieldModified($item, $descriptor)
                 ) {
                     continue;
                 }
-                $insertList = $relation->getSqlInsertList();
+                $insertList = $descriptor->getSqlInsertList();
                 $idField = $insertList[JobTableFields::ID]['value'];
 
                 $idFieldName = str_replace(['OLD.', 'NEW.'], '', $idField);
                 $itemRow = $item->getItem();
 
-                $statements = $relation->getStatements();
+                $statements = $descriptor->getRelations();
 
                 if (isset($insertList[JobTableFields::TYPE]['value'])) {
                     $itemId = $itemRow[$idFieldName];
@@ -84,8 +84,8 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
                     );
                 } elseif (empty($statements)) {
                     throw new \LogicException(
-                        'Missing related statements or no document type set in relation "'
-                        . $relation->getName() . '"'
+                        'Missing relations or no document type set in descriptor "'
+                        . $descriptor->getName() . '"'
                     );
                 }
 
@@ -132,19 +132,19 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     }
 
     /**
-     * @return RelationsCollection
+     * @return ExtractionCollection
      */
-    public function getRelationsCollection()
+    public function getExtractionCollection()
     {
-        return $this->relationsCollection;
+        return $this->extractionCollection;
     }
 
     /**
-     * @param RelationsCollection $relationsCollection
+     * @param ExtractionCollection $extractionCollection
      */
-    public function setRelationsCollection($relationsCollection)
+    public function setExtractionCollection($extractionCollection)
     {
-        $this->relationsCollection = $relationsCollection;
+        $this->extractionCollection = $extractionCollection;
     }
 
     /**
@@ -227,14 +227,14 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Checks whether any of tracked fields has been modified.
      *
-     * @param BaseDiffItem $item
-     * @param SqlRelation  $relation
+     * @param BaseDiffItem        $item
+     * @param ExtractorDescriptor $relation
      *
      * @return bool
      *
      * @throws \InvalidArgumentException
      */
-    private function isTrackedFieldModified(BaseDiffItem $item, SqlRelation $relation)
+    private function isTrackedFieldModified(BaseDiffItem $item, ExtractorDescriptor $relation)
     {
         if (!$item instanceof UpdateDiffItem) {
             throw new \InvalidArgumentException('Wrong diff item type. Got: ' . get_class($item));

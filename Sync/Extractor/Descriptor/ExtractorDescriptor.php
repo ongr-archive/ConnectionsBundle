@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\ConnectionsBundle\Sync\Extractor\Relation;
+namespace ONGR\ConnectionsBundle\Sync\Extractor\Descriptor;
 
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\SyncTrait;
 use ONGR\ConnectionsBundle\Sync\JobTableFields;
 
 /**
- * Class for managing simple triggers.
+ * Class for describing extractions.
  */
-class SqlRelation implements SqlRelationInterface
+class ExtractorDescriptor implements ExtractorDescriptorInterface
 {
     use SyncTrait;
 
@@ -83,9 +83,9 @@ class SqlRelation implements SqlRelationInterface
     protected $defaultJobType = self::TYPE_PARTIAL;
 
     /**
-     * @var JoinStatementInterface[]
+     * @var RelationInterface[]
      */
-    protected $statements = [];
+    protected $relations = [];
 
     /**
      * @var string Name of the relation.
@@ -273,19 +273,19 @@ class SqlRelation implements SqlRelationInterface
     }
 
     /**
-     * @param JoinStatementInterface $statement
+     * @param RelationInterface $relation
      */
-    public function addStatement(JoinStatementInterface $statement)
+    public function addRelation(RelationInterface $relation)
     {
-        $this->statements[] = $statement;
+        $this->relations[] = $relation;
     }
 
     /**
-     * @return JoinStatementInterface[]
+     * @return RelationInterface[]
      */
-    public function getStatements()
+    public function getRelations()
     {
-        return $this->statements;
+        return $this->relations;
     }
 
     /**

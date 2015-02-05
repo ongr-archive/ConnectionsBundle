@@ -1,5 +1,5 @@
 parameters:
-    # Sql relations classes
-    ongr_connections.sql_relations.sql_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation
-    ongr_connections.sql_relations.table_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Relation\JoinStatement
+    # Sql descriptors classes
+    ongr_connections.extractor.descriptor.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor
+    ongr_connections.extractor.join_relation.class: ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\JoinRelation
 

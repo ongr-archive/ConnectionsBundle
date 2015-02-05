@@ -15,9 +15,9 @@ use Doctrine\DBAL\Connection;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection;
+use ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor;
 use ONGR\ConnectionsBundle\Sync\Extractor\DoctrineExtractor;
-use ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection;
-use ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation;
 use ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Sync\Extractor\InvalidDiffItem;
 use ReflectionClass;
 
@@ -31,20 +31,20 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
-        /** @var SqlRelation|\PHPUnit_Framework_MockObject_MockObject $relationsCollection $relation */
-        $relation = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation');
+        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $extractionCollection $descriptor */
+        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor');
 
-        $relation->expects($this->any())->method('getTriggerTypeAlias')->willReturn(ActionTypes::UPDATE);
-        $relation->expects($this->any())->method('getTable')->willReturn('table');
-        $relation->expects($this->any())->method('getName')->willReturn('relation');
+        $descriptor->expects($this->any())->method('getTriggerTypeAlias')->willReturn(ActionTypes::UPDATE);
+        $descriptor->expects($this->any())->method('getTable')->willReturn('table');
+        $descriptor->expects($this->any())->method('getName')->willReturn('descriptor');
 
-        /** @var RelationsCollection|\PHPUnit_Framework_MockObject_MockObject $relationsCollection */
-        $relationsCollection = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Relation\RelationsCollection');
-        $relationsCollection->expects($this->any())->method('getRelations')->willReturn([$relation]);
+        /** @var ExtractionCollection|\PHPUnit_Framework_MockObject_MockObject $extractionCollection */
+        $extractionCollection = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractionCollection');
+        $extractionCollection->expects($this->any())->method('getDescriptors')->willReturn([$descriptor]);
 
         $extractor = new DoctrineExtractor();
         $extractor->setConnection($connection);
-        $extractor->setRelationsCollection($relationsCollection);
+        $extractor->setExtractionCollection($extractionCollection);
 
         /** @var UpdateDiffItem|\PHPUnit_Framework_MockObject_MockObject $item */
         $item = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem');
@@ -52,7 +52,7 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(
             '\LogicException',
-            'Missing related statements or no document type set in relation "relation"'
+            'Missing relations or no document type set in descriptor "descriptor"'
         );
         $extractor->extract($item);
     }
@@ -82,14 +82,14 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('isTrackedFieldModified');
         $method->setAccessible(true);
 
-        /** @var SqlRelation|\PHPUnit_Framework_MockObject_MockObject $relationsCollection $relation */
-        $relation = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Relation\SqlRelation');
+        /** @var ExtractorDescriptor|\PHPUnit_Framework_MockObject_MockObject $relationsCollection $descriptor */
+        $descriptor = $this->getMock('ONGR\ConnectionsBundle\Sync\Extractor\Descriptor\ExtractorDescriptor');
 
         $this->setExpectedException(
             '\InvalidArgumentException',
             'Wrong diff item type. Got: ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem'
         );
 
-        $method->invoke(new DoctrineExtractor(), new CreateDiffItem(), $relation);
+        $method->invoke(new DoctrineExtractor(), new CreateDiffItem(), $descriptor);
     }
 }

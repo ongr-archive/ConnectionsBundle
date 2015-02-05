@@ -434,7 +434,7 @@ class BinlogParser implements \Iterator
     }
 
     /**
-     * Handle SQL statements.
+     * Handle SQL relations.
      *
      * @param string $line
      * @param string $type
