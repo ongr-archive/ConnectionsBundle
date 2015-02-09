@@ -157,13 +157,21 @@ class BinlogDecorator implements \Iterator
         $mapping = $this->getTableMapping($diffItem->getCategory());
 
         if (isset($buffer[BinlogParser::PARAM_QUERY]['where'])) {
-            $where = $buffer[BinlogParser::PARAM_QUERY]['where'];
-            $diffItem->setWhereParams($this->applyMapping($where, $mapping));
+            $diffItem->setWhereParams(
+                $this->applyMapping(
+                    $buffer[BinlogParser::PARAM_QUERY]['where'],
+                    $mapping
+                )
+            );
         }
 
         if (isset($buffer[BinlogParser::PARAM_QUERY]['set'])) {
-            $set = $buffer[BinlogParser::PARAM_QUERY]['set'];
-            $diffItem->setSetParams($this->applyMapping($set, $mapping));
+            $diffItem->setSetParams(
+                $this->applyMapping(
+                    $buffer[BinlogParser::PARAM_QUERY]['set'],
+                    $mapping
+                )
+            );
         }
 
         return $diffItem;
