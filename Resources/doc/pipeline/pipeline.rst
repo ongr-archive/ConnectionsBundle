@@ -65,6 +65,37 @@ for skipping (optional).
 If ``AbstractConsumeEventListener`` is used and ``ItemSkip`` is set, ``skip`` method will be called.
 Otherwise ``consume`` will be invoked.
 
+Progress bars
+-------------
+
+There are two ways to make pipeline report its' progress:
+
+Using pipeline factory
+~~~~~~~~~~~~~~~~~~~~~~
+
+Set `ProgressBar` instance for factory:
+
+.. code-block:: php
+
+    $service = $this->getContainer()->
+    $service->setProgressBar(new ProgressBar($output));
+    $service->startPipeline($prefix, $input->getArgument('target'));
+
+..
+
+Using pipeline instance
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Set `ProgressBar` instance for specific pipeline instance
+
+.. code-block:: php
+
+    $pipeline = new Pipeline('pipeline_name');
+    $pipeline->setProgressBar(new ProgressBar($output));
+    $pipeline->start();
+
+..
+
 
 Event listeners provided by ConnectionsBundle
 ---------------------------------------------

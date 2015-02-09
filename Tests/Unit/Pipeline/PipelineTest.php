@@ -79,6 +79,55 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests pipeline with progressbar.
+     *
+     * @param array $data
+     * @param int   $expectedConsumedItems
+     * @param int   $expectedSkippedItems
+     *
+     * @dataProvider PipelineData
+     */
+    public function testPipelineProgress($data, $expectedConsumedItems, $expectedSkippedItems)
+    {
+        $pipelineFactory = new PipelineFactory();
+        $pipelineFactory->setDispatcher(new EventDispatcher());
+        $pipelineFactory->setClassName('ONGR\ConnectionsBundle\Pipeline\Pipeline');
+        $expectedContext = 'This is a test of context';
+
+        $progressBar = $this
+            ->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $progressBar->expects($this->once())->method('start');
+        $progressBar->expects($this->exactly(count($data)))->method('advance');
+        $progressBar->expects($this->once())->method('finish');
+
+        $consumer = new PipelineTestConsumer();
+
+        $source = function (SourcePipelineEvent $event) use ($data, $expectedContext) {
+            $event->addSource($data);
+            $event->setContext($expectedContext);
+        };
+
+        $pipeline = $pipelineFactory->create(
+            'test',
+            [
+                'sources' => [$source],
+                'modifiers' => [[$this, 'onModify']],
+                'consumers' => [[$consumer, 'onConsume']],
+            ]
+        );
+
+        $pipeline->setProgressBar($progressBar);
+
+        $pipeline->start();
+
+        $this->assertEquals($expectedConsumedItems, $consumer->getConsumeCalled());
+        $this->assertEquals($expectedSkippedItems, $consumer->getSkipCalled());
+        $this->assertEquals($expectedContext, $pipeline->getContext());
+    }
+
+    /**
      * OnModify.
      *
      * @param ItemPipelineEvent $event
