@@ -293,9 +293,8 @@ class UrlInvalidatorService
      * Add '*' to end if string endings with '/'.
      *
      * @param string $item
-     * @param string $key
      */
-    protected function addWildcard(&$item, $key)
+    protected function addWildcard(&$item)
     {
         if (substr($item, -1) === '/') {
             $item .= '*';
