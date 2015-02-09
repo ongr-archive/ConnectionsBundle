@@ -16,6 +16,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\FinishPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Event\StartPipelineEvent;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -42,6 +43,11 @@ class Pipeline implements PipelineInterface
     private $dispatcher;
 
     /**
+     * @var ProgressBar
+     */
+    private $progressBar = null;
+
+    /**
      * {@inheritdoc}
      */
     public function start()
@@ -60,11 +66,14 @@ class Pipeline implements PipelineInterface
         $startEvent = new StartPipelineEvent();
         $startEvent->setContext($this->getContext());
         $startEvent->setItemCount($this->countSourceItems($sources));
+
         $dispatcher->dispatch(
             $this->getEventName(self::EVENT_SUFFIX_START),
             $startEvent
         );
         $this->setContext($startEvent->getContext());
+
+        $this->progressBar && $this->progressBar->start($this->countSourceItems($sources));
 
         foreach ($sources as $source) {
             foreach ($source as $item) {
@@ -87,6 +96,8 @@ class Pipeline implements PipelineInterface
                 }
 
                 $this->setContext($itemEvent->getContext());
+
+                $this->progressBar && $this->progressBar->advance();
             }
         }
 
@@ -96,6 +107,8 @@ class Pipeline implements PipelineInterface
             $this->getEventName(self::EVENT_SUFFIX_FINISH),
             $finishEvent
         );
+
+        $this->progressBar && $this->progressBar->finish();
 
         return ['outputs' => $outputs];
     }
@@ -124,6 +137,22 @@ class Pipeline implements PipelineInterface
     public function __construct($name)
     {
         $this->setName($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProgressBar()
+    {
+        return $this->progressBar;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setProgressBar($progress)
+    {
+        $this->progressBar = $progress;
     }
 
     /**

@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Pipeline;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -27,6 +28,16 @@ interface PipelineInterface
      * Execute pipeline.
      */
     public function start();
+
+    /**
+     * @return ProgressBar
+     */
+    public function getProgressBar();
+
+    /**
+     * @param ProgressBar $progress
+     */
+    public function setProgressBar($progress);
 
     /**
      * @return EventDispatcherInterface

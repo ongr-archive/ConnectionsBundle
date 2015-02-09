@@ -12,6 +12,7 @@
 namespace ONGR\ConnectionsBundle\Pipeline;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -33,6 +34,11 @@ class PipelineFactory
      * @var string
      */
     private $className;
+
+    /**
+     * @var ProgressBar
+     */
+    private $progressBar = null;
 
     /**
      * Creates pipeline and registers first listeners in dispatcher.
@@ -66,6 +72,9 @@ class PipelineFactory
         if (!$pipeline instanceof Pipeline) {
             throw new \InvalidArgumentException('Pipeline class\' name must implement PipelineInterface');
         }
+
+        $pipeline->setProgressBar($this->getProgressBar());
+
         $dispatcher = $this->getDispatcher();
         $pipeline->setDispatcher($dispatcher);
 
@@ -106,6 +115,22 @@ class PipelineFactory
     public function setDispatcher($dispatcher)
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @return ProgressBar
+     */
+    public function getProgressBar()
+    {
+        return $this->progressBar;
+    }
+
+    /**
+     * @param ProgressBar $progress
+     */
+    public function setProgressBar($progress)
+    {
+        $this->progressBar = $progress;
     }
 
     /**
