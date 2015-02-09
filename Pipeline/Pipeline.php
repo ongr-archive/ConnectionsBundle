@@ -161,7 +161,7 @@ class Pipeline implements PipelineInterface
     /**
      * Counts number of items in the services.
      *
-     * @param array[] $sources
+     * @param \Traversable[]|array[] $sources
      *
      * @return int
      */
