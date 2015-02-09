@@ -77,7 +77,7 @@ Set `ProgressBar` instance for factory:
 
 .. code-block:: php
 
-    $service = $this->getContainer()->
+    $service = $this->getContainer()->get('factory_name');
     $service->setProgressBar(new ProgressBar($output));
     $service->startPipeline($prefix, $input->getArgument('target'));
 
