@@ -126,8 +126,8 @@ class BinlogDecorator implements \Iterator
     /**
      * Applies associative mapping to numbered columns.
      *
-     * @param array $params
-     * @param array $mapping
+     * @param array      $params
+     * @param array|bool $mapping
      *
      * @return array
      */
