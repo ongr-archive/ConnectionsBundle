@@ -259,7 +259,7 @@ class UrlInvalidatorService
      * @param string            $type
      * @param DocumentInterface $document
      */
-    public function loadUrlsFromDocument($type, $document)
+    public function loadUrlsFromDocument($type, DocumentInterface $document)
     {
         if ($this->invalidateSeoUrls) {
             // Default behavior.
