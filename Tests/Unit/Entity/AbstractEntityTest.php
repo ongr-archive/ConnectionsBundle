@@ -11,11 +11,18 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Entity;
 
+use PHPUnit_Framework_MockObject_MockObject;
+
 /**
  * Abstract entity test for setters and getters.
  */
 abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string[] List of fields that should not be checked for tests.
+     */
+    private $ignoredFields = [];
+
     /**
      * Returns list of fields to test. Works as data provider.
      *
@@ -37,23 +44,47 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
      */
     protected function getIgnoredFields()
     {
-        return [];
+        return $this->ignoredFields;
+    }
+
+    /**
+     * Set list of fields that should not be checked for tests.
+     *
+     * @param string[] $fields
+     */
+    protected function setIgnoredFields(array $fields)
+    {
+        $this->ignoredFields = $fields;
+    }
+
+    /**
+     * Set list of fields that should not be checked for tests.
+     *
+     * @param string[] $field
+     */
+    protected function addIgnoredFields($field)
+    {
+        $this->ignoredFields[] = $field;
     }
 
     /**
      * Tests field setter and getter.
      *
-     * @param string      $field
-     * @param null|string $type
-     * @param null|string $addMethod
-     * @param null|string $removeMethod
-     *
-     * @throws \Exception When unknown field type given
+     * @param string        $field
+     * @param null|string   $type
+     * @param null|string   $addMethod
+     * @param null|string   $removeMethod
+     * @param null|string[] $additionalSetter
      *
      * @dataProvider getFieldsData()
      */
-    public function testSetterGetter($field, $type = null, $addMethod = null, $removeMethod = null)
-    {
+    public function testSetterGetter(
+        $field,
+        $type = null,
+        $addMethod = null,
+        $removeMethod = null,
+        $additionalSetter = null
+    ) {
         $objectClass = $this->getClassName();
 
         $setter = 'set' . ucfirst($field);
@@ -65,42 +96,43 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
         $stub = $this->getMockForAbstractClass($objectClass);
 
-        if ($addMethod) {
-            $this->assertTrue(method_exists($stub, $addMethod), "Method ${addMethod}() not found!");
-            $this->assertTrue(method_exists($stub, $getter), "Method ${getter}() not found!");
-            $this->assertTrue(method_exists($stub, $removeMethod), "Method ${removeMethod}() not found!");
-        } else {
-            $this->assertTrue(method_exists($stub, $setter), "Method ${setter}() not found!");
-            $this->assertTrue(method_exists($stub, $getter), "Method ${getter}() not found!");
-        }
+        $this->validate($stub, $getter, $setter, $addMethod, $removeMethod, $additionalSetter);
 
-        if ($type === null || $type == 'boolean') {
-            $rand = rand(0, 9999);
-            $stub->$setter($rand);
-            $this->assertEquals($rand, $stub->$getter());
-        } elseif ($type == '\DateTime') {
-            $dateTime = new \DateTime();
-            $stub->$setter($dateTime);
-            $this->assertEquals($dateTime, $stub->$getter());
-        } elseif (class_exists($type)) {
-            $childObject = $this->getMockForAbstractClass($type);
-            $hash = spl_object_hash($childObject);
+        $expectedObject = $this->getExpectedVariable($type);
+
+        if ($type && class_exists($type)) {
+            $hash = spl_object_hash($expectedObject);
 
             if ($addMethod) {
-                $stub->$addMethod($childObject);
+                $stub->$addMethod($expectedObject);
 
                 foreach ($stub->$getter() as $collectionObject) {
                     $this->assertEquals($hash, spl_object_hash($collectionObject));
                 }
+            }
 
-                $stub->$removeMethod($childObject);
+            if ($removeMethod) {
+                $stub->$removeMethod($expectedObject);
                 $this->assertEquals(0, count($stub->$getter()));
             }
 
-            $stub->$setter($childObject);
+            $stub->$setter($expectedObject);
             $this->assertEquals($hash, spl_object_hash($stub->$getter()));
         } else {
-            throw new \Exception("Unknown field type '{$type}'.");
+            $stub->$setter($expectedObject);
+            $this->assertEquals($expectedObject, $stub->$getter());
+
+            if ($addMethod) {
+                $stub->$addMethod($this->getExpectedVariable(null));
+                $this->assertEquals(2, count($stub->$getter()));
+            }
+        }
+
+        if ($additionalSetter) {
+            $stub = $this->getMockForAbstractClass($objectClass);
+            $setter = key($additionalSetter);
+            $stub->$setter($additionalSetter[$setter][0]);
+            $this->assertEquals($additionalSetter[$setter][1], $stub->$getter());
         }
     }
 
@@ -119,6 +151,26 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
             $fields[] = $property->getName();
         }
 
+        $parentClass = $reflect->getParentClass();
+        if ($parentClass) {
+            $parentClassProperties = $parentClass->getProperties();
+            /** @var \ReflectionProperty $property */
+            foreach ($parentClassProperties as $property) {
+                $this->addIgnoredFields($property->getName());
+            }
+        }
+
+        $traits = $reflect->getTraits();
+        if ($traits) {
+            foreach ($traits as $trait) {
+                $traitProperties = $trait->getProperties();
+                /** @var \ReflectionProperty $property */
+                foreach ($traitProperties as $property) {
+                    $this->addIgnoredFields($property->getName());
+                }
+            }
+        }
+
         $registeredFields = [];
 
         foreach ($this->getFieldsData() as $data) {
@@ -134,6 +186,59 @@ abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
                     implode('", "', $diff)
                 )
             );
+        }
+    }
+
+    /**
+     * Return expected variable for compare.
+     *
+     * @param null|string $type
+     *
+     * @return object
+     */
+    protected function getExpectedVariable($type)
+    {
+        if ($type === null || $type == 'boolean') {
+            return rand(0, 9999);
+        } elseif ($type == 'string') {
+            return 'string' . rand(0, 9999);
+        } elseif ($type == 'array') {
+            return [rand(0, 9999)];
+        } elseif ($type == '\DateTime') {
+            return new \DateTime();
+        } elseif (class_exists($type)) {
+            return $this->getMockForAbstractClass($type);
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate class before test.
+     *
+     * @param PHPUnit_Framework_MockObject_MockObject $stub
+     * @param null|string                             $getter
+     * @param null|string                             $setter
+     * @param null|string                             $addMethod
+     * @param null|string                             $removeMethod
+     * @param null|string[]                           $additionalSetter
+     */
+    protected function validate($stub, $getter, $setter, $addMethod, $removeMethod, $additionalSetter)
+    {
+        $this->assertTrue(method_exists($stub, $setter), "Method ${setter}() not found!");
+        $this->assertTrue(method_exists($stub, $getter), "Method ${getter}() not found!");
+
+        if ($addMethod) {
+            $this->assertTrue(method_exists($stub, $addMethod), "Method ${addMethod}() not found!");
+        }
+
+        if ($removeMethod) {
+            $this->assertTrue(method_exists($stub, $removeMethod), "Method ${removeMethod}() not found!");
+        }
+
+        if ($additionalSetter) {
+            $setter = key($additionalSetter);
+            $this->assertTrue(method_exists($stub, $setter), "Method ${setter}() not found!");
         }
     }
 }
