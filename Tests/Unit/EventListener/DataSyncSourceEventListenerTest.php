@@ -13,13 +13,13 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use ONGR\ConnectionsBundle\EventListener\DataSyncSourceEventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\AbstractDiffProvider;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class DataSyncSourceEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DiffProvider|MockObject
+     * @var AbstractDiffProvider|MockObject
      */
     private $diffProvider;
 
@@ -33,7 +33,7 @@ class DataSyncSourceEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->diffProvider = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider');
+        $this->diffProvider = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\AbstractDiffProvider');
         $this->listener = new DataSyncSourceEventListener($this->diffProvider);
     }
 

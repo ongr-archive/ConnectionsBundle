@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Command\SyncExecuteCommand;
-use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractESDoctrineTestCase;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 /**
  * Functional test for ongr:sync:execute command.
  */
-class SyncExecuteCommandTest extends ESDoctrineTestCase
+class SyncExecuteCommandTest extends AbstractESDoctrineTestCase
 {
     /**
      * Check if a document is saved as expected after collecting data from providers.

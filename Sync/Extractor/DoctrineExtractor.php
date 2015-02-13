@@ -15,7 +15,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\AbstractQuery;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\AbstractDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
@@ -49,7 +49,7 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
      *
      * @throws \LogicException
      */
-    public function extract(BaseDiffItem $item)
+    public function extract(AbstractDiffItem $item)
     {
         $connection = $this->getConnection();
         $descriptors = $this->getExtractionCollection()->getDescriptors();
@@ -150,12 +150,12 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Returns action letter depending on item class.
      *
-     * @param BaseDiffItem $item
+     * @param AbstractDiffItem $item
      *
      * @return string
      * @throws \InvalidArgumentException
      */
-    protected function resolveItemAction(BaseDiffItem $item)
+    protected function resolveItemAction(AbstractDiffItem $item)
     {
         if ($item instanceof CreateDiffItem) {
             $action = ActionTypes::CREATE;
@@ -206,11 +206,11 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Save results to storage.
      *
-     * @param BaseDiffItem $item
-     * @param Statement    $results
-     * @param string       $action
+     * @param AbstractDiffItem $item
+     * @param Statement        $results
+     * @param string           $action
      */
-    protected function saveResult(BaseDiffItem $item, Statement $results, $action = 'U')
+    protected function saveResult(AbstractDiffItem $item, Statement $results, $action = 'U')
     {
         $storage = $this->getStorageFacility();
         while ($row = $results->fetch(AbstractQuery::HYDRATE_ARRAY)) {
@@ -227,14 +227,14 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     /**
      * Checks whether any of tracked fields has been modified.
      *
-     * @param BaseDiffItem                  $item
+     * @param AbstractDiffItem              $item
      * @param ExtractionDescriptorInterface $relation
      *
      * @return bool
      *
      * @throws \InvalidArgumentException
      */
-    private function isTrackedFieldModified(BaseDiffItem $item, ExtractionDescriptorInterface $relation)
+    private function isTrackedFieldModified(AbstractDiffItem $item, ExtractionDescriptorInterface $relation)
     {
         if (!$item instanceof UpdateDiffItem) {
             throw new \InvalidArgumentException('Wrong diff item type. Got: ' . get_class($item));

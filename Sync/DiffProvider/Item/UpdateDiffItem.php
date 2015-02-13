@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Item;
 /**
  * DiffItem of "Update" type. Includes old version of an item.
  */
-class UpdateDiffItem extends BaseDiffItem
+class UpdateDiffItem extends AbstractDiffItem
 {
     /**
      * @var mixed

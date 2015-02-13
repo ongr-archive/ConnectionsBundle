@@ -11,11 +11,17 @@
 
 namespace ONGR\ConnectionsBundle\Sync\DiffProvider;
 
+use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
+
 /**
  * Responsible for collecting sync data from data source for data import and event firing.
- *
- * @deprecated since v0.6.3 and will be removed in v0.7.0 Use AbstractDiffProvider instead.
  */
-abstract class DiffProvider extends AbstractDiffProvider
+abstract class AbstractDiffProvider implements \Iterator
 {
+    /**
+     * Event listener for diff provider pipeline.
+     *
+     * @param SourcePipelineEvent $event
+     */
+    abstract public function onSource(SourcePipelineEvent $event);
 }

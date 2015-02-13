@@ -13,12 +13,12 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync;
 
 use Doctrine\DBAL\Schema\Table;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 
 /**
  * Functional test for TableManager.
  */
-class TableManagerTest extends TestBase
+class TableManagerTest extends AbstractTestCase
 {
     /**
      * Data provider for testDoCleanup().

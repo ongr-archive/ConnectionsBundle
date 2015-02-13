@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Item;
 /**
  * DiffItem of "Delete" type.
  */
-class DeleteDiffItem extends BaseDiffItem
+class DeleteDiffItem extends AbstractDiffItem
 {
     /**
      * {@inheritdoc}

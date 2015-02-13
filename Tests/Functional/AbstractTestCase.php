@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base function test class.
  */
-abstract class TestBase extends WebTestCase
+abstract class AbstractTestCase extends WebTestCase
 {
     /**
      * @var ContainerInterface

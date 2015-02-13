@@ -13,12 +13,12 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
 use ONGR\ConnectionsBundle\Service\UrlInvalidatorService;
 use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 
 /**
  * Functional test for url invalidator service.
  */
-class UrlInvalidatorServiceTest extends TestBase
+class UrlInvalidatorServiceTest extends AbstractTestCase
 {
     /**
      * @return array

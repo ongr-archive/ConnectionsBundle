@@ -14,14 +14,14 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 use Doctrine\DBAL\Schema\Table;
 use ONGR\ConnectionsBundle\Command\SyncStorageCreateCommand;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * Integration test for ongr:sync:storage:create command.
  */
-class SyncStorageCreateCommandTest extends TestBase
+class SyncStorageCreateCommandTest extends AbstractTestCase
 {
     /**
      * @var \Symfony\Component\Console\Command\Command

@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base function test class. Sets up both Doctrine and Elasticsearch environments for tests.
  */
-abstract class ESDoctrineTestCase extends ElasticsearchTestCase
+abstract class AbstractESDoctrineTestCase extends ElasticsearchTestCase
 {
     /**
      * @var ContainerInterface
