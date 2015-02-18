@@ -35,9 +35,22 @@ class SyncProvideCommandTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $factory = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineFactory')
+            ->setMethods(['setProgressBar'])
+            ->getMock();
+        $factory
+            ->method('setProgressBar')
+            ->will($this->returnValue(null));
+
         $this->pipelineStarter = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->pipelineStarter->setPipelineFactory($factory);
+
+        $this->pipelineStarter
+            ->method('getPipelineFactory')
+            ->will($this->returnValue($factory));
     }
 
     /**
