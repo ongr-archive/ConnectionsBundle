@@ -13,6 +13,7 @@ namespace ONGR\ConnectionsBundle\Command;
 
 use ONGR\ConnectionsBundle\Pipeline\PipelineStarter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,6 +55,8 @@ abstract class AbstractStartServiceCommand extends ContainerAwareCommand
 
         /** @var PipelineStarter $service */
         $service = $this->getContainer()->get($serviceClass);
+        $factory = $service->getPipelineFactory();
+        $factory->setProgressBar(new ProgressBar($output));
         $service->startPipeline($prefix, $input->getArgument('target'));
 
         $benchmark->finish();

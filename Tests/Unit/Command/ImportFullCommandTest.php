@@ -23,10 +23,22 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommand()
     {
-        $import = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
-            ->setMethods(['startPipeline'])
+        $factory = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineFactory')
+            ->setMethods(['setProgressBar'])
             ->getMock();
-        $import->expects($this->once())->method('startPipeline')->will($this->returnValue(null));
+        $factory->expects($this->once())->method('setProgressBar')->will($this->returnValue(null));
+
+        $import = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
+            ->setMethods(['getPipelineFactory', 'startPipeline', 'setPipelineFactory'])
+            ->getMock();
+
+        $import->setPipelineFactory($factory);
+
+        $import
+            ->expects($this->once())
+            ->method('getPipelineFactory')
+            ->will($this->returnValue($factory));
+
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $import);
         $command = new ImportFullCommand();
@@ -47,14 +59,21 @@ class ImportFullCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommandWithTargetParameter()
     {
-        $initialSync = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
-            ->setMethods(['startPipeline'])
+        $factory = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineFactory')
+            ->setMethods(['setProgressBar'])
             ->getMock();
+        $factory->expects($this->once())->method('setProgressBar')->will($this->returnValue(null));
+
+        $initialSync = $this->getMockBuilder('ONGR\ConnectionsBundle\Pipeline\PipelineStarter')
+            ->setMethods(['getPipelineFactory', 'startPipeline', 'setPipelineFactory'])
+            ->getMock();
+
+        $initialSync->setPipelineFactory($factory);
+
         $initialSync
             ->expects($this->once())
-            ->method('startPipeline')
-            ->with('import.', ['test'])
-            ->will($this->returnValue(null));
+            ->method('getPipelineFactory')
+            ->will($this->returnValue($factory));
 
         $container = new ContainerBuilder();
         $container->set('ongr_connections.import_service', $initialSync);
