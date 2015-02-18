@@ -7,7 +7,7 @@ Configuration
 
 Please configure your item url invalidator events as follows (or see test configuration for an example):
 
-.. code-block:: php
+.. code-block:: yaml
 
     my.item_url_invalidator:
         class: %my.item_url_invalidator.class%
