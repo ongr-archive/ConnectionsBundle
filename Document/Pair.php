@@ -12,18 +12,15 @@
 namespace ONGR\ConnectionsBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
+use ONGR\ElasticsearchBundle\Document\AbstractDocument;
 
 /**
  * Represents key / value pair, key is also document id.
  *
  * @ES\Document(type="pair")
  */
-class Pair implements DocumentInterface
+class Pair extends AbstractDocument
 {
-    use DocumentTrait;
-
     /**
      * @var string Serialized stored value.
      *
