@@ -15,13 +15,13 @@ use DateTime;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\StorageManagerInterface;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Functional test for SyncStorage.
  */
-class SyncStorageTest extends TestBase
+class SyncStorageTest extends AbstractTestCase
 {
     /**
      * @var StorageManagerInterface|MockObject

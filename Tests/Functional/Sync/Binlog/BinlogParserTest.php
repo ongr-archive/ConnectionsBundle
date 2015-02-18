@@ -13,13 +13,13 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\Binlog;
 
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Functional test for binary log parser.
  */
-class BinlogParserTest extends TestBase
+class BinlogParserTest extends AbstractTestCase
 {
     /**
      * Clear logs before each test.

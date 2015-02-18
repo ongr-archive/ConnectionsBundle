@@ -15,9 +15,9 @@ use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 
-class DoctrineExtractorTest extends TestBase
+class DoctrineExtractorTest extends AbstractTestCase
 {
     /**
      * Test extraction service to insert updates to SyncStorage.

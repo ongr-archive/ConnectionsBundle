@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base function test class.
  */
-abstract class TestBase extends WebTestCase
+abstract class AbstractTestCase extends WebTestCase
 {
     /**
      * @var string
@@ -235,5 +235,33 @@ abstract class TestBase extends WebTestCase
     protected static function getRootDir($container)
     {
         return $container->get('kernel')->getRootDir();
+    }
+
+    /**
+     * Return an array of elements required for testing.
+     *
+     * @param array  $ids
+     * @param string $repository
+     *
+     * @return Object[]
+     */
+    protected function getTestElements(array $ids, $repository)
+    {
+        $items = [];
+        $entityManager = $this->getEntityManager();
+        $rep = $entityManager->getRepository($repository);
+        foreach ($ids as $id) {
+            if (is_array($id)) {
+                $element = $rep->findBy($id);
+            } else {
+                $element = $rep->find($id);
+            }
+
+            if ($element !== null) {
+                $items[] = $element;
+            }
+        }
+
+        return $items;
     }
 }
