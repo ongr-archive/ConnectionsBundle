@@ -14,9 +14,9 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Sync\SyncStorage\StorageManage
 use DateTime;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
-use ONGR\ConnectionsBundle\Tests\Functional\TestBase;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
 
-class MysqlStorageManagerTest extends TestBase
+class MysqlStorageManagerTest extends AbstractTestCase
 {
     const TABLE_NAME = 'sync_storage_test_storage';
 
