@@ -70,7 +70,7 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
         if (!isset($tempSyncStorageData['type'])) {
             $this->log(
                 sprintf('No operation type defined for document id: %s', $this->importItem->getDocument()->getId()),
-                LogLevel::NOTICE
+                LogLevel::ERROR
             );
 
             return false;

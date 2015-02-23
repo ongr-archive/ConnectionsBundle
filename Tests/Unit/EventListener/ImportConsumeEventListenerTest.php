@@ -12,10 +12,10 @@
 namespace ONGR\ConnectionsBundle\Tests\Unit\EventListener;
 
 use ONGR\ConnectionsBundle\EventListener\ImportConsumeEventListener;
-use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
-use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
+use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Bundles\Acme\TestBundle\Document\Product;
+use ONGR\ConnectionsBundle\Tests\Functional\Fixtures\ImportCommandTest\TestProduct;
 use Psr\Log\LogLevel;
 
 class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
@@ -24,13 +24,12 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
      * Tests what notices are provided to logger in different cases.
      *
      * @param mixed  $eventItem
-     * @param string $notice
-     *
-     * @return void
+     * @param string $message
+     * @param string $level
      *
      * @dataProvider onConsumeDataProvider
      */
-    public function testOnConsume($eventItem, $notice)
+    public function testOnConsume($eventItem, $message, $level)
     {
         $manager = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Manager')
             ->disableOriginalConstructor()
@@ -42,7 +41,7 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
         $logger->expects($this->once())
             ->method('log')
-            ->with(LogLevel::NOTICE, $this->equalTo($notice), []);
+            ->with($level, $this->equalTo($message), []);
 
         $listener = new ImportConsumeEventListener($manager);
 
@@ -63,10 +62,12 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             [
                 new ImportItem(new TestProduct(), new Product()),
                 'No document id found. Update skipped.',
+                LogLevel::NOTICE,
             ],
             [
                 new \stdClass,
                 'Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\ImportItem',
+                LogLevel::ERROR,
             ],
         ];
     }

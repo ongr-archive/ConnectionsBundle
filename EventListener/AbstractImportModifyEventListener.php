@@ -11,9 +11,9 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Log\EventLoggerAwareTrait;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
+use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
@@ -45,7 +45,7 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
                 $this->modify($item, $event);
             }
         } else {
-            $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::NOTICE);
+            $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::ERROR);
         }
     }
 
