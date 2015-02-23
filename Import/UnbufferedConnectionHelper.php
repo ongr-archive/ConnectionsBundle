@@ -29,7 +29,7 @@ class UnbufferedConnectionHelper
      *
      * @throws InvalidArgumentException
      */
-    public static function unbufferConnection(Connection &$connection)
+    public static function unbufferConnection(Connection $connection)
     {
         /** @var PDOConnection $wrappedConnection */
         $wrappedConnection = $connection->getWrappedConnection();
