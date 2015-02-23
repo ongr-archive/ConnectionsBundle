@@ -15,6 +15,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Unit test for MysqlStorageManagerTest.
@@ -34,6 +35,11 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
+     * @var ContainerInterface|MockObject
+     */
+    private $container;
+
+    /**
      * Set-up services before each test.
      */
     protected function setUp()
@@ -42,6 +48,31 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->service = new MysqlStorageManager($this->connection, self::TABLE_NAME);
+
+        $this->container = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $this->container->expects($this->any())->method('getParameter')->will(
+            $this->returnCallback(
+                function ($parameter) {
+                    if ($parameter == 'ongr_connections.active_shop') {
+                        return 'test_default';
+                    } elseif ($parameter == 'ongr_connections.shops') {
+                        return [
+                            'test_default' => ['shop_id' => 0],
+                            'test' => ['shop_id' => 1],
+                            'test2' => ['shop_id' => 2],
+                            'test12345' => ['shop_id' => 12345],
+                            'string_id' => ['shop_id' => 'string'],
+                            'inject' => ['shop_id' => '\';inject'],
+                        ];
+                    }
+
+                    return null;
+                }
+            )
+        );
+
+        $this->service->setContainer($this->container);
     }
 
     /**
@@ -49,7 +80,7 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateStorageTableAlreadyExists()
     {
-        $shopId = 123;
+        $shopId = 1;
 
         $schemaManager = $this->getMockBuilder('\Doctrine\DBAL\Schema\AbstractSchemaManager')
             ->disableOriginalConstructor()
@@ -74,7 +105,7 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateStorageTableDoesNotExist()
     {
-        $shopId = 123;
+        $shopId = 0;
 
         $schemaManager = $this->getMockBuilder('\Doctrine\DBAL\Schema\AbstractSchemaManager')
             ->disableOriginalConstructor()
@@ -107,12 +138,23 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
             1 => self::TABLE_NAME . '_' . 1,
             2 => self::TABLE_NAME . '_' . 2,
             12345 => self::TABLE_NAME . '_' . 12345,
+            'string' => self::TABLE_NAME . '_string',
         ];
 
         foreach ($tableNameAssertions as $shopId => $expectedTableName) {
             $actualTableName = $this->service->getTableName($shopId);
             $this->assertEquals($expectedTableName, $actualTableName);
         }
+    }
+
+    /**
+     * Tests exception with invalid id.
+     */
+    public function testGetTableNameException()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Shop id "invalid_id" is invalid.');
+
+        $this->service->getTableName('invalid_id');
     }
 
     /**
@@ -124,7 +166,7 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->connection->expects($this->once())
             ->method('delete')
-            ->with(self::TABLE_NAME, ['id' => $testRecordId]);
+            ->with(self::TABLE_NAME . '_0', ['id' => $testRecordId]);
 
         $this->service->removeRecord($testRecordId);
     }
@@ -138,7 +180,7 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->connection->expects($this->once())
             ->method('delete')
-            ->with(self::TABLE_NAME, ['id' => $testRecordId])
+            ->with(self::TABLE_NAME . '_0', ['id' => $testRecordId])
             ->will($this->throwException(new \Exception('Connection is not working')));
 
         $this->service->removeRecord($testRecordId);
@@ -185,5 +227,15 @@ class MysqlStorageManagerTest extends \PHPUnit_Framework_TestCase
         $table->addUniqueIndex(['type', 'document_type', 'document_id', 'status']);
 
         return $table;
+    }
+
+    /**
+     * Test possible SQL injection in shop id.
+     */
+    public function testInvalidShopId()
+    {
+        $id = '\';inject';
+        $this->setExpectedException('InvalidArgumentException', "Shop id \"{$id}\" is invalid.");
+        $this->service->getTableName($id);
     }
 }

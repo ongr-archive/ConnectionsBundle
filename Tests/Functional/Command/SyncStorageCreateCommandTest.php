@@ -43,7 +43,7 @@ class SyncStorageCreateCommandTest extends AbstractTestCase
      */
     public function testExecuteWithShopId()
     {
-        $testShopId = 14;
+        $testShopId = 12345;
 
         $commandTester = new CommandTester($this->executeCommand);
         $commandTester->execute(
@@ -77,7 +77,7 @@ class SyncStorageCreateCommandTest extends AbstractTestCase
      */
     public function testExecuteWithoutShopId()
     {
-        $defaultStorage = 'ongr_sync_storage';
+        $defaultStorage = 'ongr_sync_storage_0';
 
         $commandTester = new CommandTester($this->executeCommand);
         $commandTester->execute(

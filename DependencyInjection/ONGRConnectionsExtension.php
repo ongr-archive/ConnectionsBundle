@@ -116,10 +116,11 @@ class ONGRConnectionsExtension extends Extension
             ]
         );
 
+        $definition->addMethodCall('setContainer', [new Reference('service_container')]);
+
         // Initiate SyncStorage and inject storage manager into it.
-        $definition = $container->getDefinition('ongr_connections.sync.sync_storage');
-        $definition->setArguments(
-            [$container->getDefinition('ongr_connections.sync.storage_manager.mysql_storage_manager')]
+        $container->getDefinition('ongr_connections.sync.sync_storage')->setArguments(
+            [$definition]
         );
     }
 }
