@@ -25,18 +25,24 @@ class UnbufferedConnectionHelperTest extends ESDoctrineTestCase
         $this->importData('Import/stress.sql');
 
         UnbufferedConnectionHelper::unbufferConnection($this->getConnection());
-        $statement = new Statement('SELECT * FROM generator_64k', $this->getConnection());
-        $statement->execute();
-        $memoryUsageUnbuffered = memory_get_usage();
         $this->getConnection()->close();
 
+        $bufferredTimeStart = microtime();
         $statementBuff = new Statement('SELECT * FROM generator_64k', $this->getConnection());
         $statementBuff->execute();
-        $memoryUsageBuffered = memory_get_usage();
+        $bufferredTime = microtime() - $bufferredTimeStart;
+        $this->getConnection()->close();
+
+        UnbufferedConnectionHelper::unbufferConnection($this->getConnection());
+        $unBufferredTimeStart = microtime();
+        $statement = new Statement('SELECT * FROM generator_64k', $this->getConnection());
+        $statement->execute();
+        $unBufferedTime = microtime() - $unBufferredTimeStart;
+        $this->getConnection()->close();
 
         $this->assertTrue(
-            $memoryUsageBuffered > $memoryUsageUnbuffered,
-            'Unbuffered query should produce lower memory usage.'
+            $unBufferedTime < $bufferredTime,
+            'Unbuffered query should return faster after execute().'
         );
     }
 }
