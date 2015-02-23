@@ -22,9 +22,9 @@ interface DocumentUrlCollectorInterface
     /**
      * Get all possible document URLs.
      *
-     * @param string                          $type
-     * @param SeoAwareInterface               $document
-     * @param RouterInterface                 $router
+     * @param string            $type
+     * @param SeoAwareInterface $document
+     * @param RouterInterface   $router
      *
      * @return array
      */
@@ -33,7 +33,7 @@ interface DocumentUrlCollectorInterface
     /**
      * Get related documents parameters.
      *
-     * @param string        $type
+     * @param string            $type
      * @param SeoAwareInterface $document
      *
      * @return array

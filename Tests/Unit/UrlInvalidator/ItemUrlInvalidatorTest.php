@@ -23,8 +23,8 @@ class ItemUrlInvalidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests AbstractItemUrlInvalidator.
      */
-    public function testItemUrlInvalidator() {
-
+    public function testItemUrlInvalidator()
+    {
         /** @var RouterInterface|\PHPUnit_Framework_MockObject_MockObject $router */
         $router = $this->getMockForAbstractClass('Symfony\Component\Routing\RouterInterface');
 
