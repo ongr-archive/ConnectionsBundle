@@ -15,6 +15,10 @@ Running sync import
 
 Use `Sync Import command <../commands/sync_execute_command.rst>`_ to run sync import.
 
+Importing large data sets
+-------------------------
+
+See `HELP! I am out of memory! <memory_problems.rst>`_ for memory consumption problems that can be solved.
 
 Implementing your data import
 -----------------------------
@@ -294,3 +298,4 @@ as well as
 
         internals/doctrine_import_iterator
         internals/import_item
+        internals/unbuffered_connection_helper
