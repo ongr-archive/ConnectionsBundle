@@ -53,6 +53,8 @@ class PassthroughExtractorTest extends AbstractTestCase
         parent::setUp();
 
         $this->storageManager = new MysqlStorageManager($this->getConnection(), self::TABLE_NAME);
+        $this->storageManager->setContainer($this->getServiceContainer());
+
         $this->syncStorage = new SyncStorage($this->storageManager);
 
         $this->extractor = new PassthroughExtractor();

@@ -76,3 +76,12 @@ ongr_elasticsearch:
             connection: bar
             mappings:
                 - ONGRElasticsearchBundle
+
+ongr_connections:
+    shops:
+        default:
+            shop_id: 0
+        other:
+            shop_id: 1
+        shop_12345:
+            shop_id: 12345

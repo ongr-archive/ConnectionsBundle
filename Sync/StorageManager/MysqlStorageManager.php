@@ -12,18 +12,25 @@
 namespace ONGR\ConnectionsBundle\Sync\StorageManager;
 
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\SyncJobs\TableManager;
+use ONGR\ConnectionsBundle\Sync\SqlValidator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The service to create/update database table and manipulate its data for SyncStorage.
  */
 class MysqlStorageManager extends TableManager implements StorageManagerInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     /**
      * {@inheritdoc}
      */
@@ -77,7 +84,7 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     /**
      * Returns table name for specified shop.
      *
-     * @param int $shopId
+     * @param int|null $shopId If null will use active shop.
      *
      * @throws InvalidArgumentException
      *
@@ -87,8 +94,20 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
     {
         $tableName = parent::getTableName();
 
-        if ($shopId !== null) {
-            $tableName .= '_' . $shopId;
+        if ($shopId === null) {
+            $shopId = $this->getActiveShopId();
+        }
+
+        if (!$this->isShopValid($shopId)) {
+            throw new InvalidArgumentException("Shop id \"{$shopId}\" is invalid.");
+        }
+
+        $tableName .= '_' . $shopId;
+
+        try {
+            SqlValidator::validateTableName($tableName);
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidArgumentException("Shop id \"{$shopId}\" is invalid.", 0, $e);
         }
 
         return $tableName;
@@ -321,5 +340,56 @@ class MysqlStorageManager extends TableManager implements StorageManagerInterfac
         foreach ($entries as $entry) {
             $this->removeRecord($entry['id'], [$shopId]);
         }
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     * @return $this
+     */
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
+     * Returns active shop id.
+     *
+     * @return string
+     */
+    public function getActiveShopId()
+    {
+        $shop = $this->getContainer()->getParameter('ongr_connections.active_shop');
+
+        return $this->getContainer()->getParameter('ongr_connections.shops')[$shop]['shop_id'];
+    }
+
+    /**
+     * Checks whether shop exists.
+     *
+     * @param string $shopId
+     *
+     * @return bool
+     */
+    public function isShopValid($shopId)
+    {
+        $shops = $this->getContainer()->getParameter('ongr_connections.shops');
+        foreach ($shops as $meta) {
+            if ($meta['shop_id'] === $shopId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

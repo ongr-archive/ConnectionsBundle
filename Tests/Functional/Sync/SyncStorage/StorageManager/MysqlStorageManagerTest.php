@@ -33,6 +33,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
         parent::setUp();
 
         $this->service = new MysqlStorageManager($this->getConnection(), self::TABLE_NAME);
+        $this->service->setContainer($this->getServiceContainer());
     }
 
     /**
@@ -44,6 +45,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
 
         $this->setExpectedException('\InvalidArgumentException', "Invalid table name specified: \"$tableName\"");
         $service = new MysqlStorageManager($this->getConnection(), $tableName);
+        $service->setContainer($this->getServiceContainer());
         $service->getTableName();
     }
 
@@ -52,12 +54,12 @@ class MysqlStorageManagerTest extends AbstractTestCase
      */
     public function testCreateStorage()
     {
-        $this->service->createStorage(15);
-        $this->assertTrue($this->getConnection()->getSchemaManager()->tablesExist([self::TABLE_NAME . '_' . 15]));
+        $this->service->createStorage(12345);
+        $this->assertTrue($this->getConnection()->getSchemaManager()->tablesExist([self::TABLE_NAME . '_' . 12345]));
         $this->assertFalse($this->getConnection()->getSchemaManager()->tablesExist([self::TABLE_NAME]));
 
         $this->service->createStorage();
-        $this->assertTrue($this->getConnection()->getSchemaManager()->tablesExist([self::TABLE_NAME]));
+        $this->assertTrue($this->getConnection()->getSchemaManager()->tablesExist([self::TABLE_NAME . '_0']));
     }
 
     /**
@@ -78,7 +80,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
         $this->addRecords($expected);
 
         $actual = (object)$this->getConnection()->fetchAssoc(
-            'SELECT * FROM ' . self::TABLE_NAME . ' WHERE
+            'SELECT * FROM ' . self::TABLE_NAME . '_0 WHERE
                 `type` = :operationType
                 AND `document_type` = :documentType
                 AND `document_id` = :documentId
@@ -103,7 +105,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
      */
     public function testAddDuplicateRecords()
     {
-        $shopIds = [1, 2, 3];
+        $shopIds = [0, 1, 12345];
 
         $records = [
             (object)[
@@ -167,7 +169,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
      */
     public function testRemoveRecord()
     {
-        $shopIds = [1, 2, 3];
+        $shopIds = [0, 1, 12345];
 
         $records = [
             (object)[
@@ -256,7 +258,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
         $this->addRecords($processedRecords);
         $updatedRecords = $this->getConnection()
             ->executeUpdate(
-                'UPDATE `' . self::TABLE_NAME . '`
+                'UPDATE `' . self::TABLE_NAME . '_0`
                 SET status = :status',
                 ['status' => 1]
             );
@@ -352,7 +354,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
         }
 
         $documents = $this->getConnection()->fetchAll(
-            'SELECT * FROM `' . self::TABLE_NAME . '`
+            'SELECT * FROM `' . self::TABLE_NAME . '_0`
             WHERE `document_type` = :documentType',
             ['documentType' => 'product']
         );
@@ -466,7 +468,7 @@ class MysqlStorageManagerTest extends AbstractTestCase
         $this->addRecords($processedRecords);
 
         $actualyRecords = $this->getConnection()->fetchAll(
-            'SELECT * FROM `' . self::TABLE_NAME . '`
+            'SELECT * FROM `' . self::TABLE_NAME . '_0`
             WHERE `document_type` = :documentType',
             ['documentType' => 'product']
         );
@@ -490,5 +492,17 @@ class MysqlStorageManagerTest extends AbstractTestCase
                 isset($record->shopIds) ? $record->shopIds : null
             );
         }
+    }
+
+    /**
+     * Tests if shop validation works.
+     */
+    public function testIsShopValid()
+    {
+        $this->assertFalse($this->service->isShopValid(null));
+        $this->assertFalse($this->service->isShopValid('invalid_id'));
+        $this->assertTrue($this->service->isShopValid(1));
+        $default = $this->service->getActiveShopId();
+        $this->assertTrue($this->service->isShopValid($default));
     }
 }
