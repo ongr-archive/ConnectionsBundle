@@ -23,13 +23,12 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
      * Tests what notices are provided to logger in different cases.
      *
      * @param mixed  $eventItem
-     * @param string $notice
-     *
-     * @return void
+     * @param string $message
+     * @param string $level
      *
      * @dataProvider onModifyDataProvider
      */
-    public function testOnConsume($eventItem, $notice)
+    public function testOnConsume($eventItem, $message, $level)
     {
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
             ->setMethods(['log'])
@@ -37,7 +36,7 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
 
         $logger->expects($this->once())
             ->method('log')
-            ->with(LogLevel::NOTICE, $this->equalTo($notice), []);
+            ->with($level, $this->equalTo($message), []);
 
         $listener = $this->getMockBuilder('ONGR\ConnectionsBundle\EventListener\AbstractImportModifyEventListener')
             ->getMockForAbstractClass();
@@ -59,6 +58,7 @@ class AbstractImportModifyEventListenerTest extends \PHPUnit_Framework_TestCase
             [
                 new \stdClass,
                 'The type of provided item is not ImportItem or SyncExecuteItem.',
+                LogLevel::ERROR,
             ],
         ];
     }

@@ -101,7 +101,7 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
         $tempItem = $event->getItem();
 
         if (!$tempItem instanceof $this->importItemClass) {
-            $this->log("Item provided is not an {$this->importItemClass}", LogLevel::NOTICE);
+            $this->log("Item provided is not an {$this->importItemClass}", LogLevel::ERROR);
 
             return false;
         }

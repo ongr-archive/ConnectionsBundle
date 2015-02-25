@@ -198,7 +198,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             [
                 'document_type' => 'product',
                 'event_item' => new SyncExecuteItem(new TestProduct(), $product, []),
-                'logger_notice' => [["No operation type defined for document id: {$documentId}", LogLevel::NOTICE]],
+                'logger_notice' => [["No operation type defined for document id: {$documentId}", LogLevel::ERROR]],
                 'managerMethod' => null,
             ],
             [
@@ -211,7 +211,7 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
                 'document_type' => 'product',
                 'event_item' => new \stdClass,
                 'logger_notice' => [
-                    ['Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem', LogLevel::NOTICE],
+                    ['Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem', LogLevel::ERROR],
                 ],
                 'managerMethod' => null,
             ],
