@@ -13,8 +13,9 @@ namespace ONGR\ConnectionsBundle\Tests\Unit\UrlInvalidator;
 
 use ONGR\ConnectionsBundle\UrlInvalidator\DocumentUrlCollectorInterface;
 use ONGR\ConnectionsBundle\UrlInvalidator\UrlInvalidatorService;
-use ONGR\ConnectionsBundle\Tests\Model\ProductModel;
 use ONGR\ElasticsearchBundle\ORM\Manager;
+use ONGR\RouterBundle\Document\SeoAwareInterface;
+use ONGR\RouterBundle\Document\UrlObject;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -86,19 +87,46 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Gets SeoAware document mock.
+     *
+     * @param array $urls
+     *
+     * @return SeoAwareInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getSeoDocumentMock(array $urls = [])
+    {
+        $urlObjects = [];
+        foreach ($urls as $key => $url) {
+            /** @var UrlObject|\PHPUnit_Framework_MockObject_MockObject $urlObject */
+            $urlObject = $this->getMock('ONGR\RouterBundle\Document\UrlObject');
+            $urlObject->expects($this->any())->method('getUrl')->willReturn($url);
+            $urlObject->expects($this->any())->method('getKey')->willReturn($key);
+
+            $urlObjects[] = $urlObject;
+        }
+
+        /** @var SeoAwareInterface|\PHPUnit_Framework_MockObject_MockObject $document */
+        $document = $this->getMockForAbstractClass('ONGR\RouterBundle\Document\SeoAwareInterface');
+        $document->expects($this->any())->method('getUrls')->willReturn($urlObjects);
+
+        return $document;
+    }
+
+    /**
      * Test if documents are fetched correctly.
      */
     public function testDocumentUrls()
     {
         $service = $this->getUrlInvalidatorServiceMock();
 
-        $doc = new ProductModel(null);
-        $doc->url = [
-            ['url' => 'test-url-1.html', 'key' => 't1'],
-            ['url' => 'test-url-2.html', 'key' => 't2'],
-        ];
+        $document = $this->getSeoDocumentMock(
+            [
+                't1' => 'test-url-1.html',
+                't2' => 'test-url-2.html',
+            ]
+        );
 
-        $service->loadUrlsFromDocument('content', $doc);
+        $service->loadUrlsFromDocument('content', $document);
         $file = $service->createUrlsTempFile();
 
         $this->assertStringEqualsFile($file, '');
@@ -113,18 +141,19 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
     {
         $service = $this->getUrlInvalidatorServiceMock();
 
-        $doc = new ProductModel(null);
-        $doc->url = [
-            ['url' => 'test-url-1.html', 'key' => 't1'],
-            ['url' => 'test-url-2.html', 'key' => 't2'],
-        ];
+        $document = $this->getSeoDocumentMock(
+            [
+                't1' => 'test-url-1.html',
+                't2' => 'test-url-2.html',
+            ]
+        );
 
         $collector = $this->getDocumentUrlCollectorMock(
             ['collector-generated-url-1.html']
         );
 
         $service->addUrlCollector($collector);
-        $service->loadUrlsFromDocument('content', $doc);
+        $service->loadUrlsFromDocument('content', $document);
         $file = $service->createUrlsTempFile();
 
         $this->assertStringEqualsFile(
@@ -145,11 +174,12 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
     {
         $service = $this->getUrlInvalidatorServiceMock();
 
-        $doc = new ProductModel(null);
-        $doc->url = [
-            ['url' => 'test-url-1.html', 'key' => 't1'],
-            ['url' => 'test-url-2.html', 'key' => 't2'],
-        ];
+        $document = $this->getSeoDocumentMock(
+            [
+                't1' => 'test-url-1.html',
+                't2' => 'test-url-2.html',
+            ]
+        );
 
         $collector = $this->getDocumentUrlCollectorMock(
             [],
@@ -161,7 +191,7 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
         );
 
         $service->addUrlCollector($collector);
-        $service->loadUrlsFromDocument('content', $doc);
+        $service->loadUrlsFromDocument('content', $document);
         $service->loadUrlsByType('test');
         $file = $service->createUrlsTempFile();
 
@@ -186,13 +216,14 @@ class UrlInvalidatorServiceTest extends \PHPUnit_Framework_TestCase
     {
         $service = $this->getUrlInvalidatorServiceMock(true);
 
-        $doc = new ProductModel(null);
-        $doc->url = [
-            ['url' => 'test-url-1.html', 'key' => 't1'],
-            ['url' => 'test-url-2.html', 'key' => 't2'],
-        ];
+        $document = $this->getSeoDocumentMock(
+            [
+                't1' => 'test-url-1.html',
+                't2' => 'test-url-2.html',
+            ]
+        );
 
-        $service->loadUrlsFromDocument('content', $doc);
+        $service->loadUrlsFromDocument('content', $document);
         $file = $service->createUrlsTempFile();
 
         $this->assertStringEqualsFile(

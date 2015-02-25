@@ -11,11 +11,12 @@
 
 namespace ONGR\ConnectionsBundle\UrlInvalidator;
 
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\DSL\Filter\LimitFilter;
 use ONGR\ElasticsearchBundle\DSL\Query\Query;
 use ONGR\ElasticsearchBundle\DSL\Query\TermQuery;
 use ONGR\ElasticsearchBundle\ORM\Manager;
+use ONGR\RouterBundle\Document\SeoAwareInterface;
+use ONGR\RouterBundle\Document\UrlObject;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -257,16 +258,18 @@ class UrlInvalidatorService
      * Collect all urls for invalidation.
      *
      * @param string            $type
-     * @param DocumentInterface $document
+     * @param SeoAwareInterface $document
      */
-    public function loadUrlsFromDocument($type, DocumentInterface $document)
+    public function loadUrlsFromDocument($type, SeoAwareInterface $document)
     {
         if ($this->invalidateSeoUrls) {
             // Default behavior.
+            $urls = $document->getUrls();
 
-            if (isset($document->url) && is_array($document->url)) {
-                foreach ($document->url as $url) {
-                    $this->addUrl($url['url']);
+            if (is_array($urls) || $urls instanceof \Traversable) {
+                /** @var UrlObject $url */
+                foreach ($urls as $url) {
+                    $this->addUrl($url->getUrl());
                 }
             }
         }

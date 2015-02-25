@@ -11,6 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\UrlInvalidator;
 
+use ONGR\ConnectionsBundle\Pipeline\Pipeline;
 use ONGR\ConnectionsBundle\Pipeline\PipelineFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -26,6 +27,7 @@ class ItemUrlInvalidatorTest extends WebTestCase
     {
         $kernel = self::createClient()->getKernel();
 
+        /** @var Pipeline $pipeline */
         $pipeline = $kernel->getContainer()->get('ongr_connections.pipeline_factory')->create(
             'dummypipeline.default',
             ['consumers' => [PipelineFactory::CONSUMER_RETURN]]
