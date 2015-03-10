@@ -203,12 +203,6 @@ class SyncExecuteConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'document_type' => 'product',
-                'event_item' => new SyncExecuteItem(new TestProduct(), new Product(), []),
-                'logger_notice' => [['No document id found. Update skipped.', LogLevel::NOTICE]],
-                'managerMethod' => null,
-            ],
-            [
-                'document_type' => 'product',
                 'event_item' => new \stdClass,
                 'logger_notice' => [
                     ['Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem', LogLevel::ERROR],

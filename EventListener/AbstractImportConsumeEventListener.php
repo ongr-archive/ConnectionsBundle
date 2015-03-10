@@ -106,11 +106,6 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
             return false;
         }
 
-        if ($tempItem->getDocument()->getId() === null) {
-            $this->log('No document id found. Update skipped.', LogLevel::NOTICE);
-
-            return false;
-        }
         $this->importItem = $tempItem;
 
         return true;
