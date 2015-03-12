@@ -1,0 +1,14 @@
+parameters:
+    ongr_connections.repository_crawler.class: ONGR\ConnectionsBundle\Pipeline\PipelineStarter
+    ongr_connections.repository_crawler.source.class: ONGR\ConnectionsBundle\Crawler\Event\RepositoryCrawlerSource
+
+services:
+    # Repository crawler service.
+    ongr_connections.repository_crawler_service:
+        class: %ongr_connections.repository_crawler.class%
+        calls:
+            - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
+
+    # Repository crawlers source event for default action.
+    ongr_connections.repository_crawler.repository_source_service:
+       class: %ongr_connections.repository_crawler.source.class%

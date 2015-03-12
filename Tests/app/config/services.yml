@@ -137,3 +137,19 @@ services:
             - @es.manager
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.sync.execute.default.finish, method: onFinish }
+
+    # Crawlers config.
+    test.crawler.source:
+        class: ONGR\ConnectionsBundle\Crawler\Event\RepositoryCrawlerSource
+        calls:
+            - [ setScrollSetting, [ 5m ] ] #Optional, default value is 1m
+        arguments:
+           - @es.manager
+           - AcmeTestBundle:Product
+        tags:
+            - { name: kernel.event_listener, event: ongr.pipeline.repository_crawler.myCrawler.source, method: onSource }
+
+    test.crawler.modifier:
+        class: ONGR\ConnectionsBundle\Tests\Functional\Fixtures\Event\CrawlerTestModifier
+        tags:
+            - { name: kernel.event_listener, event: ongr.pipeline.repository_crawler.myCrawler.modify, method: onModify }

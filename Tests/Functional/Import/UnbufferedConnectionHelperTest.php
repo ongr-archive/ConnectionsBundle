@@ -19,6 +19,8 @@ class UnbufferedConnectionHelperTest extends ESDoctrineTestCase
 {
     /**
      * Tests whether UnbufferedConnectionHelper works as intended in normal circumstances.
+     *
+     * @runInSeparateProcess
      */
     public function testUnbufferedConnectionHelper()
     {

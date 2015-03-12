@@ -42,6 +42,7 @@ class ONGRConnectionsExtension extends Extension
         $loader->load('extractor.yml');
         $loader->load('sync_storage.yml');
         $loader->load('extractor_relations.yml');
+        $loader->load('crawler.yml');
 
         $this->initShops($container, $config);
         $this->initSyncStorage($container, $config);
