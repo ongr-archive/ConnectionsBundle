@@ -13,9 +13,10 @@ namespace ONGR\ConnectionsBundle\Tests\Functional\Import;
 
 use Doctrine\DBAL\Statement;
 use ONGR\ConnectionsBundle\Import\UnbufferedConnectionHelper;
+use ONGR\ConnectionsBundle\Tests\Functional\AbstractESDoctrineTestCase;
 use ONGR\ConnectionsBundle\Tests\Functional\ESDoctrineTestCase;
 
-class UnbufferedConnectionHelperTest extends ESDoctrineTestCase
+class UnbufferedConnectionHelperTest extends AbstractESDoctrineTestCase
 {
     /**
      * Tests whether UnbufferedConnectionHelper works as intended in normal circumstances.

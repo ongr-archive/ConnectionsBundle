@@ -11,7 +11,7 @@
 
 namespace ONGR\ConnectionsBundle\Sync\Extractor;
 
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\AbstractDiffItem;
 use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 
 /**
@@ -22,9 +22,9 @@ interface ExtractorInterface
     /**
      * Extract data to full stack.
      *
-     * @param BaseDiffItem $item
+     * @param AbstractDiffItem $item
      */
-    public function extract(BaseDiffItem $item);
+    public function extract(AbstractDiffItem $item);
 
     /**
      * Set SyncStorage storage facility.

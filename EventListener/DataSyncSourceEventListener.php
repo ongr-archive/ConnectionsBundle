@@ -12,7 +12,7 @@
 namespace ONGR\ConnectionsBundle\EventListener;
 
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\AbstractDiffProvider;
 
 /**
  * DataSyncSourceEventListener - adds provider to SourcePipelineEvent.
@@ -20,16 +20,16 @@ use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
 class DataSyncSourceEventListener
 {
     /**
-     * @var DiffProvider
+     * @var AbstractDiffProvider
      */
     private $provider;
 
     /**
      * Dependency injection.
      *
-     * @param DiffProvider $provider
+     * @param AbstractDiffProvider $provider
      */
-    public function __construct(DiffProvider $provider)
+    public function __construct(AbstractDiffProvider $provider)
     {
         $this->provider = $provider;
     }

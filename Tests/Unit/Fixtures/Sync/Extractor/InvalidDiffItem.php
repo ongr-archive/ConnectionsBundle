@@ -11,12 +11,12 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Unit\Fixtures\Sync\Extractor;
 
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\AbstractDiffItem;
 
 /**
  * InvalidDiffItem class.
  */
-class InvalidDiffItem extends BaseDiffItem
+class InvalidDiffItem extends AbstractDiffItem
 {
     /**
      * Sets Item values by WHERE params.

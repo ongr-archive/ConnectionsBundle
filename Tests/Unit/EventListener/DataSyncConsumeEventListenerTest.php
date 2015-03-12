@@ -50,7 +50,7 @@ class DataSyncConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnConsume()
     {
-        $item = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem');
+        $item = $this->getMock('ONGR\ConnectionsBundle\Sync\DiffProvider\Item\AbstractDiffItem');
 
         $this->itemPipelineEvent->expects($this->once())
             ->method('getItem')

@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Sync\Extractor;
 
 use InvalidArgumentException;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\BaseDiffItem;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\AbstractDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\CreateDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\DeleteDiffItem;
 use ONGR\ConnectionsBundle\Sync\DiffProvider\Item\UpdateDiffItem;
@@ -32,7 +32,7 @@ class PassthroughExtractor extends AbstractExtractor implements ExtractorInterfa
     /**
      * {@inheritdoc}
      */
-    public function extract(BaseDiffItem $item)
+    public function extract(AbstractDiffItem $item)
     {
         if (!is_numeric($item->getItemId())) {
             throw new InvalidArgumentException('No valid item ID provided.');
@@ -68,10 +68,10 @@ class PassthroughExtractor extends AbstractExtractor implements ExtractorInterfa
     /**
      * Save results to storage.
      *
-     * @param BaseDiffItem $item
-     * @param string       $action
+     * @param AbstractDiffItem $item
+     * @param string           $action
      */
-    private function saveResult(BaseDiffItem $item, $action)
+    private function saveResult(AbstractDiffItem $item, $action)
     {
         $this->storage->save(
             $action,

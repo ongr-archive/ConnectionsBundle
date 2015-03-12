@@ -13,7 +13,7 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog;
 
 use Doctrine\DBAL\Connection;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\DiffProvider;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\AbstractDiffProvider;
 use ONGR\ConnectionsBundle\Service\PairStorage;
 use InvalidArgumentException;
 use \DateTime;
@@ -21,7 +21,7 @@ use \DateTime;
 /**
  * Sync data provider from MySQL binlog.
  */
-class BinlogDiffProvider extends DiffProvider
+class BinlogDiffProvider extends AbstractDiffProvider
 {
     const LAST_SYNC_DATE_PARAM = 'last_sync_date';
     const LAST_SYNC_POSITION_PARAM = 'last_sync_position';
