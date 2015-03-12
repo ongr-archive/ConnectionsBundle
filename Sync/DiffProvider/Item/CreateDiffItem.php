@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\Sync\DiffProvider\Item;
 /**
  * DiffItem of "Create" type.
  */
-class CreateDiffItem extends BaseDiffItem
+class CreateDiffItem extends AbstractDiffItem
 {
     /**
      * {@inheritdoc}
