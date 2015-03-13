@@ -17,18 +17,18 @@ services:
             - [ setPipelineFactory, [ @ongr_connections.pipeline_factory ] ]
 
     ongr_connections.import.source:
-        abstract:  true
+        abstract: true
         class: %ongr_connections.import.source.class%
 
     ongr_connections.import.modifier:
-        abstract:  true
+        abstract: true
 
     ongr_connections.import.consumer:
-        abstract:  true
+        abstract: true
         class: %ongr_connections.import.consumer.class%
 
     ongr_connections.import.finish:
-        abstract:  true
+        abstract: true
         class: %ongr_connections.import.finish.class%
 
     ongr_connections.sync.execute_service:
