@@ -16,6 +16,7 @@ use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Item\AbstractImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Item\ImportItem;
 use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
+use ONGR\ConnectionsBundle\Pipeline\ItemSkipper;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
@@ -43,6 +44,8 @@ abstract class AbstractImportModifyEventListener implements LoggerAwareInterface
 
             if ($syncStorageData['type'] !== ActionTypes::DELETE) {
                 $this->modify($item, $event);
+            } else {
+                ItemSkipper::skip($event, 'Delete item with id = ' . $syncStorageData['id']);
             }
         } else {
             $this->log('The type of provided item is not ImportItem or SyncExecuteItem.', LogLevel::ERROR);

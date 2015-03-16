@@ -60,11 +60,6 @@ class ImportConsumeEventListenerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                new ImportItem(new TestProduct(), new Product()),
-                'No document id found. Update skipped.',
-                LogLevel::NOTICE,
-            ],
-            [
                 new \stdClass,
                 'Item provided is not an ONGR\ConnectionsBundle\Pipeline\Item\ImportItem',
                 LogLevel::ERROR,
