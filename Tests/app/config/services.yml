@@ -65,7 +65,7 @@ services:
                - { name: kernel.event_listener, event: ongr.pipeline.import.default.source, method: onSource }
 
     test.import.modifier:
-        class: %ongr_connections.import.modifier.class%
+        parent: ongr_connections.import.modifier
         tags:
             - { name: kernel.event_listener, event: ongr.pipeline.import.default.modify, method: onModify }
 
