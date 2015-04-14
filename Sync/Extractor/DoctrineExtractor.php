@@ -100,10 +100,16 @@ class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
     }
 
     /**
+     * @throws \LogicException
+     *
      * @return Connection
      */
     public function getConnection()
     {
+        if ($this->connection === null) {
+            throw new \LogicException('setConnection must be called before getConnection.');
+        }
+
         return $this->connection;
     }
 
