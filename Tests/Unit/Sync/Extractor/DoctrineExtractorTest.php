@@ -92,4 +92,16 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 
         $method->invoke(new DoctrineExtractor(), new CreateDiffItem(), $descriptor);
     }
+
+    /**
+     * Check if exception is thrown when connection is not set.
+     *
+     * @expectedException \LogicException
+     */
+    public function testConnectionSetter()
+    {
+        $extractor = new DoctrineExtractor();
+        $extractor->setConnection(null);
+        $extractor->getConnection();
+    }
 }
