@@ -229,7 +229,7 @@ class UrlInvalidatorService
     /**
      * Invalidates collected URLs.
      *
-     * @return string Executed file name
+     * @return string Executed file name.
      */
     public function invalidate()
     {
