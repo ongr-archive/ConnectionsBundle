@@ -40,7 +40,7 @@ class Item implements DocumentInterface
 
     /**
      * @var \DateTime
-     * 
+     *
      * @ES\Property(name="created_at", type="date")
      */
     private $createdAt;

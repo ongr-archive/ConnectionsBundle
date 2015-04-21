@@ -137,7 +137,6 @@ class LoadClassMetadataListenerTest extends \PHPUnit_Framework_TestCase
         $out[] = [$replacements, $input, $output];
 
         // Case 5: nested annotations.
-
         $inputClassMetadataInfo = new ClassMetadataInfo('someEntity');
         $inputClassMetadataInfo->mapField(
             array_merge(
@@ -167,7 +166,6 @@ class LoadClassMetadataListenerTest extends \PHPUnit_Framework_TestCase
         $out[] = [$replacements, $input, $output];
 
         // Case 6: replacing table name.
-
         $inputClassMetadataInfo = new ClassMetadataInfo('someEntity');
         $inputClassMetadataInfo->mapField($baseMapping);
         $inputClassMetadataInfo->setPrimaryTable(
