@@ -25,9 +25,63 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class AbstractTestCase extends WebTestCase
 {
     /**
+     * @var string
+     */
+    private $setUpDbFile = null;
+
+    /**
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * Sets up required info before each test.
+     */
+    protected function setUp()
+    {
+        AnnotationRegistry::registerFile(
+            'vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+        );
+
+        $container = static::createClient()->getContainer();
+
+        $name = $container->getParameter('database_name');
+
+        $connection = DriverManager::getConnection(
+            [
+                'driver' => $container->getParameter('database_driver'),
+                'host' => $container->getParameter('database_host'),
+                'port' => $container->getParameter('database_port'),
+                'user' => $container->getParameter('database_user'),
+                'password' => $container->getParameter('database_password'),
+                'charset' => 'UTF8',
+            ]
+        );
+        $name = $connection->getDatabasePlatform()->quoteSingleIdentifier($name);
+
+        $connection->getSchemaManager()->dropAndCreateDatabase($name);
+        $connection->close();
+
+        if ($this->getSetUpDbFile() !== null) {
+            $this->executeLargeSqlFile(static::getRootDir($container) . $this->getSetUpDbFile());
+        }
+    }
+
+    /**
+     * Deletes the database.
+     */
+    public static function tearDownAfterClass()
+    {
+        $container = static::createClient()->getContainer();
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get('doctrine')->getManager();
+
+        $connection = $entityManager->getConnection();
+        $name = $container->getParameter('database_name');
+        $name = $connection->getSchemaManager()->getDatabasePlatform()->quoteSingleIdentifier($name);
+
+        $connection->getSchemaManager()->dropDatabase($name);
+    }
 
     /**
      * Gets entity manager.
@@ -50,41 +104,23 @@ abstract class AbstractTestCase extends WebTestCase
     }
 
     /**
-     * Sets up required info before each test.
+     * Set full route to db file.
+     *
+     * @param string $dbFile
      */
-    protected function setUp()
+    public function setSetUpDbFile($dbFile)
     {
-        AnnotationRegistry::registerFile(
-            'vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
-        );
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $params = $connection->getParams();
-        $name = $connection->getParams()['dbname'];
-        unset($params['dbname']);
-        $tmpConnection = DriverManager::getConnection($params);
-        $name = $tmpConnection->getDatabasePlatform()->quoteSingleIdentifier($name);
-        try {
-            $tmpConnection->getSchemaManager()->dropDatabase($name);
-        } catch (\Exception $ex) {
-            // Catching exception in case database not dropped.
-        }
-        $tmpConnection->getSchemaManager()->createDatabase($name);
-        $tmpConnection->close();
+        $this->setUpDbFile = $dbFile;
     }
 
     /**
-     * Deletes  all data after each test.
+     * Return full route to db file.
+     *
+     * @return string
      */
-    protected function tearDown()
+    public function getSetUpDbFile()
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $name = $connection->getParams()['dbname'];
-        $name = $connection->getSchemaManager()->getDatabasePlatform()->quoteSingleIdentifier($name);
-        $connection->getSchemaManager()->dropDatabase($name);
+        return $this->setUpDbFile;
     }
 
     /**
@@ -115,19 +151,6 @@ abstract class AbstractTestCase extends WebTestCase
     }
 
     /**
-     * Executes an SQL file.
-     *
-     * @param Connection $conn
-     * @param string     $file
-     */
-    protected function executeSqlFile(Connection $conn, $file)
-    {
-        $sql = file_get_contents($file);
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-    }
-
-    /**
      * Compares two sets of records (suited for sync jobs data comparison).
      *
      * @param array $expectedRecords
@@ -153,5 +176,90 @@ abstract class AbstractTestCase extends WebTestCase
         }
 
         $this->assertEquals($expectedRecords, $actualRecords);
+    }
+
+    /**
+     * Executes an SQL file.
+     *
+     * @param Connection $conn
+     * @param string     $file
+     */
+    protected function executeSqlFile(Connection $conn, $file)
+    {
+        $sql = file_get_contents($file);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+    }
+
+    /**
+     * Executes large SQL file.
+     *
+     * @param string $filename
+     */
+    protected function executeLargeSqlFile($filename)
+    {
+        $container = static::createClient()->getContainer();
+        /** @var EntityManager $manager */
+        $manager = $container->get('doctrine')->getManager();
+        $connection = $manager->getConnection();
+        $tempLine = '';
+        $lines = file($filename);
+
+        foreach ($lines as $line) {
+            // Skip it if it's a comment.
+            if (substr($line, 0, 2) == '--' || $line == '') {
+                continue;
+            }
+
+            // Add this line to the current segment.
+            $tempLine .= $line;
+
+            // If it has a semicolon at the end, it's the end of the query.
+            if (substr(trim($line), -1, 1) == ';') {
+                $connection->exec($tempLine);
+                // Reset temp variable to empty.
+                $tempLine = '';
+            }
+        }
+    }
+
+    /**
+     * Return full path to kernel root dir.
+     *
+     * @param ContainerInterface $container
+     *
+     * @return string
+     */
+    protected static function getRootDir($container)
+    {
+        return $container->get('kernel')->getRootDir();
+    }
+
+    /**
+     * Return an array of elements required for testing.
+     *
+     * @param array  $ids
+     * @param string $repository
+     *
+     * @return Object[]
+     */
+    protected function getTestElements(array $ids, $repository)
+    {
+        $items = [];
+        $entityManager = $this->getEntityManager();
+        $rep = $entityManager->getRepository($repository);
+        foreach ($ids as $id) {
+            if (is_array($id)) {
+                $element = $rep->findBy($id);
+            } else {
+                $element = $rep->find($id);
+            }
+
+            if ($element !== null) {
+                $items[] = $element;
+            }
+        }
+
+        return $items;
     }
 }
