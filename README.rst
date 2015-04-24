@@ -19,16 +19,16 @@ ONGR Connections Bundle is responsible for importing data into Elasticsearch fro
 .. image:: https://insight.sensiolabs.com/projects/c2fb500d-b29a-439c-ad4a-5f3728a4ba58/mini.png
     :target: https://insight.sensiolabs.com/projects/c2fb500d-b29a-439c-ad4a-5f3728a4ba58
 
-.. image:: https://poser.pugx.org/ongr/connections-bundle/downloads.svg
+.. image:: https://poser.pugx.org/ongr/connections-bundle/downloads
     :target: https://packagist.org/packages/ongr/connections-bundle
 
-.. image:: https://poser.pugx.org/ongr/connections-bundle/v/stable.svg
+.. image:: https://poser.pugx.org/ongr/connections-bundle/v/stable
     :target: https://packagist.org/packages/ongr/connections-bundle
 
-.. image:: https://poser.pugx.org/ongr/connections-bundle/v/unstable.svg
+.. image:: https://poser.pugx.org/ongr/connections-bundle/v/unstable
     :target: https://packagist.org/packages/ongr/connections-bundle
 
-.. image:: https://poser.pugx.org/ongr/connections-bundle/license.svg
+.. image:: https://poser.pugx.org/ongr/connections-bundle/license
     :target: https://packagist.org/packages/ongr/connections-bundle
 
 
