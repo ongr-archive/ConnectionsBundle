@@ -35,9 +35,8 @@ class PairStorage
     /**
      * @param Manager $manager
      */
-    public function __construct(
-        Manager $manager
-    ) {
+    public function __construct(Manager $manager)
+    {
         $this->manager = $manager;
         $this->repository = $this->manager->getRepository('ONGRConnectionsBundle:Pair');
     }
@@ -51,13 +50,9 @@ class PairStorage
      */
     public function get($key)
     {
-        try {
-            $pair = $this->repository->find($key);
-        } catch (Missing404Exception $exception) {
-            return null;
-        }
+        $pair = $this->repository->find($key);
 
-        return $pair->getValue();
+        return $pair ? $pair->getValue() : null;
     }
 
     /**
@@ -70,15 +65,12 @@ class PairStorage
      */
     public function set($key, $value)
     {
-        try {
-            $pair = $this->repository->find($key);
-        } catch (Missing404Exception $exception) {
+        if (($pair = $this->repository->find($key)) === null) {
             $pair = new Pair();
             $pair->setId($key);
         }
 
         $pair->setValue($value);
-
         $this->save($pair);
 
         return $pair;
@@ -91,14 +83,10 @@ class PairStorage
      */
     public function remove($key)
     {
-        try {
-            $pair = $this->repository->find($key);
-
+        if (($pair = $this->repository->find($key)) !== null) {
             $this->repository->remove($pair->getId());
             $this->manager->flush();
             $this->manager->refresh();
-        } catch (Missing404Exception $exception) {
-            // If pair wasn't found, we don't do anything.
         }
     }
 

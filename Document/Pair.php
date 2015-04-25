@@ -24,7 +24,7 @@ class Pair extends AbstractDocument
     /**
      * @var string Serialized stored value.
      *
-     * @ES\Property(name="value", type="string", search_analyzer="standard")
+     * @ES\Property(name="value", type="string", searchAnalyzer="standard")
      */
     private $value;
 
