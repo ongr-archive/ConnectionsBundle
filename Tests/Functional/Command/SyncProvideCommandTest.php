@@ -486,7 +486,6 @@ class SyncProvideCommandTest extends AbstractTestCase
             // Sometimes, mysql, php and server timezone could differ, we need convert time seen by php
             // to the same time in the same timezone as is used in mysqlbinlog.
             // This issue is for tests only, should not affect live website.
-
             $result = $this->managerMysql->getConnection()->executeQuery('SELECT @@global.time_zone');
             $time_zone = $result->fetchAll()[0]['@@global.time_zone'];
 

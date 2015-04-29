@@ -31,11 +31,9 @@ class DoctrineExtractorTest extends AbstractTestCase
         $extractor = $container->get('ongr_connections.sync.extractor.doctrine_extractor');
 
         // Populate database with schema and data.
-
         $this->importData('ExtractorTest/sample_db.sql');
 
         // Get storage mock.
-
         /** @var SyncStorageInterface|\PHPUnit_Framework_MockObject_MockObject $dummySyncStorage */
         $dummySyncStorage = $this->getMock('\ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface');
         $dummySyncStorage
@@ -54,7 +52,6 @@ class DoctrineExtractorTest extends AbstractTestCase
         $extractor->setStorageFacility($dummySyncStorage);
 
         // Execute.
-
         // Should not make any save calls because Category CREATE action is turned off.
         $item = new CreateDiffItem();
         $item->setCategory('oxcategories');
