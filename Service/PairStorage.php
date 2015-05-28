@@ -11,11 +11,10 @@
 
 namespace ONGR\ConnectionsBundle\Service;
 
-use ONGR\ElasticsearchBundle\ORM\Repository;
-use ONGR\ElasticsearchBundle\ORM\Manager;
 use ONGR\ConnectionsBundle\Document\Pair;
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
+use ONGR\ElasticsearchBundle\ORM\Manager;
+use ONGR\ElasticsearchBundle\ORM\Repository;
 
 /**
  * Responsible for managing pairs actions.
@@ -65,7 +64,8 @@ class PairStorage
      */
     public function set($key, $value)
     {
-        if (($pair = $this->repository->find($key)) === null) {
+        $pair = $this->repository->find($key);
+        if ($pair === null) {
             $pair = new Pair();
             $pair->setId($key);
         }
@@ -83,7 +83,8 @@ class PairStorage
      */
     public function remove($key)
     {
-        if (($pair = $this->repository->find($key)) !== null) {
+        $pair = $this->repository->find($key);
+        if ($pair !== null) {
             $this->repository->remove($pair->getId());
             $this->manager->flush();
             $this->manager->refresh();

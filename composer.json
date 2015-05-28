@@ -14,7 +14,7 @@
         "symfony/symfony": "~2.6",
         "symfony/monolog-bundle": "~2.0",
         "ongr/elasticsearch-bundle": ">=0.9,<2",
-        "ongr/router-bundle": "~0.3.1",
+        "ongr/router-bundle": "~0.4",
         "doctrine/orm": "~2.5"
     },
     "require-dev": {
