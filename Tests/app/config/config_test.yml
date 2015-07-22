@@ -85,3 +85,15 @@ ongr_connections:
             shop_id: 1
         shop_12345:
             shop_id: 12345
+    pipelines:
+        oxid:
+            types:
+                product:
+                    entity_class: DemoOXIDBundle:Article
+                    document_class: ONGRDemoOXIDBundle:ProductDocument
+                category:
+                    entity_class: DemoOXIDBundle:Category
+                    document_class: ONGRDemoOXIDBundle:CategoryDocument
+                content:
+                    entity_class: DemoOXIDBundle:Content
+                    document_class: ONGRDemoOXIDBundle:ContentDocument

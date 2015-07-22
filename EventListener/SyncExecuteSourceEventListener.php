@@ -16,22 +16,22 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
     /**
      * @var SyncStorageInterface
      */
-    protected $syncStorage;
+    private $syncStorage;
 
     /**
      * @var int
      */
-    protected $shopId = 1;
+    private $shopId = 1;
 
     /**
      * @var int
      */
-    protected $chunkSize = 1;
+    private $chunkSize = 1;
 
     /**
      * @var string
      */
-    protected $documentType = '';
+    private $documentType = '';
 
     /**
      * @param EntityManager        $manager
@@ -41,11 +41,11 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
      * @param SyncStorageInterface $syncStorage
      */
     public function __construct(
-        EntityManager $manager,
-        $entityClass,
-        Manager $elasticsearchManager,
-        $documentClass,
-        $syncStorage
+        EntityManager $manager = null,
+        $entityClass = null,
+        Manager $elasticsearchManager = null,
+        $documentClass = null,
+        $syncStorage = null
     ) {
         parent::__construct($manager, $entityClass, $elasticsearchManager, $documentClass);
         $this->syncStorage = $syncStorage;
@@ -60,13 +60,13 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
     {
         return new SyncStorageImportIterator(
             [
-                'sync_storage' => $this->syncStorage,
-                'shop_id' => $this->shopId,
-                'document_type' => $this->documentType,
+                'sync_storage' => $this->getSyncStorage(),
+                'shop_id' => $this->getShopId(),
+                'document_type' => $this->getDocumentType(),
             ],
-            $this->elasticsearchManager->getRepository($this->documentClass),
-            $this->entityManager,
-            $this->entityClass
+            $this->getElasticsearchManager()->getRepository($this->getDocumentClass()),
+            $this->getDoctrineManager(),
+            $this->getEntityClass()
         );
     }
 
@@ -126,5 +126,29 @@ class SyncExecuteSourceEventListener extends AbstractImportSourceEventListener
     public function setDocumentType($documentType)
     {
         $this->documentType = $documentType;
+    }
+
+    /**
+     * @return SyncStorageInterface
+     */
+    public function getSyncStorage()
+    {
+        if ($this->syncStorage === null) {
+            throw new \LogicException('Sync storage must be set before using \'getSyncStorage\'');
+        }
+
+        return $this->syncStorage;
+    }
+
+    /**
+     * @param SyncStorageInterface $syncStorage
+     *
+     * @return $this
+     */
+    public function setSyncStorage($syncStorage)
+    {
+        $this->syncStorage = $syncStorage;
+
+        return $this;
     }
 }

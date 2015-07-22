@@ -14,7 +14,7 @@ namespace ONGR\ConnectionsBundle\EventListener;
 use ONGR\ConnectionsBundle\Pipeline\Event\ItemPipelineEvent;
 use ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
-use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorage;
+use ONGR\ConnectionsBundle\Sync\SyncStorage\SyncStorageInterface;
 use ONGR\ElasticsearchBundle\ORM\Manager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
@@ -29,28 +29,99 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
     /**
      * @var string
      */
-    protected $documentType;
+    private $documentClass;
 
     /**
-     * @var SyncStorage
+     * @var SyncStorageInterface
      */
-    protected $syncStorage;
+    private $syncStorage;
 
     /**
      * @var array
      */
-    protected $syncStorageData;
+    private $syncStorageData;
 
     /**
-     * @param Manager     $manager
-     * @param string      $documentType
-     * @param SyncStorage $syncStorage
+     * @param Manager              $elasticsearchManager
+     * @param string               $documentClass
+     * @param SyncStorageInterface $syncStorage
      */
-    public function __construct(Manager $manager, $documentType, SyncStorage $syncStorage)
-    {
-        $this->documentType = $documentType;
+    public function __construct(
+        Manager $elasticsearchManager = null,
+        $documentClass = null,
+        SyncStorageInterface $syncStorage = null
+    ) {
+        parent::__construct($elasticsearchManager, 'ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem');
+        $this->documentClass = $documentClass;
         $this->syncStorage = $syncStorage;
-        parent::__construct($manager, 'ONGR\ConnectionsBundle\Pipeline\Item\SyncExecuteItem');
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentClass()
+    {
+        if ($this->documentClass === null) {
+            throw new \LogicException('Document class must be set before using \'getSyncStorage\'');
+        }
+
+        return $this->documentClass;
+    }
+
+    /**
+     * @param string $documentClass
+     *
+     * @return $this
+     */
+    public function setDocumentClass($documentClass)
+    {
+        $this->documentClass = $documentClass;
+
+        return $this;
+    }
+
+    /**
+     * @return SyncStorageInterface
+     */
+    public function getSyncStorage()
+    {
+        if ($this->syncStorage === null) {
+            throw new \LogicException('Sync storage must be set before using \'getSyncStorage\'');
+        }
+
+        return $this->syncStorage;
+    }
+
+    /**
+     * @param SyncStorageInterface $syncStorage
+     *
+     * @return $this
+     */
+    public function setSyncStorage(SyncStorageInterface $syncStorage)
+    {
+        $this->syncStorage = $syncStorage;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSyncStorageData()
+    {
+        return $this->syncStorageData;
+    }
+
+    /**
+     * @param array $syncStorageData
+     *
+     * @return $this
+     */
+    protected function setSyncStorageData($syncStorageData)
+    {
+        $this->syncStorageData = $syncStorageData;
+
+        return $this;
     }
 
     /**
@@ -62,20 +133,23 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
             return false;
         }
 
-        if (!$this->importItem instanceof SyncExecuteItem) {
+        /** @var SyncExecuteItem $item */
+        $item = $this->getItem();
+        if (!$item instanceof SyncExecuteItem) {
             return false;
         }
-        $tempSyncStorageData = $this->importItem->getSyncStorageData();
+
+        $tempSyncStorageData = $item->getSyncStorageData();
 
         if (!isset($tempSyncStorageData['type'])) {
             $this->log(
-                sprintf('No operation type defined for document id: %s', $this->importItem->getDocument()->getId()),
+                sprintf('No operation type defined for document id: %s', $item->getDocument()->getId()),
                 LogLevel::ERROR
             );
 
             return false;
         }
-        $this->syncStorageData = $tempSyncStorageData;
+        $this->setSyncStorageData($tempSyncStorageData);
 
         return true;
     }
@@ -85,30 +159,33 @@ class SyncExecuteConsumeEventListener extends AbstractImportConsumeEventListener
      */
     protected function persistDocument()
     {
-        switch ($this->syncStorageData['type']) {
+        $syncStorageData = $this->getSyncStorageData();
+        switch ($syncStorageData['type']) {
             case ActionTypes::CREATE:
-                $this->manager->persist($this->importItem->getDocument());
+                $this->getElasticsearchManager()->persist($this->getItem()->getDocument());
                 break;
             case ActionTypes::UPDATE:
-                $this->manager->persist($this->importItem->getDocument());
+                $this->getElasticsearchManager()->persist($this->getItem()->getDocument());
                 break;
             case ActionTypes::DELETE:
-                $this->manager->getRepository($this->documentType)->remove($this->importItem->getDocument()->getId());
+                $this->getElasticsearchManager()->getRepository($this->getDocumentClass())->remove(
+                    $this->getItem()->getDocument()->getId()
+                );
                 break;
             default:
                 $this->log(
                     sprintf(
                         'Failed to update document of type  %s id: %s: no valid operation type defined',
-                        get_class($this->importItem->getDocument()),
-                        $this->importItem->getDocument()->getId()
+                        get_class($this->getItem()->getDocument()),
+                        $this->getItem()->getDocument()->getId()
                     )
                 );
 
                 return false;
         }
-        $this->syncStorage->deleteItem(
-            $this->syncStorageData['id'],
-            [$this->syncStorageData['shop_id']]
+        $this->getSyncStorage()->deleteItem(
+            $syncStorageData['id'],
+            [$syncStorageData['shop_id']]
         );
 
         return true;

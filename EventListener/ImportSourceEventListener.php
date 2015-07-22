@@ -11,36 +11,14 @@
 
 namespace ONGR\ConnectionsBundle\EventListener;
 
-use Doctrine\ORM\EntityManager;
 use ONGR\ConnectionsBundle\Import\DoctrineImportIterator;
 use ONGR\ConnectionsBundle\Pipeline\Event\SourcePipelineEvent;
-use ONGR\ElasticsearchBundle\ORM\Manager;
 
 /**
  * Class ImportSourceEventListener - gets items from Doctrine, creates empty Elasticsearch documents.
  */
 class ImportSourceEventListener extends AbstractImportSourceEventListener
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var string Type of source.
-     */
-    protected $entityClass;
-
-    /**
-     * @var Manager Elasticsearch manager.
-     */
-    protected $elasticsearchManager;
-
-    /**
-     * @var string Classname of Elasticsearch document. (e.g. Product).
-     */
-    protected $documentClass;
-
     /**
      * Gets all documents by given type.
      *
@@ -49,9 +27,9 @@ class ImportSourceEventListener extends AbstractImportSourceEventListener
     public function getAllDocuments()
     {
         return new DoctrineImportIterator(
-            $this->entityManager->createQuery("SELECT e FROM {$this->entityClass} e")->iterate(),
-            $this->entityManager,
-            $this->elasticsearchManager->getRepository($this->documentClass)
+            $this->getDoctrineManager()->createQuery("SELECT e FROM {$this->getentityClass()} e")->iterate(),
+            $this->getDoctrineManager(),
+            $this->getElasticsearchManager()->getRepository($this->getDocumentClass())
         );
     }
 

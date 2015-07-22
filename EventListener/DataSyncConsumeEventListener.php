@@ -33,7 +33,7 @@ class DataSyncConsumeEventListener extends AbstractConsumeEventListener implemen
      *
      * @param ExtractorInterface $extractor
      */
-    public function __construct(ExtractorInterface $extractor)
+    public function __construct(ExtractorInterface $extractor = null)
     {
         $this->extractor = $extractor;
     }
@@ -45,6 +45,30 @@ class DataSyncConsumeEventListener extends AbstractConsumeEventListener implemen
      */
     public function consume(ItemPipelineEvent $event)
     {
-        $this->extractor->extract($event->getItem());
+        $this->getExtractor()->extract($event->getItem());
+    }
+
+    /**
+     * @return ExtractorInterface
+     */
+    public function getExtractor()
+    {
+        if ($this->extractor === null) {
+            throw new \LogicException('Extractor must be set before using \'getExtractor\'');
+        }
+
+        return $this->extractor;
+    }
+
+    /**
+     * @param ExtractorInterface $extractor
+     *
+     * @return $this
+     */
+    public function setExtractor(ExtractorInterface $extractor)
+    {
+        $this->extractor = $extractor;
+
+        return $this;
     }
 }

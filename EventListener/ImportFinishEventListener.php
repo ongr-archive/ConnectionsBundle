@@ -21,14 +21,14 @@ class ImportFinishEventListener
     /**
      * @var Manager
      */
-    protected $manager;
+    private $elasticsearchManager;
 
     /**
-     * @param Manager $manager
+     * @param Manager $elasticsearchManager
      */
-    public function __construct(Manager $manager)
+    public function __construct(Manager $elasticsearchManager = null)
     {
-        $this->manager = $manager;
+        $this->elasticsearchManager = $elasticsearchManager;
     }
 
     /**
@@ -36,6 +36,30 @@ class ImportFinishEventListener
      */
     public function onFinish()
     {
-        $this->manager->commit();
+        $this->getElasticsearchManager()->commit();
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getElasticsearchManager()
+    {
+        if ($this->elasticsearchManager === null) {
+            throw new \LogicException('Manager must be set before using \'getProvider\'');
+        }
+
+        return $this->elasticsearchManager;
+    }
+
+    /**
+     * @param Manager $elasticsearchManager
+     *
+     * @return $this
+     */
+    public function setElasticsearchManager(Manager $elasticsearchManager)
+    {
+        $this->elasticsearchManager = $elasticsearchManager;
+
+        return $this;
     }
 }

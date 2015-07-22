@@ -22,8 +22,8 @@ class ImportConsumeEventListener extends AbstractImportConsumeEventListener impl
     /**
      * {@inheritdoc}
      */
-    public function __construct(Manager $manager)
+    public function __construct(Manager $elasticsearchManager = null)
     {
-        parent::__construct($manager, 'ONGR\ConnectionsBundle\Pipeline\Item\ImportItem');
+        parent::__construct($elasticsearchManager, 'ONGR\ConnectionsBundle\Pipeline\Item\ImportItem');
     }
 }
