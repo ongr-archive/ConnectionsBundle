@@ -73,7 +73,10 @@ class Pipeline implements PipelineInterface
         );
         $this->setContext($startEvent->getContext());
 
-        $this->progressBar && $this->progressBar->start($this->countSourceItems($sources));
+        $count = $this->countSourceItems($sources);
+
+        $this->progressBar && $this->progressBar->setRedrawFrequency($count > 10 ? $count / 10 : 1);
+        $this->progressBar && $this->progressBar->start($count);
 
         foreach ($sources as $source) {
             foreach ($source as $item) {
