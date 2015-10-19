@@ -22,16 +22,16 @@ class DataSyncSourceEventListener
     /**
      * @var AbstractDiffProvider
      */
-    private $provider;
+    private $diffProvider;
 
     /**
      * Dependency injection.
      *
      * @param AbstractDiffProvider $provider
      */
-    public function __construct(AbstractDiffProvider $provider)
+    public function __construct(AbstractDiffProvider $provider = null)
     {
-        $this->provider = $provider;
+        $this->diffProvider = $provider;
     }
 
     /**
@@ -41,6 +41,30 @@ class DataSyncSourceEventListener
      */
     public function onSource(SourcePipelineEvent $event)
     {
-        $event->addSource($this->provider);
+        $event->addSource($this->getDiffProvider());
+    }
+
+    /**
+     * @return AbstractDiffProvider
+     */
+    public function getDiffProvider()
+    {
+        if ($this->diffProvider === null) {
+            throw new \LogicException('Provider must be set before using \'getProvider\'');
+        }
+
+        return $this->diffProvider;
+    }
+
+    /**
+     * @param AbstractDiffProvider $diffProvider
+     *
+     * @return $this
+     */
+    public function setDiffProvider(AbstractDiffProvider $diffProvider)
+    {
+        $this->diffProvider = $diffProvider;
+
+        return $this;
     }
 }

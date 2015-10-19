@@ -11,17 +11,18 @@
 
 namespace ONGR\ConnectionsBundle\Tests\Functional\Command;
 
+use DateTime;
 use ONGR\ConnectionsBundle\Command\SyncProvideCommand;
+use ONGR\ConnectionsBundle\Service\PairStorage;
 use ONGR\ConnectionsBundle\Sync\ActionTypes;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
+use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
 use ONGR\ConnectionsBundle\Sync\StorageManager\MysqlStorageManager;
 use ONGR\ConnectionsBundle\Tests\Functional\AbstractTestCase;
+use ONGR\ElasticsearchBundle\Test\DelayedObjectWrapper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
-use ONGR\ConnectionsBundle\Service\PairStorage;
-use \DateTime;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogDiffProvider;
-use ONGR\ConnectionsBundle\Sync\DiffProvider\Binlog\BinlogParser;
 
 class SyncProvideCommandTest extends AbstractTestCase
 {
@@ -433,7 +434,8 @@ class SyncProvideCommandTest extends AbstractTestCase
         $application = new Application($kernel);
         $application->add(new SyncProvideCommand());
         $command = $application->find('ongr:sync:provide');
-        $commandTester = new CommandTester($command);
+        /** @var CommandTester $commandTester */
+        $commandTester = DelayedObjectWrapper::wrap(new CommandTester($command));
         $commandTester->execute(
             [
                 'command' => $command->getName(),

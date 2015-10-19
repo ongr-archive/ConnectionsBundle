@@ -28,25 +28,25 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
     /**
      * @var Manager
      */
-    protected $manager;
+    private $elasticsearchManager;
 
     /**
      * @var string Import item class of an item contained in ItemPipelineEvent.
      */
-    protected $importItemClass;
+    private $importItemClass;
 
     /**
      * @var AbstractImportItem
      */
-    protected $importItem;
+    private $importItem;
 
     /**
-     * @param Manager $manager
+     * @param Manager $elasticsearchManager
      * @param string  $itemClass
      */
-    public function __construct(Manager $manager, $itemClass)
+    public function __construct(Manager $elasticsearchManager = null, $itemClass = null)
     {
-        $this->manager = $manager;
+        $this->elasticsearchManager = $elasticsearchManager;
         $this->importItemClass = $itemClass;
     }
 
@@ -64,8 +64,8 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
         $this->log(
             sprintf(
                 'Start update single document of type %s id: %s',
-                get_class($this->importItem->getDocument()),
-                $this->importItem->getDocument()->getId()
+                get_class($this->getItem()->getDocument()),
+                $this->getItem()->getDocument()->getId()
             )
         );
 
@@ -83,7 +83,7 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
      */
     protected function persistDocument()
     {
-        $this->manager->persist($this->importItem->getDocument());
+        $this->getElasticsearchManager()->persist($this->getItem()->getDocument());
 
         return true;
     }
@@ -109,5 +109,61 @@ abstract class AbstractImportConsumeEventListener extends AbstractConsumeEventLi
         $this->importItem = $tempItem;
 
         return true;
+    }
+
+    /**
+     * @return AbstractImportItem
+     */
+    protected function getItem()
+    {
+        return $this->importItem;
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getElasticsearchManager()
+    {
+        if ($this->elasticsearchManager === null) {
+            throw new \LogicException('Elasticsearch manager must be set before using \'getElasticsearchManager\'');
+        }
+
+        return $this->elasticsearchManager;
+    }
+
+    /**
+     * @param Manager $elasticsearchManager
+     *
+     * @return $this
+     */
+    public function setElasticsearchManager(Manager $elasticsearchManager)
+    {
+        $this->elasticsearchManager = $elasticsearchManager;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImportItemClass()
+    {
+        if ($this->importItemClass === null) {
+            throw new \LogicException('Import item class must be set before using \'getImportItemClass\'');
+        }
+
+        return $this->importItemClass;
+    }
+
+    /**
+     * @param string $importItemClass
+     *
+     * @return $this
+     */
+    public function setImportItemClass($importItemClass)
+    {
+        $this->importItemClass = $importItemClass;
+
+        return $this;
     }
 }
